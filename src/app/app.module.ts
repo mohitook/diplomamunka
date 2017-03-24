@@ -9,6 +9,9 @@ import { AngularFireModule } from 'angularfire2';
 import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { ChatPageComponent } from './chat-page/chat-page.component';
+import { AddNewComponent } from './add-new/add-new.component';
+
 
 // Must export the config
 export const firebaseConfig = {
@@ -21,7 +24,9 @@ export const firebaseConfig = {
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
-  { path: 'login', component: LoginPageComponent }
+  { path: 'login', component: LoginPageComponent },
+  { path: 'chat', component: ChatPageComponent },
+  { path: 'addnew', component: AddNewComponent }
 ];
 
 
@@ -29,7 +34,9 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     LoginPageComponent,
-    HomePageComponent
+    HomePageComponent,
+    ChatPageComponent,
+    AddNewComponent
   ],
   imports: [
     BrowserModule,

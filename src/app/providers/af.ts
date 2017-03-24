@@ -1,9 +1,15 @@
 // src/app/providers/af.ts
 import {Injectable} from "@angular/core";
-import {AngularFire, AuthProviders, AuthMethods} from 'angularfire2';
+import {AngularFire, AuthProviders, AuthMethods, FirebaseListObservable} from 'angularfire2';
 @Injectable()
 export class AF {
-  constructor(public af: AngularFire) {}
+  public messages: FirebaseListObservable<any>;
+  public users: FirebaseListObservable<any>;
+  public displayName: string;
+  public email: string;
+  constructor(public af: AngularFire) {
+    this.messages = this.af.database.list('messages');
+  }
   /**
    * Logs in the user
    * @returns {firebase.Promise<FirebaseAuthState>}
@@ -19,5 +25,18 @@ export class AF {
    */
   logout() {
     return this.af.auth.logout();
+  }
+  /**
+   * Saves a message to the Firebase Realtime Database
+   * @param text
+   */
+  sendMessage(text) {
+    var message = {
+      message: text,
+      displayName: this.displayName,
+      email: this.email,
+      timestamp: Date.now()
+    };
+    this.messages.push(message);
   }
 }
