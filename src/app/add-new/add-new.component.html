@@ -2,22 +2,34 @@
   <form>
 
     <div class="form-group">
-      <!-- <label for="exampleTextarea">Example textarea</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea> -->
-      <ckeditor
-        [(ngModel)]="ckeditorContent" name="fullText"
-        [config]="{uiColor: '#99000'}"
-        debounce="500">
+      <label for="usr">Title:</label>
+      <input type="text" class="form-control" id="usr">
+    </div>
+
+    <div class="form-group">
+      <label for="usr">Cover image url:</label>
+      <input type="text" class="form-control" id="usr">
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Summary:</label>
+      <textarea [(ngModel)]="summary" name="newSummary" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+      <ckeditor [(ngModel)]="ckeditorContent" name="newFullText" [config]="{uiColor: '#4286f4'}" debounce="500">
       </ckeditor>
     </div>
+
     <div class="form-group">
-      <label for="exampleInputFile">File input</label>
-      <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-      <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+      <label for="labels">Labels</label>
+      <div id="labels">
+        <label class="checkbox-inline"><input type="checkbox" value="">All</label>
+        <label class="checkbox-inline"><input type="checkbox" value="">Dota 2</label>
+        <label class="checkbox-inline"><input type="checkbox" value="">League of Legends</label>
+        <label class="checkbox-inline"><input type="checkbox" value="">Overwatch</label>
+      </div>
     </div>
-    <label class="checkbox-inline"><input type="checkbox" value="">Dota 2</label>
-    <label class="checkbox-inline"><input type="checkbox" value="">League of Legends</label>
-    <label class="checkbox-inline"><input type="checkbox" value="">Overwatch</label>
 
     <div class="form-group">
       <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
@@ -25,5 +37,4 @@
 
 
   </form>
-
 </div>

@@ -27,7 +27,7 @@ export class AppComponent {
                     this.afService.displayName = auth.google.displayName;
                     this.afService.email = auth.google.email;
 
-                    this.router.navigate(['']);
+                    //this.router.navigate(['']);
                 }
             }
         );

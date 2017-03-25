@@ -17,12 +17,12 @@ import { EditorDirective } from '../editor.directive';
 })
 export class AddNewComponent implements OnInit {
 
-
-
     ckeditorContent;
+    summary;
 
     constructor() {
-        this.ckeditorContent = `<p>My HTML</p>`;
+        this.ckeditorContent = ``;
+
     }
 
     ngOnInit() {
@@ -31,6 +31,5 @@ export class AddNewComponent implements OnInit {
     onSubmit(){
       console.log(this.ckeditorContent)
     }
-
 
 }
