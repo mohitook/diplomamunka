@@ -11,6 +11,9 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
+import { EditorDirective } from './editor.directive';
+
+import { CKEditorModule } from 'ng2-ckeditor';
 
 
 // Must export the config
@@ -36,12 +39,14 @@ const routes: Routes = [
     LoginPageComponent,
     HomePageComponent,
     ChatPageComponent,
-    AddNewComponent
+    AddNewComponent,
+    EditorDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
+    CKEditorModule,
     AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes)
   ],
