@@ -1,5 +1,15 @@
 # Diplomamunka
 
+Eddig felhasznált források:
+- Firebase+Angular2: https://progblog.io/
+- Angular 2 rich text editor: https://github.com/chymz/ng2-ckeditor //próbálkozások/jobb alternativa open request: https://github.com/Ledzz/angular2-tinymce/issues/2
+
+
+
+# GENERATED README PART
+
+# Diplomamunka
+
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.28.3.
 
 ## Development server
