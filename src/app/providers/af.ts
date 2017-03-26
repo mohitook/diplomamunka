@@ -4,11 +4,13 @@ import {AngularFire, AuthProviders, AuthMethods, FirebaseListObservable} from 'a
 @Injectable()
 export class AF {
   public messages: FirebaseListObservable<any>;
+  public news: FirebaseListObservable<any>;
   public users: FirebaseListObservable<any>;
   public displayName: string;
   public email: string;
   constructor(public af: AngularFire) {
     this.messages = this.af.database.list('messages');
+    this.news = this.af.database.list('news');
   }
   /**
    * Logs in the user
@@ -39,4 +41,27 @@ export class AF {
     };
     this.messages.push(message);
   }
+
+  /**
+   * Saves a News to the Firebase Realtime Database
+   * @param text
+   */
+  sendNews(news) {
+    console.log(news);
+    var newsSend = {
+      content:{
+        title: news.title,
+        coverImageUrl: news.coverImageUrl,
+        summary: news.summary,
+        text: news.text,
+        labels: news.labels,
+        email: this.email,
+        displayName : this.displayName,
+        timestamp: Date.now()
+      }
+
+    };
+    this.news.push(newsSend);
+  }
+
 }

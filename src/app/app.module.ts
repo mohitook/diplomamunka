@@ -17,7 +17,9 @@ import { AddNewComponent } from './add-new/add-new.component';
 import { EditorDirective } from './editor.directive';
 
 import { CKEditorModule } from 'ng2-ckeditor';
-
+import { NewsModalComponent } from './news-modal/news-modal.component';
+import {ModalModule} from "ngx-modal";
+import { SafePipe } from './safe.pipe';
 
 // Must export the config
 export const firebaseConfig = {
@@ -43,13 +45,16 @@ const routes: Routes = [
     HomePageComponent,
     ChatPageComponent,
     AddNewComponent,
-    EditorDirective
+    EditorDirective,
+    NewsModalComponent,
+    SafePipe
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     CKEditorModule,
+    ModalModule,
     AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes)
   ],

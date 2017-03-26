@@ -2,32 +2,36 @@
   <form>
 
     <div class="form-group">
-      <label for="usr">Title:</label>
-      <input type="text" class="form-control" id="usr">
+      <label for="title">Title:</label>
+      <input type="text" name="title" class="form-control" [(ngModel)]="newsModel.title" id="title">
     </div>
 
     <div class="form-group">
-      <label for="usr">Cover image url:</label>
-      <input type="text" class="form-control" id="usr">
+      <label for="coverImageUrl">Cover image url:</label>
+      <input type="text" name="coverImageUrl" class="form-control" accept=""[(ngModel)]="newsModel.coverImageUrl" id="coverImageUrl">
     </div>
 
     <div class="form-group">
-      <label for="comment">Summary:</label>
-      <textarea [(ngModel)]="summary" name="newSummary" class="form-control"></textarea>
+      <label for="summary">Summary:</label>
+      <textarea name="summary" [(ngModel)]="newsModel.summary" name="newSummary" class="form-control" id="summary"></textarea>
     </div>
 
     <div class="form-group">
-      <ckeditor [(ngModel)]="ckeditorContent" name="newFullText" [config]="{uiColor: '#4286f4'}" debounce="500">
+      <label for="text">Text:</label>
+      <ckeditor [(ngModel)]="newsModel.text" name="newFullText" [config]="{uiColor: '#4286f4'}" debounce="500" id="text">
       </ckeditor>
     </div>
 
     <div class="form-group">
-      <label for="labels">Labels</label>
-      <div id="labels">
-        <label class="checkbox-inline"><input type="checkbox" value="">All</label>
-        <label class="checkbox-inline"><input type="checkbox" value="">Dota 2</label>
-        <label class="checkbox-inline"><input type="checkbox" value="">League of Legends</label>
-        <label class="checkbox-inline"><input type="checkbox" value="">Overwatch</label>
+      <label for="labels">Labels:</label><br>
+      <div id="labels" *ngFor="let label of labels" class="form-inline">
+        <label class="checkbox-inline">
+            <input type="checkbox"
+                   name="label"
+                   value="{{label.value}}"
+                   [(ngModel)]="label.checked"/>
+                   {{label.value}}
+        </label>
       </div>
     </div>
 
