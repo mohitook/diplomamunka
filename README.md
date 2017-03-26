@@ -3,7 +3,12 @@
 Eddig felhasznált források:
 - Firebase+Angular2: https://progblog.io/
 - Angular 2 rich text editor: https://github.com/chymz/ng2-ckeditor //próbálkozások/jobb alternativa open request: https://github.com/Ledzz/angular2-tinymce/issues/2
+- Modal windows: https://github.com/pleerock/ng2-modal
 
+TODO:
+- sanitizer.bypassSecurityTrustHtml vizsgálata
+- http://lipis.github.io/bootstrap-social/ használata
+- Tag/label rendszer kitalálása - kellően dinamikus legyen
 
 
 # GENERATED README PART
