@@ -21,6 +21,11 @@ import { NewsModalComponent } from './news-modal/news-modal.component';
 import {ModalModule} from "ngx-modal";
 import { SafePipe } from './safe.pipe';
 
+//import { TinymceModule } from 'angular2-tinymce'; issue: https://github.com/Ledzz/angular2-tinymce/issues/11
+
+import 'tinymce/tinymce.min';
+declare var tinymce: any;
+
 // Must export the config
 export const firebaseConfig = {
   apiKey: "AIzaSyA5F2tA1GRgsyJNReTuxuyQC20WrpDRSy4",
