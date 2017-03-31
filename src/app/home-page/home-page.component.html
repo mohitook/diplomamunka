@@ -25,25 +25,8 @@
 <div class="container">
 
 <div >
-  <modal #newsModal modalClass="modal-lg">
-    <modal-header>
-        <h1>{{selectedNews.content.title}}</h1>
-        <hr />
-        <div style="display: flex; justify-content: center;">
-          <img src="{{selectedNews.content.coverImageUrl}}" class="img-responsive" align="middle">
-        </div>
-    </modal-header>
-    <modal-content>
-      <!-- in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
-      <div [innerHTML]="selectedNews.content.text">
-      </div>
-      <div class="text-muted"><small>{{selectedNews.content.displayName}} | {{ selectedNews.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-    </modal-content>
-    <modal-footer>
-
-        <button class="btn btn-default" (click)="newsModal.close()">Close</button>
-    </modal-footer>
-  </modal>
+  <!-- modal here -->
+  <router-outlet></router-outlet>
 </div>
 
 
@@ -113,7 +96,8 @@
                             <h3>{{new.content.title}}</h3>
                             {{new.content.summary}}
                             <div class="text-muted"><small>{{new.content.displayName}} | {{ new.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p>
+                            <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
+                            <p><button [routerLink]="['post', new.$key]">More</button></p>
                     </div>
                   </div>
                   <hr>
@@ -129,15 +113,19 @@
 
                   <div *ngFor="let new of news | async">
                     <div class="well">
+                            <div >
+                              <h5>
+                                <span *ngFor="let label of new.content.labels" style="font-size:100%; margin-right:5px;" class="label label-info">{{label}}</span>
+                              </h5>
+                            </div>
                             <img src="{{new.content.coverImageUrl}}" class="img-responsive">
                             <h3>{{new.content.title}}</h3>
                             {{new.content.summary}}
                             <div class="text-muted"><small>{{new.content.displayName}} | {{ new.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p>
+                            <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
+                            <p><button [routerLink]="['post', new.$key]">More</button></p>
                     </div>
                   </div>
-
-
                   </div><!--/panel-body-->
                 </div><!--/panel-->
               	<!--/end right column-->

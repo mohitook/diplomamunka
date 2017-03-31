@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from "@angular/router";
@@ -36,11 +36,20 @@ export const firebaseConfig = {
 };
 
 const routes: Routes = [
-  { path: '', component: HomePageComponent },
+  { path: '', component: HomePageComponent,
+  children: [
+        { path: 'post/:key', component: NewsModalComponent }
+      ] },
   { path: 'login', component: LoginPageComponent },
   { path: 'chat', component: ChatPageComponent },
   { path: 'addnew', component: AddNewComponent }
 ];
+
+/*class MyErrorHandler implements ErrorHandler {
+  handleError(error) {
+    console.log("ERROR happened");
+  }
+}*/
 
 
 @NgModule({
@@ -63,7 +72,7 @@ const routes: Routes = [
     AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes)
   ],
-  providers: [AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 // src/app/providers/af.ts
 import {Injectable} from "@angular/core";
-import {AngularFire, AuthProviders, AuthMethods, FirebaseListObservable} from 'angularfire2';
+import {AngularFire, AuthProviders, AuthMethods, FirebaseListObservable,FirebaseObjectObservable} from 'angularfire2';
 @Injectable()
 export class AF {
   public messages: FirebaseListObservable<any>;
@@ -62,6 +62,12 @@ export class AF {
 
     };
     this.news.push(newsSend);
+  }
+
+  getSingleNewsByKey(key){
+    //...And if you already have the data loaded in memory, the SDK won't do a network call unless the item has changed remotely.
+    var item = this.af.database.object('/news/'+key);
+    return item;
   }
 
 }

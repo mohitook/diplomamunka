@@ -1,3 +1,20 @@
 <p>
-  news-modal works!
+  <route-modal [cancelUrl]="['/']" modalClass="modal-lg">
+      <modal-header>
+          <h1>{{selectedNews.content.title}}</h1>
+          <hr />
+          <div style="display: flex; justify-content: center;">
+            <img src="{{selectedNews.content.coverImageUrl}}" class="img-responsive" align="middle">
+          </div>
+      </modal-header>
+      <modal-content>
+        <!--in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
+        <div [innerHTML]="selectedNews.content.text">
+        </div>
+        <div class="text-muted"><small>{{selectedNews.content.displayName}} | {{ selectedNews.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+      </modal-content>
+      <modal-footer>
+          <button class="btn btn-primary" [routerLink]="['/']">okay!</button>
+      </modal-footer>
+</route-modal>
 </p>
