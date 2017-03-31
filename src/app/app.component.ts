@@ -8,6 +8,10 @@ import { Router } from "@angular/router";
 })
 export class AppComponent {
     public isLoggedIn: boolean;
+
+    throttle = 300;
+    scrollDistance = 1;
+
     constructor(public afService: AF, private router: Router) {
         // This asynchronously checks if our user is logged it and will automatically
         // redirect them to the Login page when the status changes.
@@ -36,8 +40,8 @@ export class AppComponent {
         this.afService.logout();
     }
 
-    onScroll () {
-	    console.log('scrolled!!')
-	}
+    onScrollDown () {
+    console.log('scrolled!!');
+  }
 
 }

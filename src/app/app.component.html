@@ -12,7 +12,7 @@
   </div>
 </nav> -->
 
-<nav class="navbar navbar-static">
+<nav class="navbar navbar-default navbar-fixed-top">
    <div class="container">
     <div class="navbar-header">
       <a class="navbar-brand" href="https://github.com/mohitook/diplomamunka" target="ext"><b>e-Spot</b></a>
@@ -60,10 +60,10 @@
     </div>
 </nav><!-- /.navbar -->
 
-<div class="app-content"
-        infinite-scroll
-		    [infiniteScrollDistance]="2"
-		    [infiniteScrollThrottle]="300"
-		    (scrolled)="onScroll()">
+<div class="app-content" style="padding-top:50px;"
+  infinite-scroll
+ [infiniteScrollDistance]="scrollDistance"
+ [infiniteScrollThrottle]="throttle"
+ (scrolled)="onScrollDown()">
   <router-outlet></router-outlet>
 </div>
