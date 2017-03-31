@@ -15,6 +15,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
 import { EditorDirective } from './editor.directive';
+import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 import { CKEditorModule } from 'ng2-ckeditor';
 import { NewsModalComponent } from './news-modal/news-modal.component';
@@ -70,7 +71,8 @@ const routes: Routes = [
     CKEditorModule,
     ModalModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    InfiniteScrollModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

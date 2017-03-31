@@ -1,0 +1,22 @@
+{
+  "rules": {
+    ".write" : true,
+    ".read":true,
+      "news":{
+        ".read": true,
+        	"content":{
+            ".write": "root.child('users').child(auth.uid).child('roles').child('administrator').val() === true"
+          },
+          "$new":{
+            	"comments":{
+                 "$comment": {
+                   					// we can write as long as old data or new data does not exist
+														// in other words, if this is a delete or a create, but not an update
+                          ".write": "!data.exists() || !newData.exists()"
+                  }
+         				}
+          }
+         
+      }
+  }
+}

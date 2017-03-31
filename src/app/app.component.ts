@@ -35,4 +35,9 @@ export class AppComponent {
     logout() {
         this.afService.logout();
     }
+
+    onScroll () {
+	    console.log('scrolled!!')
+	}
+
 }
