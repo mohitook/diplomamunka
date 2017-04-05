@@ -9,6 +9,7 @@ TODO:
 - sanitizer.bypassSecurityTrustHtml vizsgálata
 - http://lipis.github.io/bootstrap-social/ használata
 - Tag/label rendszer kitalálása - kellően dinamikus legyen
+- https://www.becompany.ch/en/blog/2016/09/19/angular2-rss-reader
 
 
 # GENERATED README PART
