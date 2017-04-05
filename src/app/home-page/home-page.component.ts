@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild,Pipe,PipeTra
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
+import {Observable} from 'rxjs/Observable';
+import "rxjs/add/operator/map";
 
 import { Router } from "@angular/router";
 
@@ -15,31 +17,22 @@ export class HomePageComponent implements OnInit {
 
     news: FirebaseListObservable<any>;
 
+    news2: Observable<any>;
+
     selectedNews;
 
     constructor(public afService: AF,private sanitizer:DomSanitizer){
-      this.news = this.afService.news;
+      this.news = this.afService.news.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
       //this.selectedNews = this.news.subscribe(x=>{this.selectedNews = x[0]; console.log(this.selectedNews);});
+
+      this.news.subscribe(x=>console.log(x));
 
       this.news.forEach((x)=>{
         console.log(x.$key);
       });
 
-      this.selectedNews = {content:{title:"",summary:"",coverImageUrl:"",text:"",labels:[]}}
-
     }
 
     ngOnInit() { }
-
-    setSelectedNews(news){
-      //Object.assign(this.selectedNews,news);
-      this.selectedNews = JSON.parse(JSON.stringify(news)); //this is the only working DEEP COPY! wtf...
-      //http://stackoverflow.com/questions/38446235/div-innerhtml-not-working-with-iframe-html-in-angular2-html-inject
-      //in fact it is not secure right now!! TODO: read about this bypassSecurityTrustHtml
-
-      console.log(this.selectedNews.$key)
-
-      this.selectedNews.content.text = this.sanitizer.bypassSecurityTrustHtml(this.selectedNews.content.text);
-    }
 
 }

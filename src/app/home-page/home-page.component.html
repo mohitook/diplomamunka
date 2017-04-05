@@ -1,21 +1,29 @@
 
+<!-- <div >
+    Angular 2 prevents run any external scripts in between templates!
+    <script src='https://cdn.html5maker.com/embed.js?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&responsive=1&width=940&height=400&h5mTag=html5maker'></script>
+
+</div> -->
+
 <header class="masthead">
   <div class="container">
     <div class="row">
       <div class="col-md-6">
         <h1>
-          <!-- <img src="/app/home-page/1_Primary_logo_on_transparent_308x66.png" /> -->
-          <img src="https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/1_Primary_logo_on_transparent_308x66.png?alt=media&token=34697bc5-a91f-4d25-b5f5-98832dff112e" />
+          <!-- <img class="img-responsive"  src="/app/home-page/giphy.gif" /> -->
+          <img class="img-responsive"  src="https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/1_Primary_logo_on_transparent_308x66.png?alt=media&token=34697bc5-a91f-4d25-b5f5-98832dff112e" />
           <!-- <a href="#" title="Scroll down for your viewing pleasure">e-Spot</a> -->
           <!-- <p class="lead">Minden ami e-sports és e-community egy helyen!</p>-->
         </h1>
       </div>
       <div class="col-md-6">
         <div class="pull-right">
-          <!-- <img src="http://crm-gaming.com/img/menu/lol.png" /> -->
-          <iframe id='htmla9644991b543dc0dc888d4471fdf010d8dac5094eaa8' height='200px' width='470px'
-          src='https://cdn.html5maker.com/iframe.html?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&width=470&height=200&h5mTag=html5maker'
-          frameborder='0' scrolling='no'></iframe>
+            <!-- <img class="img-responsive"  class="img-responsive"  src="http://crm-gaming.com/img/menu/lol.png" />   -->
+            <!-- not response, script would be, but I can't run from template.. -> have to make a banner manually and use it -->
+            <!-- <iframe id='htmla9644991b543dc0dc888d4471fdf010d8dac5094eaa8' height='200' width='470'
+            src='https://cdn.html5maker.com/iframe.html?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&width=470&height=200&h5mTag=html5maker'
+            frameborder='0' scrolling='no' allowfullscreen></iframe> -->
+
         </div>
       </div>
     </div>
@@ -45,7 +53,7 @@
                   	<li><a href="#">Link</a></li>
           			<li><a href="#">Link</a></li>
 				</ul>
-                <div class="accordion" id="accordion2">
+                <!-- <div class="accordion" id="accordion2">
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
@@ -70,7 +78,8 @@
                                 </div>
                             </div>
                         </div>
-               	</div><!--/acc-->
+               	</div> -->
+                <!--/acc-->
 
                   <hr>
 
@@ -93,10 +102,10 @@
 
                   <div *ngFor="let new of news | async">
                     <div class="well">
-                            <img src="{{new.content.coverImageUrl}}" class="img-responsive">
-                            <h3>{{new.content.title}}</h3>
-                            {{new.content.summary}}
-                            <div class="text-muted"><small>{{new.content.displayName}} | {{ new.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+                            <img class="img-responsive"  src="{{new.coverImageUrl}}" class="img-responsive">
+                            <h3>{{new.title}}</h3>
+                            {{new.summary}}
+                            <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
                             <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
                             <p><button [routerLink]="['post', new.$key]">More</button></p>
                     </div>
@@ -116,13 +125,13 @@
                     <div class="well">
                             <div >
                               <h5>
-                                <span *ngFor="let label of new.content.labels" style="font-size:100%; margin-right:5px;" class="label label-info">{{label}}</span>
+                                <span *ngFor="let label of new.labels | keyValues" style="font-size:100%; margin-right:5px;" class="label label-info">{{label.key}}</span>
                               </h5>
                             </div>
-                            <img src="{{new.content.coverImageUrl}}" class="img-responsive">
-                            <h3>{{new.content.title}}</h3>
-                            {{new.content.summary}}
-                            <div class="text-muted"><small>{{new.content.displayName}} | {{ new.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+                            <img class="img-responsive"  src="{{new.coverImageUrl}}" class="img-responsive">
+                            <h3>{{new.title}}</h3>
+                            {{new.summary}}
+                            <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
                             <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
                             <p><button [routerLink]="['post', new.$key]">More</button></p>
                     </div>

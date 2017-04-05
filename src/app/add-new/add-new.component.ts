@@ -25,10 +25,10 @@ export class AddNewComponent implements OnInit {
     public title;
 
     labels = [
-        { value: 'All', checked: true },
-        {  value: 'Dota 2', checked: false },
-        {  value: 'League of Legends', checked: false },
-        {  value: 'Overwatch', checked: false }
+        { value: 'all', checked: false },
+        {  value: 'dota 2', checked: false },
+        {  value: 'league of legends', checked: false },
+        {  value: 'overwatch', checked: false }
     ]
 
     public newMessage: string;

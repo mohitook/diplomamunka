@@ -25,6 +25,8 @@ import { SafePipe } from './safe.pipe';
 //import { TinymceModule } from 'angular2-tinymce'; issue: https://github.com/Ledzz/angular2-tinymce/issues/11
 
 import 'tinymce/tinymce.min';
+import { SettingsComponent } from './settings/settings.component';
+import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 declare var tinymce: any;
 
 // Must export the config
@@ -43,7 +45,9 @@ const routes: Routes = [
       ] },
   { path: 'login', component: LoginPageComponent },
   { path: 'chat', component: ChatPageComponent },
-  { path: 'addnew', component: AddNewComponent }
+  { path: 'addnew', component: AddNewComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: 'profile-modal', component: ProfileModalComponent }
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -62,7 +66,9 @@ const routes: Routes = [
     AddNewComponent,
     EditorDirective,
     NewsModalComponent,
-    SafePipe
+    SafePipe,
+    SettingsComponent,
+    ProfileModalComponent
   ],
   imports: [
     BrowserModule,

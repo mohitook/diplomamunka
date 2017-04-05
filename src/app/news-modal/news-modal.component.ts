@@ -15,9 +15,11 @@ export class NewsModalComponent implements OnInit {
 
   public selectedNews;
 
+  private htmlText;
+
   constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer) {
     //predefine to avoid errors
-    this.selectedNews = {content:{title:"",summary:"",coverImageUrl:"",text:"",labels:[]}}
+    this.selectedNews = {coverImageUrl:"",creator:{displayname:"",uid:""},labels:{},summary:"",timestamp:"",title:""}
   }
 
   ngOnInit() {
@@ -26,26 +28,32 @@ export class NewsModalComponent implements OnInit {
        });
 
        this.afService.getSingleNewsByKey(this.key).subscribe(x=>{
-
          //if the provided key doesn't exists / avoid errors
-         if(x.content == null){
+         if(x.title == null){
            this.router.navigate(['']);
            return;
          }
-
-        console.log(x)
-
          //Object.assign(this.selectedNews,news);
          this.selectedNews = JSON.parse(JSON.stringify(x)); //this is the only working DEEP COPY! wtf...
 
          //http://stackoverflow.com/questions/38446235/div-innerhtml-not-working-with-iframe-html-in-angular2-html-inject
          //in fact it is not secure right now!! TODO: read about this bypassSecurityTrustHtml
 
-         this.selectedNews.content.text = this.sanitizer.bypassSecurityTrustHtml(this.selectedNews.content.text);
+         //this.selectedNews.content.text = this.sanitizer.bypassSecurityTrustHtml(this.selectedNews.content.text);
        },
        err =>{
          console.log("ERROR")
        },
      ()=>{console.log("yay")});
+
+     this.afService.getNewsContent(this.key).subscribe(x=>{
+       if(x.text == null){
+         this.htmlText = "test news with no content!"
+       }
+       else{
+         var tmp = JSON.parse(JSON.stringify(x));
+         this.htmlText = this.sanitizer.bypassSecurityTrustHtml(tmp.text);
+       }
+     });
   }
 }

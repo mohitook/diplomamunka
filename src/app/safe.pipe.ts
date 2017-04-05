@@ -1,16 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 
-@Pipe({name: 'safeHtml'})
+@Pipe({name: 'keyValues'})
 export class SafePipe implements PipeTransform {
-  constructor(private sanitizer:DomSanitizer){}
-
-  transform(style): any {
-    return this.sanitizer.bypassSecurityTrustStyle(style);
-    // return this.sanitizer.bypassSecurityTrustHtml(style);
-    // return this.sanitizer.bypassSecurityTrustXxx(style); - see docs
+  transform(value, args:string[]) : any {
+    let keys = [];
+    for (let key in value) {
+      keys.push({key: key, value: value[key]});
+    }
+    return keys;
   }
-
-
-
 }

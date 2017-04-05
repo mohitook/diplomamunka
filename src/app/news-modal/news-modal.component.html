@@ -1,20 +1,27 @@
 <p>
-  <route-modal [cancelUrl]="['/']" modalClass="modal-lg">
+  <route-modal [cancelUrl]="['/']" modalClass="modal-md">
       <modal-header>
-          <h1>{{selectedNews.content.title}}</h1>
+          <h1>{{selectedNews.title}}</h1>
           <hr />
-          <div style="display: flex; justify-content: center;">
-            <img src="{{selectedNews.content.coverImageUrl}}" class="img-responsive" align="middle">
+          <!-- <div style="display: flex; justify-content: center;" >   </div> -->
+          <div >
+            <img class="img-responsive"  src="{{selectedNews.coverImageUrl}}" align="middle">
           </div>
       </modal-header>
       <modal-content>
         <!--in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
-        <div [innerHTML]="selectedNews.content.text">
+        <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
+
+        </div> -->
+        <div *ngIf="htmlText">
+          <div [innerHTML]="htmlText">
+
+          </div>
         </div>
-        <div class="text-muted"><small>{{selectedNews.content.displayName}} | {{ selectedNews.content.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+        <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
       </modal-content>
       <modal-footer>
-          <button class="btn btn-primary" [routerLink]="['/']">okay!</button>
+          <button class="btn btn-primary" [routerLink]="['/']">close</button>
       </modal-footer>
 </route-modal>
 </p>

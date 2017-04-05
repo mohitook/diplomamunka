@@ -30,7 +30,7 @@ export class AppComponent {
                     // Set the Display Name and Email so we can attribute messages to them
                     this.afService.displayName = auth.google.displayName;
                     this.afService.email = auth.google.email;
-
+                    this.afService.uid = auth.uid;
                     //this.router.navigate(['']);
                 }
             }
