@@ -1,4 +1,3 @@
-
 <!-- <div >
     Angular 2 prevents run any external scripts in between templates!
     <script src='https://cdn.html5maker.com/embed.js?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&responsive=1&width=940&height=400&h5mTag=html5maker'></script>
@@ -18,9 +17,9 @@
       </div>
       <div class="col-md-6">
         <div class="pull-right">
-            <!-- <img class="img-responsive"  class="img-responsive"  src="http://crm-gaming.com/img/menu/lol.png" />   -->
-            <!-- not response, script would be, but I can't run from template.. -> have to make a banner manually and use it -->
-            <!-- <iframe id='htmla9644991b543dc0dc888d4471fdf010d8dac5094eaa8' height='200' width='470'
+          <!-- <img class="img-responsive"  class="img-responsive"  src="http://crm-gaming.com/img/menu/lol.png" />   -->
+          <!-- not response, script would be, but I can't run from template.. -> have to make a banner manually and use it -->
+          <!-- <iframe id='htmla9644991b543dc0dc888d4471fdf010d8dac5094eaa8' height='200' width='470'
             src='https://cdn.html5maker.com/iframe.html?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&width=470&height=200&h5mTag=html5maker'
             frameborder='0' scrolling='no' allowfullscreen></iframe> -->
 
@@ -32,28 +31,28 @@
 
 <!-- Begin Body -->
 <div class="container">
+  <button (click)="filter()">FILTER</button>
+  <div>
+    <!-- modal here -->
+    <router-outlet></router-outlet>
+  </div>
 
-<div >
-  <!-- modal here -->
-  <router-outlet></router-outlet>
-</div>
 
-
-	<div class="no-gutter row">
-      		<!-- left side column -->
-  			<div class="col-md-2">
-              	<div class="panel panel-default" id="sidebar">
-                <div class="panel-heading" style="background-color:#888;color:#fff;">Sidebar</div>
-                <div class="panel-body">
-      			<ul class="nav nav-stacked">
-                    <li><a href="#">Link</a></li>
-          			<li><a href="#">Link</a></li>
-                  	<li><a href="#">Link</a></li>
-          			<li><a href="#">Link</a></li>
-                  	<li><a href="#">Link</a></li>
-          			<li><a href="#">Link</a></li>
-				</ul>
-                <!-- <div class="accordion" id="accordion2">
+  <div class="no-gutter row">
+    <!-- left side column -->
+    <div class="col-md-2">
+      <div class="panel panel-default" id="sidebar">
+        <div class="panel-heading" style="background-color:#888;color:#fff;">Sidebar</div>
+        <div class="panel-body">
+          <ul class="nav nav-stacked">
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <!-- <div class="accordion" id="accordion2">
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
@@ -79,73 +78,103 @@
                             </div>
                         </div>
                	</div> -->
-                <!--/acc-->
+          <!--/acc-->
 
-                  <hr>
+          <hr>
 
-                <div class="col col-span-12">
-                  <i class="icon-2x icon-facebook"></i>&nbsp;
-                  <i class="icon-2x icon-twitter"></i>&nbsp;
-                  <i class="icon-2x icon-linkedin"></i>&nbsp;
-                  <i class="icon-2x icon-pinterest"></i>
-                </div>
+          <div class="col col-span-12">
+            <i class="icon-2x icon-facebook"></i>&nbsp;
+            <i class="icon-2x icon-twitter"></i>&nbsp;
+            <i class="icon-2x icon-linkedin"></i>&nbsp;
+            <i class="icon-2x icon-pinterest"></i>
+          </div>
 
-                </div><!--/panel body-->
-              </div><!--/panel-->
-      		</div><!--/end left column-->
+        </div>
+        <!--/panel body-->
+      </div>
+      <!--/panel-->
+    </div>
+    <!--/end left column-->
 
-      		<!--mid column-->
-      		<div class="col-md-3">
-              <div class="panel" id="midCol">
-                <div class="panel-heading" style="background-color:#555;color:#eee;">New Stories</div>
-                <div class="panel-body">
+<!-- <button class="btn toggle-dropdown" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" style="background-color:#555;color:#eee;"> -->
 
-                  <div *ngFor="let new of news | async">
-                    <div class="well">
-                            <img class="img-responsive"  src="{{new.coverImageUrl}}" class="img-responsive">
-                            <h3>{{new.title}}</h3>
-                            {{new.summary}}
-                            <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-                            <p><button [routerLink]="['post', new.$key]">More</button></p>
-                    </div>
-                  </div>
-                  <hr>
-               </div>
-               </div><!--/panel-->
-      		</div><!--/end mid column-->
+    <!--mid column-->
+    <div class="col-md-3" >
+      <!-- http://stackoverflow.com/questions/33833930/bootstrap-3-dropdown-menu-in-panel-header-positioned-wrong -->
+      <div class="panel panel-collapsable panel-chart" id="midCol">
+      <div class="panel-heading" style="background-color:#555;color:#eee;">
+        <div class="btn-group" >
+          <button class="btn toggle-dropdown" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" style="background-color:#555;color:#eee;">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="#"><img class="img-responsive pull-right" src="http://esport1.hu/images/577d0cda9ae45_577d0cda9ad64-dota2.png" style="height:23px;" />Dota 2</a></li>
+            <li class="divider"></li>
+            <li><a href="#">League of Legends</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Team Secret</a></li>
+            <li class="divider"></li>
+            <li><a href="#">World of Warcraft</a></li>
+          </ul>
+        </div>
+        <!-- <span class="label label-warning">Dota 2</span> -->
 
-      		<!-- right content column-->
-      		<div class="col-md-7" id="content">
-            	<div class="panel">
-    			<div class="panel-heading" style="background-color:#111;color:#fff;">Top Stories</div>
-              	<div class="panel-body">
+          <h4 data-toggle="collapse" data-target="#sg1" aria-expanded="true">Your News</h4>
+          <div class="clearfix"></div>
+      </div>
 
-                  <div *ngFor="let new of news | async">
-                    <div class="well">
-                            <div >
-                              <h5>
+      <div id="sg1" class="panel-body collapse in" aria-expanded="true">
+        <div *ngFor="let new of afService.specificNews | async">
+          <div class="well">
+            <img class="img-responsive" src="{{new.coverImageUrl}}" class="img-responsive">
+            <h3>{{new.title}}</h3> {{new.summary}}
+            <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+            <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
+            <p><button [routerLink]="['post', new.$key]">More</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!--/panel-->
+    </div>
+    <!--/end mid column-->
+
+    <!-- right content column-->
+    <div class="col-md-7" id="content">
+      <div class="panel">
+        <div class="panel-heading" style="background-color:#111;color:#fff;">
+          <h4>Top News</h4>
+          <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+
+          <div *ngFor="let new of allNews | async">
+            <div class="well">
+              <div>
+                <h5>
                                 <span *ngFor="let label of new.labels | keyValues" style="font-size:100%; margin-right:5px;" class="label label-info">{{label.key}}</span>
                               </h5>
-                            </div>
-                            <img class="img-responsive"  src="{{new.coverImageUrl}}" class="img-responsive">
-                            <h3>{{new.title}}</h3>
-                            {{new.summary}}
-                            <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-                            <p><button [routerLink]="['post', new.$key]">More</button></p>
-                    </div>
-                  </div>
-                  </div><!--/panel-body-->
-                </div><!--/panel-->
-              	<!--/end right column-->
-      	</div>
-  	</div>
+              </div>
+              <img class="img-responsive" src="{{new.coverImageUrl}}" class="img-responsive">
+              <h3>{{new.title}}</h3> {{new.summary}}
+              <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+              <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
+              <p><button [routerLink]="['post', new.$key]">More</button></p>
+            </div>
+          </div>
+        </div>
+        <!--/panel-body-->
+      </div>
+      <!--/panel-->
+      <!--/end right column-->
+    </div>
+  </div>
 </div>
 <footer>
   <div class="container">
-  	<div class="row">
-      <div class="col-md-12 text-right"><h5>©eSpot - Diplomamunka</h5></div>
+    <div class="row">
+      <div class="col-md-12 text-right">
+        <h5>©eSpot - Diplomamunka</h5></div>
     </div>
   </div>
 </footer>

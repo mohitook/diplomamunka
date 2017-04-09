@@ -43,9 +43,12 @@ const routes: Routes = [
   children: [
         { path: 'post/:key', component: NewsModalComponent }
       ] },
-  { path: 'login', component: LoginPageComponent },
+  { path: 'login', component: LoginPageComponent},
   { path: 'chat', component: ChatPageComponent },
-  { path: 'addnew', component: AddNewComponent },
+  { path: 'addnew', component: AddNewComponent,
+  children: [
+        { path: 'preview/:preview', component: NewsModalComponent }
+      ]  },
   { path: 'settings', component: SettingsComponent },
   { path: 'profile-modal', component: ProfileModalComponent }
 ];

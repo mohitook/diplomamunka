@@ -10,6 +10,7 @@ import { EditorDirective } from '../editor.directive';
 import { FirebaseListObservable } from "angularfire2";
 import { AF } from "../providers/af";
 import {NewsModel} from "../model/news.model";
+import { ActivatedRoute, Router } from '@angular/router';
 
 //declare var tinymce: any;
 
@@ -33,7 +34,7 @@ export class AddNewComponent implements OnInit {
 
     public newMessage: string;
     public messages: FirebaseListObservable<any>;
-    constructor(public afService: AF) {
+    constructor(private router: Router,public afService: AF) {
       this.newsModel = new NewsModel();
       this.title = "alma";
     }

@@ -23,6 +23,7 @@ export class NewsModalComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.sub = this.route.params.subscribe(params => {
        this.key = params['key'];
        });

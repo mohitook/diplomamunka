@@ -17,22 +17,43 @@ export class HomePageComponent implements OnInit {
 
     news: FirebaseListObservable<any>;
 
-    news2: Observable<any>;
+    allNews: FirebaseListObservable<any>;
 
-    selectedNews;
+    specificNews: FirebaseListObservable<any>;
 
     constructor(public afService: AF,private sanitizer:DomSanitizer){
-      this.news = this.afService.news.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
-      //this.selectedNews = this.news.subscribe(x=>{this.selectedNews = x[0]; console.log(this.selectedNews);});
+
+      //test things
+      //this.news = this.afService.allNews.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
+
+      this.news = this.afService.news.map(posts => {
+         return posts.reverse();
+     }) as FirebaseListObservable<any[]>;
+      console.log("filtered: ");
+      //this.news = this.news.map(items => items.filter(item => item.title == "Az első normális hír a portálon")) as FirebaseListObservable<any[]>;
 
       this.news.subscribe(x=>console.log(x));
 
       this.news.forEach((x)=>{
         console.log(x.$key);
       });
+      //test things
+
+      //this.allNews = this.afService.allNews.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
+
+      this.allNews = this.afService.allNews;
+      //this.specificNews = this.afService.specificNews;
+
+      this.specificNews =this.afService.specificNews;
 
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+      this.afService.filterBy('labels/nyuszi','igaz');
+    }
+
+    filter(){
+      this.afService.filterBy('labels/nyuszi','igaz');
+    }
 
 }
