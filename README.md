@@ -5,6 +5,7 @@ Eddig felhasznált források:
 - Angular 2 rich text editor: https://github.com/chymz/ng2-ckeditor //próbálkozások/jobb alternativa open request: https://github.com/Ledzz/angular2-tinymce/issues/2
 - Modal windows: https://github.com/pleerock/ng2-modal
 - bootstrap validator: https://github.com/1000hz/bootstrap-validator
+- selector: https://github.com/basvandenberg/ng-select
 
 TODO:
 - [ ] sanitizer.bypassSecurityTrustHtml vizsgálata
