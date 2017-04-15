@@ -6,6 +6,7 @@ Eddig felhasznált források:
 - Modal windows: https://github.com/pleerock/ng2-modal
 - bootstrap validator: https://github.com/1000hz/bootstrap-validator
 - selector: https://github.com/basvandenberg/ng-select
+- filter pipe: ng2-filter-pipe https://github.com/VadimDez/ng2-filter-pipe
 
 TODO:
 - [ ] sanitizer.bypassSecurityTrustHtml vizsgálata
