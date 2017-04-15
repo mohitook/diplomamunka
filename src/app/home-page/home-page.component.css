@@ -1,9 +1,27 @@
-.dropdown {
-    background:#fff;
-    border:1px solid #ccc;
-    border-radius:4px;
-    width:300px;
+.mySelect{
+  background-color:#555;
+  color: black;
+  border:1px solid #ccc;
 }
+
+.dropdown {
+    background-color:#555;
+    color: #eee;
+
+
+    width:auto;
+}
+
+.dropdown>button{
+  background-color:#555;
+  color: #eee;
+}
+
+.dropdown>button:focus{
+  background-color:#eee;
+  color: #555;
+}
+
 .dropdown-menu>li>a {
     color:#428bca;
 }
@@ -33,21 +51,6 @@
     right: 14px;
     z-index: 9;
 }
-
-.panel-collapsable .panel-heading h4:after {
-   font-family: 'Glyphicons Halflings';
-   content: "\e114";
-   float: right;
-   color: white;
-   margin-right: 5px;
-   cursor: pointer;
- }
- .panel-collapsable .collapsed h4:after {
-   content: "\e080";
- }
- .panel-heading .btn-group {
-   float: right;
- }
 
 .videoWrapper {
     position: relative;

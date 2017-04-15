@@ -16,17 +16,21 @@ import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
 import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
+import {SelectModule} from 'ng-select';
 
 import { CKEditorModule } from 'ng2-ckeditor';
 import { NewsModalComponent } from './news-modal/news-modal.component';
 import {ModalModule} from "ngx-modal";
 import { SafePipe } from './safe.pipe';
+import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
 
 //import { TinymceModule } from 'angular2-tinymce'; issue: https://github.com/Ledzz/angular2-tinymce/issues/11
 
 import 'tinymce/tinymce.min';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
+import { RegistrationPageComponent } from './registration-page/registration-page.component';
+import { LabelFilterPipe } from './label-filter.pipe';
 declare var tinymce: any;
 
 // Must export the config
@@ -50,7 +54,8 @@ const routes: Routes = [
         { path: 'preview/:preview', component: NewsModalComponent }
       ]  },
   { path: 'settings', component: SettingsComponent },
-  { path: 'profile-modal', component: ProfileModalComponent }
+  { path: 'profile-modal', component: ProfileModalComponent },
+  { path: 'register', component: RegistrationPageComponent}
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -71,7 +76,9 @@ const routes: Routes = [
     NewsModalComponent,
     SafePipe,
     SettingsComponent,
-    ProfileModalComponent
+    ProfileModalComponent,
+    RegistrationPageComponent,
+    LabelFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -81,7 +88,9 @@ const routes: Routes = [
     ModalModule,
     AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes),
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    SelectModule,
+    Ng2FilterPipeModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

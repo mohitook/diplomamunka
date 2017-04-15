@@ -1,26 +1,43 @@
 // src/app/providers/af.ts
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class AF {
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
+    public labels: FirebaseListObservable<any>;
     public allNews: FirebaseListObservable<any>;
     public users: FirebaseListObservable<any>;
+    public user: FirebaseObjectObservable<any>;
     public specificNews: FirebaseListObservable<any>;
+    public placeHolderSpecificNews: FirebaseListObservable<any>;
     public uid: string;
     public displayName: string;
     public email: string;
+    public firstLogin: boolean = false;
+
 
     public propertySubject: Subject<any>;
     public valueSubject: Subject<any>;
+
+    uidUpdate: EventEmitter<string> = new EventEmitter();
+
+    get uid_prop(): string {
+    return this.uid;
+    }
+    set uid_prop(value: string) {
+      this.uid = value;
+      this.uidUpdate.next(value);
+    }
 
     constructor(public af: AngularFire) {
         this.propertySubject = new Subject();
         this.valueSubject = new Subject();
         this.messages = this.af.database.list('messages');
         this.news = this.af.database.list('news');
+        this.labels = this.af.database.list('labels');
+        this.users = this.af.database.list('users');
 
         this.allNews = this.af.database.list('news', {
             query: {
@@ -30,18 +47,18 @@ export class AF {
             }
         });
 
+        console.log(this.propertySubject.observers.length);
 
         //valamiért inicializáláskor nem működik, csak pl gombnyomás után -->?!
-        this.specificNews = this.af.database.list('news', {
-            query: {
-                orderByChild: this.propertySubject,
-                equalTo: this.valueSubject?this.valueSubject:'igaz',
-                limitToFirst: 2
-            }
-        });
-
-        //this.filterBy('labels/nyuszi','igaz');
-
+        // this.specificNews = this.af.database.list('news', {
+        //     query: {
+        //         orderByChild: this.propertySubject,
+        //         equalTo: true,
+        //         limitToFirst: 2
+        //     }
+        // });
+        // this.propertySubject.next('labels/Dota 2');
+        // console.log(this.propertySubject.observers.length);
     }
     /**
      * Logs in the user
@@ -53,6 +70,23 @@ export class AF {
             method: AuthMethods.Popup,
         });
     }
+
+    checkIfFirstLogin() {
+        //check if the labels is initialized
+        return this.af.database.object('users/' + this.uid + '/labels');
+    }
+
+    /**
+   *
+   */
+    addUserInfo() {
+        //We saved their auth info now save the rest to the db.
+        return this.af.database.object('users/' + this.uid).set({
+            displayName: this.displayName,
+            email: this.email,
+        });
+    }
+
     /**
      * Logs out the current user
      */
@@ -72,6 +106,11 @@ export class AF {
         };
         this.messages.push(message);
 
+    }
+
+    getUserLabels(uid){
+      console.log(uid);
+      this.user = this.af.database.object('/users/'+uid);
     }
 
     /**
@@ -104,12 +143,12 @@ export class AF {
         };
         //this.news.push(newsSend).key;
         //https://github.com/angular/angularfire2/issues/144
-        var newObjectKey = (1/Date.now()) + this.uid.substring(0,5);
-        newObjectKey = newObjectKey.replace('.','');
+        var newObjectKey = (1 / Date.now()) + this.uid.substring(0, 5);
+        newObjectKey = newObjectKey.replace('.', '');
         console.log("newsObjectKey:");
         console.log(newObjectKey);
         //not necessary, it will just order the news on the firebase dashboard! dont affect to the items queried by child element!
-        this.news.$ref.ref.child(newObjectKey).setWithPriority(newsSend,0-Date.now());
+        this.news.$ref.ref.child(newObjectKey).setWithPriority(newsSend, 0 - Date.now());
 
         //Set the timestamp as key
         //const toSet = this.af.database.object('news/' + newObjectKey);
@@ -135,20 +174,79 @@ export class AF {
         return item;
     }
 
-    filterBy(property: string, value: string) {
+    setUserLabels(selectedLabels){
+      this.af.database.object('/users/'+this.uid+"/labels").set(selectedLabels);
+    }
+
+    filterBy(property: string, value) {
 
         this.propertySubject.next(property);
         this.valueSubject.next(value);
-        this.specificNews.subscribe(x=>{
-          console.log("miafenevan?!");
-          console.log(x);
-        })
     }
 
-    //++Helper methods
+    getUserLastSelected(){
+      var queryString = 'users/'+this.uid+'/lastSelected';
+      return this.af.database.object(queryString);
+    }
 
+    selectSpecificNews(property: any) {
 
+        console.log('4');
+        this.specificNews = this.af.database.list('news', {
+            query: {
+                orderByChild: 'labels/'+property,
+                equalTo: true,
+                limitToFirst: 2
+            }
+        });
+        console.log(property);
+        this.af.database.object('users/'+this.uid+'/lastSelected').set(property);
+        return this.specificNews;
 
-    //--Helper methods
+    }
+
+    //++Email/PW Registration
+
+    /**
+   * Calls the AngularFire2 service to register a new user
+   * @param model
+   * @returns {firebase.Promise<void>}
+   */
+    registerUser(email, password) {
+        console.log(email)
+        return this.af.auth.createUser({
+            email: email,
+            password: password
+        });
+    }
+    /**
+     * Saves information to display to screen when user is logged in
+     * @param uid
+     * @param model
+     * @returns {firebase.Promise<void>}
+     */
+    saveUserInfoFromForm(uid, name, email) {
+        return this.af.database.object('users/' + uid).set({
+            displayName: name,
+            email: email,
+        });
+    }
+    /**
+    * Logs the user in using their Email/Password combo
+    * @param email
+    * @param password
+    * @returns {firebase.Promise<FirebaseAuthState>}
+    */
+    loginWithEmail(email, password) {
+        return this.af.auth.login({
+            email: email,
+            password: password,
+        },
+            {
+                provider: AuthProviders.Password,
+                method: AuthMethods.Password,
+            });
+    }
+    //++Email/PW Registration
 
 }

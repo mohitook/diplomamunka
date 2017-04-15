@@ -26,33 +26,9 @@
 
 <!-- Begin Body -->
 <div class="container">
+  <button (click)="filter()">FILTER</button>
   <div>
     <!-- modal here -->
-
-    <modal #addRemFav>
-        <modal-header>
-            <h1>Your Favourites</h1>
-        </modal-header>
-        <modal-content>
-          <div style="margin:20px">
-            <label class="control-label" for="selectLabels">Favourites</label>
-            <div >
-              <ng-select
-                [options]="labels | async"
-                [multiple]="true" name="selectLabels"
-                (selected)="onMultipleSelected($event)"
-                (deselected)="onMultipleDeselected($event)"
-                [(ngModel)]="selectedLabels"
-                >
-              </ng-select>
-            </div>
-          </div>
-        </modal-content>
-        <modal-footer>
-            <button class="btn btn-primary" (click)="saveFavourites();addRemFav.close()">OK</button>
-        </modal-footer>
-    </modal>
-
     <router-outlet></router-outlet>
   </div>
 
@@ -94,30 +70,29 @@
     <div class="col-md-3" >
       <!-- http://stackoverflow.com/questions/33833930/bootstrap-3-dropdown-menu-in-panel-header-positioned-wrong -->
       <div class="panel panel-collapsable panel-chart" id="midCol">
-      <div class="panel-heading" style="background-color:#555;color:#eee;padding:0px" >
-        <div class="dropdown" >
-          <button (click)="dropdownButtonOnClick()" class="btn dropdown-toggle" data-toggle="dropdown" style="width:100%;padding: 8px 12px;">
-              <div class="pull-left" data-toggle="collapse" aria-expanded="true" style="margin:0px">{{dropdownSelected.label}}</div>
-              <span *ngIf="!dropdownSelected.image" class="glyphicon glyphicon-search pull-right"></span>
-              <img *ngIf="dropdownSelected.image" class="img-responsive pull-right" [src]="dropdownSelected.image" style="height:23px;" />
+      <div class="panel-heading" style="background-color:#555;color:#eee;">
+        <div class="btn-group" >
+          <button class="btn toggle-dropdown" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" style="background-color:#555;color:#eee;">
+            <span class="glyphicon glyphicon-search"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
-
-            <li *ngFor="let label of labels | async | labelFilter : labelFilter">
-              <a  (click)="onDropDownSelected(label)">
-                <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" />
-                {{label.label}}</a>
-            </li>
+            <li><a href="#"><img class="img-responsive pull-right" src="http://esport1.hu/images/577d0cda9ae45_577d0cda9ad64-dota2.png" style="height:23px;" />Dota 2</a></li>
             <li class="divider"></li>
-
-            <li><a (click)="addRemFav.open()">Add/Remove Favourites<span class="glyphicon glyphicon-minus pull-right"></span><span class="glyphicon glyphicon-plus pull-right"></span></a></li>
+            <li><a href="#">League of Legends</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Team Secret</a></li>
+            <li class="divider"></li>
+            <li><a href="#">World of Warcraft</a></li>
           </ul>
         </div>
+        <!-- <span class="label label-warning">Dota 2</span> -->
+
+          <h4 data-toggle="collapse" data-target="#sg1" aria-expanded="true">Your News</h4>
           <div class="clearfix"></div>
       </div>
 
-      <div class="panel-body" >
-        <div *ngFor="let new of specificNews | async">
+      <div id="sg1" class="panel-body collapse in" aria-expanded="true">
+        <div *ngFor="let new of afService.specificNews | async">
           <div class="well">
             <img class="img-responsive" src="{{new.coverImageUrl}}" class="img-responsive">
             <h3>{{new.title}}</h3> {{new.summary}}
@@ -136,7 +111,7 @@
     <div class="col-md-7" id="content">
       <div class="panel">
         <div class="panel-heading" style="background-color:#111;color:#fff;">
-          Top News
+          <h4>Top News</h4>
           <div class="clearfix"></div>
         </div>
         <div class="panel-body">

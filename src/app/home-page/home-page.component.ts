@@ -16,44 +16,87 @@ import { Router } from "@angular/router";
 export class HomePageComponent implements OnInit {
 
     news: FirebaseListObservable<any>;
-
+    labels: FirebaseListObservable<any>;
+    userLabels: FirebaseListObservable<any>;
     allNews: FirebaseListObservable<any>;
-
     specificNews: FirebaseListObservable<any>;
+
+    labelFilter:  any[] = [{ label: '' }];
+
+
+    selectedLabels: Array<any>;
+
+    selectedLabelsToSend: Array<any>;
+
+    ///default selected value in the specific news /ng-select
+    currentItem : string;
+
+    dropdownSelected: any = {label:"Favourites", image:''};
 
     constructor(public afService: AF,private sanitizer:DomSanitizer){
 
-      //test things
-      //this.news = this.afService.allNews.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
-
-      this.news = this.afService.news.map(posts => {
-         return posts.reverse();
-     }) as FirebaseListObservable<any[]>;
-      console.log("filtered: ");
-      //this.news = this.news.map(items => items.filter(item => item.title == "Az első normális hír a portálon")) as FirebaseListObservable<any[]>;
-
-      this.news.subscribe(x=>console.log(x));
-
-      this.news.forEach((x)=>{
-        console.log(x.$key);
-      });
-      //test things
-
-      //this.allNews = this.afService.allNews.map(items => items.sort((a, b) => b.timestamp - a.timestamp)) as FirebaseListObservable<any[]>;
+      this.labels = this.afService.labels;
+      this.selectedLabelsToSend = new Array<any>();
 
       this.allNews = this.afService.allNews;
-      //this.specificNews = this.afService.specificNews;
 
-      this.specificNews =this.afService.specificNews;
+      //this.specificNews =this.afService.specificNews;
 
     }
 
     ngOnInit() {
-      this.afService.filterBy('labels/nyuszi','igaz');
+
+      //this.specificNews = this.afService.selectSpecificNews('all');
+
+      this.afService.uidUpdate.subscribe(x=>{
+        this.afService.getUserLastSelected().subscribe(y=>{
+          this.specificNews = this.afService.selectSpecificNews(y.$value);
+        });
+      });
     }
 
-    filter(){
-      this.afService.filterBy('labels/nyuszi','igaz');
+    dropdownButtonOnClick(){
+      //itt használom mivel az afservice.user még nicns inicializálva amikor ráhívnék a constructorban
+      this.afService.user.subscribe(x=>{
+        this.selectedLabels = new Array<any>();
+        this.selectedLabelsToSend = new Array<any>();
+        this.labelFilter = new Array<any>();
+        if(x.labels == null){
+          return;
+        }
+        x.labels.forEach(y=>{
+          this.selectedLabels.push(y);
+          this.selectedLabelsToSend.push(y);
+          this.labelFilter.push({label:y});
+        });
+      })
+    }
+
+    onMultipleSelected(item) {
+        this.selectedLabelsToSend.push(item.label)
+    }
+
+    onMultipleDeselected(item) {
+        this.selectedLabelsToSend = this.selectedLabelsToSend.filter(x => x !== item.label);
+    }
+
+    onSingleSelected(item) {
+        console.log('- selected (value: ' + item.value  + ', label:' +
+                       item.label + ')');
+
+        //this.afService.filterBy('labels/'+item.label,true);
+
+        this.specificNews = this.afService.selectSpecificNews(item.label);
+    }
+
+    onDropDownSelected(item){
+      console.log(item);
+      this.dropdownSelected = item;
+      this.specificNews = this.afService.selectSpecificNews(item.label);
+    }
+
+    saveFavourites(){
+      this.afService.setUserLabels(this.selectedLabelsToSend);
     }
 
 }

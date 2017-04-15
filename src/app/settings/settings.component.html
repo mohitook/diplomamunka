@@ -1,45 +1,52 @@
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <div class="well well-sm">
-        <div class="row">
-          <div class="col-sm-6 col-md-4">
-            <img src="http://placehold.it/380x500" alt="" class="img-rounded img-responsive" />
-          </div>
-          <div class="col-sm-6 col-md-8">
-            <h4>
-                            {{afService.displayName}}</h4>
-            <!-- <small><cite title="San Francisco, USA">San Francisco, USA <i class="glyphicon glyphicon-map-marker">
-                        </i></cite></small> -->
-            <p>
-              <i class="glyphicon glyphicon-envelope"></i>{{afService.email}}
-              <br />
+<form class="form-horizontal">
+<fieldset>
 
-              <div class="checkbox">
-                <label><input type="checkbox" value="">Option 1</label>
-              </div>
-              <div class="checkbox">
-                <label><input type="checkbox" value="">Option 2</label>
-              </div>
+<!-- Form Name -->
+<legend>My Profile -> Account setting</legend>
 
-              <!-- Split button -->
-              <!-- <div class="btn-group">
-                            <button type="button" class="btn btn-primary">
-                                Social</button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span><span class="sr-only">Social</span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Twitter</a></li>
-                                <li><a href="https://plus.google.com/+Jquery2dotnet/posts">Google +</a></li>
-                                <li><a href="https://www.facebook.com/jquery2dotnet">Facebook</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Github</a></li>
-                            </ul>
-                        </div> -->
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- Text input-->
+<!-- <div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">Change Email ID</label>
+  <div class="col-md-4">
+  <input id="textinput" name="textinput" type="text" placeholder="your current email " class="form-control input-md">
+  <span class="help-block">your new email ID</span>
   </div>
+</div> -->
+
+<!-- Password input-->
+<!-- <div class="form-group">
+  <label class="col-md-4 control-label" for="passwordinput">New password</label>
+  <div class="col-md-4">
+    <input id="passwordinput" name="passwordinput" type="password" placeholder="new password" class="form-control input-md">
+
+  </div>
+</div> -->
+
+<!-- Password input-->
+<!-- <div class="form-group">
+  <label class="col-md-4 control-label" for="passwordinput">Repeat password</label>
+  <div class="col-md-4">
+    <input id="passwordinput" name="passwordinput" type="password" placeholder="repeat password" class="form-control input-md">
+
+  </div>
+</div> -->
+
+<!-- Select Labels -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="selectbasic">Favourites</label>
+  <div class="col-md-4">
+    <ng-select
+      [options]="characters"
+      [multiple]="true" name="selectLabels"
+      [(ngModel)]="selectedValues">
+    </ng-select>
+  </div>
+</div>
+
+
+
+</fieldset>
+</form>
+
 </div>
