@@ -4,6 +4,9 @@ import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import {Observable} from 'rxjs/Observable';
 import "rxjs/add/operator/map";
+import { Subject } from 'rxjs/Subject';
+
+import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 
 import { Router } from "@angular/router";
 
@@ -15,14 +18,24 @@ import { Router } from "@angular/router";
 })
 export class HomePageComponent implements OnInit {
 
+  public config: PaginationInstance = {
+        id: 'custom',
+        itemsPerPage: 2,
+        currentPage: 1
+    };
+
+    startNumber:number = 0;
+    endNumber:number = 1;
+
     news: FirebaseListObservable<any>;
     labels: FirebaseListObservable<any>;
     userLabels: FirebaseListObservable<any>;
     allNews: FirebaseListObservable<any>;
     specificNews: FirebaseListObservable<any>;
 
-    labelFilter:  any[] = [{ label: '' }];
+    public valueSubject: Subject<any>;
 
+    labelFilter:  any[] = [{ label: '' }];
 
     selectedLabels: Array<any>;
 
@@ -35,28 +48,44 @@ export class HomePageComponent implements OnInit {
 
     constructor(public afService: AF,private sanitizer:DomSanitizer){
 
+      this.startNumber = 0;
+      this.endNumber = 1;
+
       this.labels = this.afService.labels;
       this.selectedLabelsToSend = new Array<any>();
 
       this.allNews = this.afService.allNews;
 
       //this.specificNews =this.afService.specificNews;
-
     }
 
     ngOnInit() {
+      console.log('ngOnInit');
 
-      //this.specificNews = this.afService.selectSpecificNews('all');
-
-      this.afService.uidUpdate.subscribe(x=>{
+      if(this.afService.uid_prop != null){
         this.afService.getUserLastSelected().subscribe(y=>{
           this.specificNews = this.afService.selectSpecificNews(y.$value);
         });
-      });
+      }
+      else{
+        this.afService.uidUpdate.subscribe(x=>{
+          console.log(x);
+          this.afService.getUserLastSelected().subscribe(y=>{
+            this.afService.selectedLabel = y.$value;
+            this.specificNews = this.afService.selectSpecificNews(y.$value);
+            this.specificNews.subscribe(xxx => console.log(xxx));
+          });
+        });
+      }
     }
 
     dropdownButtonOnClick(){
       //itt használom mivel az afservice.user még nicns inicializálva amikor ráhívnék a constructorban
+
+      if(this.afService.user == null){
+        return;
+      }
+
       this.afService.user.subscribe(x=>{
         this.selectedLabels = new Array<any>();
         this.selectedLabelsToSend = new Array<any>();
@@ -85,7 +114,7 @@ export class HomePageComponent implements OnInit {
                        item.label + ')');
 
         //this.afService.filterBy('labels/'+item.label,true);
-
+        this.afService.selectedLabel = item.label;
         this.specificNews = this.afService.selectSpecificNews(item.label);
     }
 
@@ -97,6 +126,14 @@ export class HomePageComponent implements OnInit {
 
     saveFavourites(){
       this.afService.setUserLabels(this.selectedLabelsToSend);
+    }
+
+    onNextPage(){
+      this.afService.limitNumber += 2;
+      console.log(this.afService.selectedLabel)
+      this.specificNews = this.afService.selectSpecificNews(this.afService.selectedLabel);
+      this.startNumber+=2;
+      this.endNumber+=2;
     }
 
 }

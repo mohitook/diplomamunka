@@ -4,6 +4,13 @@ import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, Fireba
 import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class AF {
+
+    public isLoggedIn: boolean;
+
+    public limitNumber : number = 2;
+
+    public selectedLabel:string;
+
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
     public labels: FirebaseListObservable<any>;
@@ -34,6 +41,7 @@ export class AF {
     constructor(public af: AngularFire) {
         this.propertySubject = new Subject();
         this.valueSubject = new Subject();
+
         this.messages = this.af.database.list('messages');
         this.news = this.af.database.list('news');
         this.labels = this.af.database.list('labels');
@@ -47,18 +55,40 @@ export class AF {
             }
         });
 
-        console.log(this.propertySubject.observers.length);
+        this.af.auth.subscribe(
+          (auth) =>{
+            console.log('af auth trigger');
+            if (auth == null) {
+                console.log("Not Logged in.");
+                this.isLoggedIn = false;
+                //this.router.navigate(['login']);
+            }
+            else {
+                console.log("Successfully Logged in.");
+                // Set the Display Name and Email so we can attribute messages to them
+                if (auth.google) {
+                    this.displayName = auth.google.displayName;
+                    this.email = auth.google.email;
+                    this.uid_prop = auth.auth.uid;
+                    //this.uid = auth.auth.uid; //google.uid returns something else..
+                }
+                else {
+                    this.displayName = auth.auth.displayName;
+                    this.email = auth.auth.email;
+                    this.uid_prop = auth.auth.uid;
+                }
 
-        //valamiért inicializáláskor nem működik, csak pl gombnyomás után -->?!
-        // this.specificNews = this.af.database.list('news', {
-        //     query: {
-        //         orderByChild: this.propertySubject,
-        //         equalTo: true,
-        //         limitToFirst: 2
-        //     }
-        // });
-        // this.propertySubject.next('labels/Dota 2');
-        // console.log(this.propertySubject.observers.length);
+                this.displayName = auth.auth.displayName;
+                this.uid_prop = auth.auth.uid;
+                this.email = auth.auth.email;
+                this.addUserInfo();
+
+                this.isLoggedIn = true;
+                this.user = this.af.database.object('/users/'+this.uid_prop);
+            }
+          }
+        );
+
     }
     /**
      * Logs in the user
@@ -71,17 +101,12 @@ export class AF {
         });
     }
 
-    checkIfFirstLogin() {
-        //check if the labels is initialized
-        return this.af.database.object('users/' + this.uid + '/labels');
-    }
-
     /**
    *
    */
     addUserInfo() {
         //We saved their auth info now save the rest to the db.
-        return this.af.database.object('users/' + this.uid).set({
+        return this.af.database.object('users/' + this.uid).update({
             displayName: this.displayName,
             email: this.email,
         });
@@ -91,12 +116,17 @@ export class AF {
      * Logs out the current user
      */
     logout() {
+        this.email = null;
+        this.uid_prop = null;
+        this.displayName = null;
+        this.user=null;
         return this.af.auth.logout();
     }
     /**
      * Saves a message to the Firebase Realtime Database
      * @param text
      */
+
     sendMessage(text) {
         var message = {
             message: text,
@@ -106,11 +136,6 @@ export class AF {
         };
         this.messages.push(message);
 
-    }
-
-    getUserLabels(uid){
-      console.log(uid);
-      this.user = this.af.database.object('/users/'+uid);
     }
 
     /**
@@ -178,31 +203,24 @@ export class AF {
       this.af.database.object('/users/'+this.uid+"/labels").set(selectedLabels);
     }
 
-    filterBy(property: string, value) {
-
-        this.propertySubject.next(property);
-        this.valueSubject.next(value);
-    }
-
     getUserLastSelected(){
       var queryString = 'users/'+this.uid+'/lastSelected';
+      console.log('getUserLastSelected - '+queryString);
       return this.af.database.object(queryString);
     }
 
     selectSpecificNews(property: any) {
-
-        console.log('4');
+      console.log('selectSpecificNews - ' + property);
         this.specificNews = this.af.database.list('news', {
             query: {
                 orderByChild: 'labels/'+property,
                 equalTo: true,
-                limitToFirst: 2
+                //limitToFirst: this.limitNumber //nem nyerek vele kb semmit..csak vesztek
             }
         });
         console.log(property);
         this.af.database.object('users/'+this.uid+'/lastSelected').set(property);
         return this.specificNews;
-
     }
 
     //++Email/PW Registration
@@ -219,6 +237,7 @@ export class AF {
             password: password
         });
     }
+
     /**
      * Saves information to display to screen when user is logged in
      * @param uid

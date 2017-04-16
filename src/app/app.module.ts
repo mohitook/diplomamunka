@@ -23,6 +23,7 @@ import { NewsModalComponent } from './news-modal/news-modal.component';
 import {ModalModule} from "ngx-modal";
 import { SafePipe } from './safe.pipe';
 import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 //import { TinymceModule } from 'angular2-tinymce'; issue: https://github.com/Ledzz/angular2-tinymce/issues/11
 
@@ -31,6 +32,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
 import { LabelFilterPipe } from './label-filter.pipe';
+import { PaginationPipePipe } from './pagination-pipe.pipe';
 declare var tinymce: any;
 
 // Must export the config
@@ -78,7 +80,8 @@ const routes: Routes = [
     SettingsComponent,
     ProfileModalComponent,
     RegistrationPageComponent,
-    LabelFilterPipe
+    LabelFilterPipe,
+    PaginationPipePipe
   ],
   imports: [
     BrowserModule,
@@ -90,7 +93,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     InfiniteScrollModule,
     SelectModule,
-    Ng2FilterPipeModule
+    Ng2FilterPipeModule,
+    NgxPaginationModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
