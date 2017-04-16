@@ -7,6 +7,7 @@ Eddig felhasznált források:
 - bootstrap validator: https://github.com/1000hz/bootstrap-validator
 - selector: https://github.com/basvandenberg/ng-select
 - filter pipe: ng2-filter-pipe https://github.com/VadimDez/ng2-filter-pipe
+- pagination pipe: https://github.com/michaelbromley/ngx-pagination
 
 TODO:
 - [ ] sanitizer.bypassSecurityTrustHtml vizsgálata
