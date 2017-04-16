@@ -1,27 +1,40 @@
 <p>
   <route-modal [cancelUrl]="['/']" modalClass="modal-md">
-      <modal-header>
-          <h1>{{selectedNews.title}}</h1>
-          <hr />
-          <!-- <div style="display: flex; justify-content: center;" >   </div> -->
-          <div >
-            <img class="img-responsive"  src="{{selectedNews.coverImageUrl}}" align="middle">
-          </div>
-      </modal-header>
-      <modal-content>
-        <!--in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
-        <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
-
+    <modal-header>
+      <h1>{{selectedNews.title}}</h1>
+      <hr />
+      <!-- <div style="display: flex; justify-content: center;" >   </div> -->
+      <div>
+        <img class="img-responsive" src="{{selectedNews.coverImageUrl}}" align="middle">
+      </div>
+    </modal-header>
+    <modal-content>
+      <!--in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
+      <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
         </div> -->
-        <div *ngIf="htmlText">
-          <div [innerHTML]="htmlText">
-
-          </div>
+      <div *ngIf="htmlText">
+        <div [innerHTML]="htmlText">
         </div>
-        <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-      </modal-content>
-      <modal-footer>
-          <button class="btn btn-primary" [routerLink]="['/']">close</button>
-      </modal-footer>
-</route-modal>
+      </div>
+      <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+      <hr *ngIf="commentsOpened" />
+      <div *ngIf="comments">
+        <div class="well" *ngFor="let comment of comments | async">
+          <p class="media-comment">
+            {{comment.message}}
+          </p>
+          <div class="text-muted pull-left"><small>{{ comment.displayName}}</small></div>
+          <div class="text-muted pull-right"><small>{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+        </div>
+        <hr />
+        <textarea [(ngModel)]="newCommentText" class="form-control" name="addComment" rows="5"></textarea>
+        <br />
+        <button (click)="addComment()" class="btn btn-success">Send</button>
+      </div>
+    </modal-content>
+    <modal-footer>
+      <button *ngIf="!commentsOpened" (click)="onComments()" class="btn btn-success pull-left">Comments</button>
+      <button class="btn btn-primary" [routerLink]="['/']">close</button>
+    </modal-footer>
+  </route-modal>
 </p>

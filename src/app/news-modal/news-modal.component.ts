@@ -14,8 +14,13 @@ export class NewsModalComponent implements OnInit {
   private key:string;
 
   public selectedNews;
-
   private htmlText;
+
+  public comments: FirebaseListObservable<any>;
+
+  private commentsOpened :boolean = false;
+
+  private newCommentText:string;
 
   constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer) {
     //predefine to avoid errors
@@ -36,11 +41,6 @@ export class NewsModalComponent implements OnInit {
          }
          //Object.assign(this.selectedNews,news);
          this.selectedNews = JSON.parse(JSON.stringify(x)); //this is the only working DEEP COPY! wtf...
-
-         //http://stackoverflow.com/questions/38446235/div-innerhtml-not-working-with-iframe-html-in-angular2-html-inject
-         //in fact it is not secure right now!! TODO: read about this bypassSecurityTrustHtml
-
-         //this.selectedNews.content.text = this.sanitizer.bypassSecurityTrustHtml(this.selectedNews.content.text);
        },
        err =>{
          console.log("ERROR")
@@ -52,9 +52,26 @@ export class NewsModalComponent implements OnInit {
          this.htmlText = "test news with no content!"
        }
        else{
+         //http://stackoverflow.com/questions/38446235/div-innerhtml-not-working-with-iframe-html-in-angular2-html-inject
+         //in fact it is not secure right now!! TODO: read about this bypassSecurityTrustHtml
          var tmp = JSON.parse(JSON.stringify(x));
          this.htmlText = this.sanitizer.bypassSecurityTrustHtml(tmp.text);
        }
      });
   }
+
+  onComments(){
+    this.commentsOpened=true;
+    console.log(this.key);
+    this.comments = this.afService.setCommentsFilter(this.key);
+  }
+
+  addComment(){
+    if(this.newCommentText==null){
+      this.newCommentText = "TODO: Validate if input exists!";
+    }
+    this.afService.sendComment(this.newCommentText);
+    this.newCommentText=null;
+  }
+
 }

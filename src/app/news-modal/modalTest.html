@@ -1,0 +1,7 @@
+<div class="well" *ngFor="let comment of comments | async">
+  <h4 class="media-heading reviews">{{comment.displayName}}</h4>
+  <div class="text-muted"><small>{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+  <p class="media-comment">
+    {{comment.message}}
+  </p>
+</div>

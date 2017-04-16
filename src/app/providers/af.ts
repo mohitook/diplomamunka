@@ -13,6 +13,7 @@ export class AF {
 
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
+    public comments: FirebaseListObservable<any>;
     public labels: FirebaseListObservable<any>;
     public allNews: FirebaseListObservable<any>;
     public users: FirebaseListObservable<any>;
@@ -27,6 +28,7 @@ export class AF {
 
     public propertySubject: Subject<any>;
     public valueSubject: Subject<any>;
+    public commentsSubject: Subject<any>;
 
     uidUpdate: EventEmitter<string> = new EventEmitter();
 
@@ -41,6 +43,7 @@ export class AF {
     constructor(public af: AngularFire) {
         this.propertySubject = new Subject();
         this.valueSubject = new Subject();
+        this.commentsSubject = new Subject();
 
         this.messages = this.af.database.list('messages');
         this.news = this.af.database.list('news');
@@ -77,12 +80,7 @@ export class AF {
                     this.email = auth.auth.email;
                     this.uid_prop = auth.auth.uid;
                 }
-
-                this.displayName = auth.auth.displayName;
-                this.uid_prop = auth.auth.uid;
-                this.email = auth.auth.email;
                 this.addUserInfo();
-
                 this.isLoggedIn = true;
                 this.user = this.af.database.object('/users/'+this.uid_prop);
             }
@@ -135,7 +133,25 @@ export class AF {
             timestamp: Date.now()
         };
         this.messages.push(message);
+    }
 
+    setCommentsFilter(key:any){
+      this.comments = this.af.database.list('comments/'+key);
+      this.comments.subscribe(x=>{
+        console.log('comments sub');
+        console.log(x);
+      });
+      return this.comments;
+    }
+
+    sendComment(text) {
+        var message = {
+            message: text,
+            displayName: this.displayName,
+            email: this.email,
+            timestamp: Date.now()
+        };
+        this.comments.push(message);
     }
 
     /**
