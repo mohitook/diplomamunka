@@ -8,6 +8,7 @@ Eddig felhasznált források:
 - selector: https://github.com/basvandenberg/ng-select
 - filter pipe: ng2-filter-pipe https://github.com/VadimDez/ng2-filter-pipe
 - pagination pipe: https://github.com/michaelbromley/ngx-pagination
+- new news tags: https://github.com/Gbuomprisco/ng2-tag-input
 
 TODO:
 - [ ] sanitizer.bypassSecurityTrustHtml vizsgálata
