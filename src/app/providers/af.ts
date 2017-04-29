@@ -154,12 +154,33 @@ export class AF {
         this.comments.push(message);
     }
 
+    checkAndUpdateLabels(labels: Array<string>){
+      this.labels.subscribe(originalList=>{
+        labels.forEach(l=>{
+          var isItNew = true;
+          originalList.forEach(o=>{
+            if(o.value == l){
+              isItNew = false;
+            }
+          });
+          if(isItNew){
+            this.labels.$ref.ref.child(l).set({
+              image:"https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3",
+              label: l,
+              value: l
+            })
+          }
+        })
+      });
+    }
+
     /**
      * Saves a News to the Firebase Realtime Database
      * @param text
      */
     sendNews(news) {
-        console.log(news);
+
+      this.checkAndUpdateLabels(news.labels);
 
         var labelsTmp: any = {};
 

@@ -3,7 +3,7 @@
  <br />
     <div class="form-group">
       <label for="coverImageUrl">Title:</label>
-      <input type="text" name="title" class="form-control" [(ngModel)]="name" id="title" #ctrl="ngModel" required>
+      <input type="text" name="title" class="form-control" [(ngModel)]="newsModel.title" id="title" #ctrl="ngModel" required>
     </div>
 
     <div class="form-group">
@@ -24,15 +24,11 @@
 
     <div class="form-group">
       <label for="labels">Labels:</label><br>
-      <div id="labels" *ngFor="let label of labels" class="form-inline">
-        <label class="checkbox-inline">
-            <input type="checkbox"
-                   name="label"
-                   value="{{label.value}}"
-                   [(ngModel)]="label.checked"/>
-                   {{label.value}}
-        </label>
-      </div>
+      <tag-input id="labels" [(ngModel)]='labels' name="tagInput" [modelAsStrings]="true">
+        <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="existingLabelsValue">
+        </tag-input-dropdown>
+      </tag-input>
+     <!-- <button (click)="getCurrentLabels()" >currentLabels</button> -->
     </div>
 
     <div class="form-group">

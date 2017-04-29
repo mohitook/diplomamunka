@@ -11,6 +11,7 @@ import { FirebaseListObservable } from "angularfire2";
 import { AF } from "../providers/af";
 import {NewsModel} from "../model/news.model";
 import { ActivatedRoute, Router } from '@angular/router';
+import {Observable} from 'rxjs/Observable';
 
 //declare var tinymce: any;
 
@@ -25,32 +26,46 @@ export class AddNewComponent implements OnInit {
 
     public title;
 
-    labels = [
-        { value: 'all', checked: false },
-        {  value: 'dota 2', checked: false },
-        {  value: 'league of legends', checked: false },
-        {  value: 'overwatch', checked: false }
-    ]
+    labels = ["All"];
+
+    items = ['Nop', 'Pasta', 'Parmesan'];
+
+    existingLabels : FirebaseListObservable<any>;
+    existingLabelsValue: Array<string> = new Array();
 
     public newMessage: string;
     public messages: FirebaseListObservable<any>;
     constructor(private router: Router,public afService: AF) {
       this.newsModel = new NewsModel();
       this.title = "alma";
+      this.existingLabels = this.afService.labels;
+      this.existingLabels.subscribe(x=>{
+        this.existingLabelsValue = new Array();
+        x.forEach(y=>{
+          this.existingLabelsValue.push(y.value);
+        })
+      });
     }
 
     ngOnInit() {
     }
 
-    get selectedOptions() {
-        return this.labels
-            .filter(label => label.checked)
-            .map(label => label.value)
+    onSubmit(){
+      this.newsModel.labels = this.labels;
+      this.afService.sendNews(this.newsModel);
     }
 
-    onSubmit(){
-      this.newsModel.labels = this.selectedOptions;
-      this.afService.sendNews(this.newsModel);
+    getCurrentLabels(){
+      console.log(this.labels);
+    }
+    onItemAdded(){
+      console.log("asdasdasd");
+    }
+
+    //végtelenszer kéregeti és jön a sub...
+    getObservable(){
+      //this.afService.labels.map(x=>x.value).subscribe(x=>console.log(x));
+        //return this.afService.labels.map(x=>x.value);
     }
 
 }

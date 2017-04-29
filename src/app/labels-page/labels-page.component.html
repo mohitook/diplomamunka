@@ -1,0 +1,84 @@
+<!-- http://bootsnipp.com/snippets/xPEW -->
+<div class="container">
+  <div class="row">
+    <div class="">
+      <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+
+          <div class="input-group">
+            <input [(ngModel)]="searchText" name="searchText" type="text" class="form-control" placeholder="Search">
+            <div class="input-group-btn">
+              <button class="btn btn-primary" (click)="search()"><i class="glyphicon glyphicon-search"></i></button>
+              <button type="button" class="btn btn-primary" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
+                        </button>
+              <ul class="dropdown-menu slidedown">
+                <li><a href=""><span class="glyphicon glyphicon-pencil"></span>Default Picture</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <ul class="list-group" *ngFor="let label of existingLabels | async | filterBy: labelFilter">
+            <li class="list-group-item">
+              <div class="checkbox">
+                <label for="checkbox">
+                                    {{label.label}}<span>&#09;<img src="{{label.image}}" style="height:23px;" /></span>
+                                </label>
+              </div>
+              <div class="pull-right action-buttons">
+                <a style="cursor: pointer;" (click)="setSelected(label);modifyLabelModal.open()"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a style="cursor: pointer;" (click)="setSelected(label);areyousure.open()" class="trash"><span class="glyphicon glyphicon-trash"></span></a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <modal #modifyLabelModal>
+    <modal-header>
+      <h1>{{selectedLabel.value}}</h1>
+    </modal-header>
+    <modal-content>
+      <div>
+        <label for="selectedImage">Current Image:</label>
+        <img id="selectedImage"  [src]="selectedLabel.image" style="height:23px;"/>
+      </div>
+      <div>
+        <label for="newImageUrl">New Image:</label>
+        <input [(ngModel)]="newImageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Url" class="form-control"/>
+        <label *ngIf="newImageUrl" for="newselectedImage">Preview:</label>
+        <img *ngIf="newImageUrl" id="newselectedImage"  [src]="newImageUrl" style="height:23px;"/>
+      </div>
+    </modal-content>
+    <modal-footer>
+      <button class="btn btn-warning pull-left" (click)="modifyLabelModal.close();clearSelected()">Cencel</button>
+      <button class="btn btn-primary" (click)="modifyLabelModal.close();saveModifications();clearSelected()">Save</button>
+    </modal-footer>
+  </modal>
+
+  <modal #areyousure modalClass="modal-sm">
+    <modal-header>
+      <h1>Delete {{selectedLabel.value}}</h1>
+    </modal-header>
+    <modal-content>
+      <div style="text-align:center">
+        <img id="selectedImage"  src="http://www.freeiconspng.com/uploads/warning-icon-24.png" style="height:50px;"/>
+        <h2>Are you sure?</h2>
+        <h3>This will affect XXX news!</h3>
+      </div>
+    </modal-content>
+    <modal-footer>
+      <button class="btn btn-default pull-left" (click)="areyousure.close();clearSelected()">Keep it</button>
+      <button class="btn btn-success" (click)="areyousure.close();deleteSelected();clearSelected()">Delete</button>
+    </modal-footer>
+  </modal>
+
+<div>

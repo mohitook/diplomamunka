@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from "@angular/router";
 
+import {LabelsPageComponent} from './labels-page/labels-page.component';
+
 import {LocationStrategy, HashLocationStrategy} from "@angular/common";
 
 import { AppComponent } from './app.component';
@@ -33,6 +35,11 @@ import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
 import { LabelFilterPipe } from './label-filter.pipe';
 import { PaginationPipePipe } from './pagination-pipe.pipe';
+
+import { TagInputModule } from 'ng2-tag-input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // this is needed!
+
+
 declare var tinymce: any;
 
 // Must export the config
@@ -57,7 +64,8 @@ const routes: Routes = [
       ]  },
   { path: 'settings', component: SettingsComponent },
   { path: 'profile-modal', component: ProfileModalComponent },
-  { path: 'register', component: RegistrationPageComponent}
+  { path: 'register', component: RegistrationPageComponent},
+  { path: 'labelsPage', component: LabelsPageComponent}
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -81,7 +89,8 @@ const routes: Routes = [
     ProfileModalComponent,
     RegistrationPageComponent,
     LabelFilterPipe,
-    PaginationPipePipe
+    PaginationPipePipe,
+    LabelsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +103,8 @@ const routes: Routes = [
     InfiniteScrollModule,
     SelectModule,
     Ng2FilterPipeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    TagInputModule, BrowserAnimationsModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
