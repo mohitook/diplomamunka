@@ -16,6 +16,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
+import { DeleteNewsComponent } from './delete-news/delete-news.component';
 import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 import {SelectModule} from 'ng-select';
@@ -65,7 +66,8 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'profile-modal', component: ProfileModalComponent },
   { path: 'register', component: RegistrationPageComponent},
-  { path: 'labelsPage', component: LabelsPageComponent}
+  { path: 'labelsPage', component: LabelsPageComponent},
+  { path: 'deleteNews', component: DeleteNewsComponent}
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -90,7 +92,8 @@ const routes: Routes = [
     RegistrationPageComponent,
     LabelFilterPipe,
     PaginationPipePipe,
-    LabelsPageComponent
+    LabelsPageComponent,
+    DeleteNewsComponent
   ],
   imports: [
     BrowserModule,

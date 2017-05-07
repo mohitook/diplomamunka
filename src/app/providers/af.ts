@@ -52,9 +52,8 @@ export class AF {
 
         this.allNews = this.af.database.list('news', {
             query: {
-                orderByChild: 'labels/all',
-                equalTo: true,
-                limitToFirst: 2
+                orderByChild: 'labels/All',
+                equalTo: true
             }
         });
 

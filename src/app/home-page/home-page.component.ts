@@ -18,11 +18,17 @@ import { Router } from "@angular/router";
 })
 export class HomePageComponent implements OnInit {
 
-  public config: PaginationInstance = {
-        id: 'custom',
-        itemsPerPage: 2,
+  public configFavourite: PaginationInstance = {
+        id: 'configFavourite',
+        itemsPerPage: 10,
         currentPage: 1
     };
+
+    public configAll: PaginationInstance = {
+          id: 'configAll',
+          itemsPerPage: 10,
+          currentPage: 1
+      };
 
     startNumber:number = 0;
     endNumber:number = 1;

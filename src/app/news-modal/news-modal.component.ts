@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 
 @Component({
   selector: 'app-news-modal',
@@ -21,6 +22,12 @@ export class NewsModalComponent implements OnInit {
   private commentsOpened :boolean = false;
 
   private newCommentText:string;
+
+  public config: PaginationInstance = {
+        id: 'config',
+        itemsPerPage: 10,
+        currentPage: 1
+    };
 
   constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer) {
     //predefine to avoid errors
