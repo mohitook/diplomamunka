@@ -28,3 +28,10 @@
   display: block;
   height: 100%;
 }
+
+.output{
+  border-radius: 8px;
+  padding: 0 20px;
+  border: 3px dashed #f2bc93;
+  margin: 20px 0;
+}

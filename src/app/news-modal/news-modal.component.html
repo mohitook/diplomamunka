@@ -1,5 +1,5 @@
 <p>
-  <route-modal [cancelUrl]="['/']" modalClass="modal-md">
+  <route-modal [cancelUrl]="['/']" modalClass="modal-lg">
     <modal-header>
       <h1>{{selectedNews.title}}</h1>
       <hr />
@@ -17,6 +17,17 @@
         </div>
       </div>
       <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+      <div>
+        <share-buttons [description]="selectedNews.summary" [url]="myUrl" [title]="selectedNews.title" [image]="selectedNews.coverImageUrl"
+          [linkedIn]="false"
+          [tumblr]="false"
+          [pinterest]="false"
+          [stumbleUpOn]="false"
+          [whatsApp]="false"
+
+        ></share-buttons>
+      </div>
+
       <hr *ngIf="commentsOpened" />
       <div *ngIf="comments">
 

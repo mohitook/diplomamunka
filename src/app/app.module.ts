@@ -3,6 +3,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from "@angular/router";
+import {ShareButtonsModule} from 'ngx-sharebuttons';
 
 import {LabelsPageComponent} from './labels-page/labels-page.component';
 
@@ -107,7 +108,8 @@ const routes: Routes = [
     SelectModule,
     Ng2FilterPipeModule,
     NgxPaginationModule,
-    TagInputModule, BrowserAnimationsModule
+    TagInputModule, BrowserAnimationsModule,
+    ShareButtonsModule.forRoot()
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

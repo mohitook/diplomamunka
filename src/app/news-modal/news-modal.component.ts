@@ -4,6 +4,7 @@ import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
+import { ShareButton, ShareProvider } from 'ngx-sharebuttons';
 
 @Component({
   selector: 'app-news-modal',
@@ -23,6 +24,8 @@ export class NewsModalComponent implements OnInit {
 
   private newCommentText:string;
 
+  fbButton;
+
   public config: PaginationInstance = {
         id: 'config',
         itemsPerPage: 10,
@@ -35,6 +38,8 @@ export class NewsModalComponent implements OnInit {
   }
 
   ngOnInit() {
+
+
 
     this.sub = this.route.params.subscribe(params => {
        this.key = params['key'];

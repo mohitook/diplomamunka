@@ -119,7 +119,7 @@
               <h3>{{new.title}}</h3> {{new.summary}}
               <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
               <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-              <p><button [routerLink]="['post', new.$key]">More</button></p>
+              <p><button class="btn btn-default" [routerLink]="['post', new.$key]">More</button></p>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@
               <h3>{{new.title}}</h3> {{new.summary}}
               <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
               <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-              <p><button [routerLink]="['post', new.$key]">More</button></p>
+              <p><button class="btn btn-default" [routerLink]="['post', new.$key]">More</button></p>
             </div>
           </div>
         </div>

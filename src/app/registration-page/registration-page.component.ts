@@ -14,7 +14,10 @@ export class RegistrationPageComponent {
     event.preventDefault();
     this.afService.registerUser(email, password).then((user) => {
       this.afService.saveUserInfoFromForm(user.uid, name, email).then(() => {
-        this.router.navigate(['']);
+        this.afService.saveUserNameInAuth(name).then(()=>{
+          this.afService.displayName = name;
+          this.router.navigate(['']);
+        });
       })
         .catch((error) => {
           this.error = error;

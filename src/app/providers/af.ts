@@ -1,6 +1,6 @@
 // src/app/providers/af.ts
 import { Injectable, EventEmitter } from "@angular/core";
-import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef } from 'angularfire2';
+import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef,FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class AF {
@@ -32,6 +32,8 @@ export class AF {
 
     uidUpdate: EventEmitter<string> = new EventEmitter();
 
+    public authState : FirebaseAuthState;
+
     get uid_prop(): string {
     return this.uid;
     }
@@ -59,6 +61,7 @@ export class AF {
 
         this.af.auth.subscribe(
           (auth) =>{
+            this.authState=auth;
             console.log('af auth trigger');
             if (auth == null) {
                 console.log("Not Logged in.");
@@ -80,8 +83,10 @@ export class AF {
                     this.uid_prop = auth.auth.uid;
                 }
                 this.addUserInfo();
+
                 this.isLoggedIn = true;
                 this.user = this.af.database.object('/users/'+this.uid_prop);
+
             }
           }
         );
@@ -286,6 +291,14 @@ export class AF {
             email: email,
         });
     }
+
+    saveUserNameInAuth(name){
+      return this.authState.auth.updateProfile({
+            displayName: "Name here",
+            photoURL: ''
+          });
+    }
+
     /**
     * Logs the user in using their Email/Password combo
     * @param email
