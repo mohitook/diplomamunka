@@ -24,6 +24,8 @@ export class NewsModalComponent implements OnInit {
 
   private newCommentText:string;
 
+  private commentsLength:number = 0;
+
   fbButton;
 
   public config: PaginationInstance = {
@@ -76,14 +78,22 @@ export class NewsModalComponent implements OnInit {
     this.commentsOpened=true;
     console.log(this.key);
     this.comments = this.afService.setCommentsFilter(this.key);
+    this.comments.subscribe(x=>{
+      //to paginate to the last page when a new comment comes
+      this.commentsLength = x.length;
+      console.log("current length: " + x.length);
+    })
   }
 
   addComment(){
     if(this.newCommentText==null){
       this.newCommentText = "TODO: Validate if input exists!";
     }
-    this.afService.sendComment(this.newCommentText);
+    this.afService.sendComment(this.newCommentText).then(x=>{
+      this.config.currentPage = Math.ceil(this.commentsLength / this.config.itemsPerPage);
+    });
     this.newCommentText=null;
+
   }
 
 }

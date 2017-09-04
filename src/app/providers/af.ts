@@ -55,7 +55,7 @@ export class AF {
         this.allNews = this.af.database.list('news', {
             query: {
                 orderByChild: 'labels/All',
-                equalTo: true
+                equalTo: true,
             }
         });
 
@@ -155,7 +155,7 @@ export class AF {
             email: this.email,
             timestamp: Date.now()
         };
-        this.comments.push(message);
+        return this.comments.push(message);
     }
 
     checkAndUpdateLabels(labels: Array<string>){

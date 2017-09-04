@@ -53,6 +53,20 @@ export class AddNewComponent implements OnInit {
     onSubmit(){
       this.newsModel.labels = this.labels;
       this.afService.sendNews(this.newsModel);
+
+      this.clearAll();
+    }
+
+    clearAll(){
+      this.newsModel = new NewsModel();
+      this.title = "alma";
+      this.existingLabels = this.afService.labels;
+      this.existingLabels.subscribe(x=>{
+        this.existingLabelsValue = new Array();
+        x.forEach(y=>{
+          this.existingLabelsValue.push(y.value);
+        })
+      });
     }
 
     getCurrentLabels(){

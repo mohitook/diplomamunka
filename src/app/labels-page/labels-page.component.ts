@@ -46,6 +46,7 @@ export class LabelsPageComponent implements OnInit {
   }
 
   deleteSelected(){
+    console.log(this.selectedLabel.$key);
     this.existingLabels.remove(this.selectedLabel.$key).then(_ => console.log(this.selectedLabel.$key+' deleted!'));;
   }
 

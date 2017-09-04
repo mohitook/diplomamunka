@@ -36,7 +36,10 @@
         <div style="margin:20px">
           <label class="control-label" for="selectLabels">Favourites</label>
           <div>
-            <ng-select [options]="labels | async" [multiple]="true" name="selectLabels" (selected)="onMultipleSelected($event)" (deselected)="onMultipleDeselected($event)" [(ngModel)]="selectedLabels">
+            <ng-select  [options]="labels | async" [multiple]="true" name="selectLabels" (selected)="onMultipleSelected($event)" (deselected)="onMultipleDeselected($event)" [(ngModel)]="selectedLabels">
+              <div style="cursor:default;">
+
+              </div>
             </ng-select>
           </div>
         </div>
@@ -94,7 +97,7 @@
               <span *ngIf="!dropdownSelected.image" class="glyphicon glyphicon-search pull-right"></span>
               <img *ngIf="dropdownSelected.image" class="img-responsive pull-right" [src]="dropdownSelected.image" style="height:23px;" />
           </button>
-            <ul class="dropdown-menu dropdown-menu-right">
+            <ul class="dropdown-menu dropdown-menu-right" style="cursor:default;">
 
               <li *ngFor="let label of labels | async | labelFilter : labelFilter">
                 <a (click)="onDropDownSelected(label)">

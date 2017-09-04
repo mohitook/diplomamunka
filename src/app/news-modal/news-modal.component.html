@@ -38,7 +38,7 @@
           <div class="text-muted pull-left"><small>{{ comment.displayName}}</small></div>
           <div class="text-muted pull-right"><small>{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
         </div>
-
+        <!-- (pageChange)="config.currentPage = $event" -->
         <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
           <div  *ngIf="p.pages[1]">
             <div class="custom-pagination" >
