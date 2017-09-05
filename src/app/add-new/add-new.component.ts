@@ -53,7 +53,7 @@ export class AddNewComponent implements OnInit {
     onSubmit(){
       this.newsModel.labels = this.labels;
       this.afService.sendNews(this.newsModel);
-
+      console.log("onSubmitEnd");
       this.clearAll();
     }
 

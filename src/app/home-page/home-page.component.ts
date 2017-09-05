@@ -62,7 +62,7 @@ export class HomePageComponent implements OnInit {
 
       this.allNews = this.afService.allNews;
 
-      //this.specificNews =this.afService.specificNews;
+      console.log('home-page constructor end');
     }
 
     ngOnInit() {
@@ -92,7 +92,7 @@ export class HomePageComponent implements OnInit {
         return;
       }
 
-      this.afService.user.subscribe(x=>{
+      this.afService.user.subscribe(x => {
         this.selectedLabels = new Array<any>();
         this.selectedLabelsToSend = new Array<any>();
         this.labelFilter = new Array<any>();
@@ -104,11 +104,11 @@ export class HomePageComponent implements OnInit {
           this.selectedLabelsToSend.push(y);
           this.labelFilter.push({label:y});
         });
-      })
+      });
     }
 
     onMultipleSelected(item) {
-        this.selectedLabelsToSend.push(item.label)
+        this.selectedLabelsToSend.push(item.label);
     }
 
     onMultipleDeselected(item) {
@@ -119,7 +119,7 @@ export class HomePageComponent implements OnInit {
         console.log('- selected (value: ' + item.value  + ', label:' +
                        item.label + ')');
 
-        //this.afService.filterBy('labels/'+item.label,true);
+        // this.afService.filterBy('labels/'+item.label,true);
         this.afService.selectedLabel = item.label;
         this.specificNews = this.afService.selectSpecificNews(item.label);
     }
@@ -136,10 +136,10 @@ export class HomePageComponent implements OnInit {
 
     onNextPage(){
       this.afService.limitNumber += 2;
-      console.log(this.afService.selectedLabel)
+      console.log(this.afService.selectedLabel);
       this.specificNews = this.afService.selectSpecificNews(this.afService.selectedLabel);
-      this.startNumber+=2;
-      this.endNumber+=2;
+      this.startNumber += 2;
+      this.endNumber += 2;
     }
 
 }
