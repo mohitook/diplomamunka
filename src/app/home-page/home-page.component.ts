@@ -10,6 +10,10 @@ import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 
 import { Router } from "@angular/router";
 
+import {MediaChange, ObservableMedia} from "@angular/flex-layout";
+
+import {MdSidenav} from '@angular/material';
+
 
 @Component({
     selector: 'app-home-page',
@@ -29,6 +33,8 @@ export class HomePageComponent implements OnInit {
           itemsPerPage: 10,
           currentPage: 1
       };
+
+    selectedLabel:string;
 
     startNumber:number = 0;
     endNumber:number = 1;
@@ -52,7 +58,10 @@ export class HomePageComponent implements OnInit {
 
     dropdownSelected: any = {label:"Favourites", image:''};
 
-    constructor(public afService: AF,private sanitizer:DomSanitizer){
+    isMobileView: boolean;
+    labelsAreAvailable: boolean = false;
+
+    constructor(public afService: AF, private sanitizer: DomSanitizer, private media: ObservableMedia){
 
       this.startNumber = 0;
       this.endNumber = 1;
@@ -62,10 +71,23 @@ export class HomePageComponent implements OnInit {
 
       this.allNews = this.afService.allNews;
 
+      // https://github.com/angular/material2/issues/1130
+      this.isMobileView = (this.media.isActive('xs') || this.media.isActive('sm'));
+      this.media.subscribe((change: MediaChange) => {
+          this.isMobileView = (change.mqAlias === 'xs' || change.mqAlias === 'sm');
+      });
+
+      this.labels.subscribe(x=>{
+        if(x != null){
+          this.labelsAreAvailable = true;
+        }
+      })
+
       console.log('home-page constructor end');
     }
 
     ngOnInit() {
+
       console.log('ngOnInit');
 
       if(this.afService.uid_prop != null){
@@ -73,15 +95,21 @@ export class HomePageComponent implements OnInit {
           this.specificNews = this.afService.selectSpecificNews(y.$value);
         });
       }
-      else{
+      else {
         this.afService.uidUpdate.subscribe(x=>{
           console.log(x);
           this.afService.getUserLastSelected().subscribe(y=>{
-            this.afService.selectedLabel = y.$value;
+            this.selectedLabel = y.$value;
             this.specificNews = this.afService.selectSpecificNews(y.$value);
             this.specificNews.subscribe(xxx => console.log(xxx));
           });
         });
+      }
+    }
+
+    onLinkClick(menuSidenav : MdSidenav):void {
+      if (this.isMobileView) {
+        menuSidenav.close();
       }
     }
 
@@ -120,7 +148,7 @@ export class HomePageComponent implements OnInit {
                        item.label + ')');
 
         // this.afService.filterBy('labels/'+item.label,true);
-        this.afService.selectedLabel = item.label;
+        this.selectedLabel = item.label;
         this.specificNews = this.afService.selectSpecificNews(item.label);
     }
 
@@ -136,8 +164,8 @@ export class HomePageComponent implements OnInit {
 
     onNextPage(){
       this.afService.limitNumber += 2;
-      console.log(this.afService.selectedLabel);
-      this.specificNews = this.afService.selectSpecificNews(this.afService.selectedLabel);
+      console.log(this.selectedLabel);
+      this.specificNews = this.afService.selectSpecificNews(this.selectedLabel);
       this.startNumber += 2;
       this.endNumber += 2;
     }

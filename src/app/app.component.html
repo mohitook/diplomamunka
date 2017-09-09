@@ -1,72 +1,38 @@
 
-<!-- <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Firebase Crud</a>
-    </div>
-    <div *ngIf="isLoggedIn" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a (click)="logout()">Logout</a></li>
-      </ul>
-    </div>
-  </div>
-</nav> -->
+<!-- https://stackoverflow.com/questions/38209713/how-to-make-a-responsive-nav-bar-using-angular-material-2 -->
+<!-- http://blog.learningtree.com/create-side-menu-angular-2-material-design/ -->
 
-<nav class="navbar navbar-default navbar-fixed-top">
-   <div class="container">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="https://github.com/mohitook/diplomamunka" target="ext"><b>e-Spot</b></a>
-      <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="glyphicon glyphicon-chevron-down"></span>
-      </a>
-    </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a routerLink="">Home</a></li>
-          <li><a routerLink="/chat">Chat</a></li>
-          <li><a routerLink="/addnew">Add News</a></li>
-          <li><a routerLink="/deleteNews">Delete News</a></li>
-          <li><a routerLink="/labelsPage">Label settings</a></li>
-          <!-- <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Channels</a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Sub-link</a></li>
-              <li><a href="#">Sub-link</a></li>
-              <li><a href="#">Sub-link</a></li>
-              <li><a href="#">Sub-link</a></li>
-
-            </ul>
-          </li> -->
-        </ul>
-        <ul class="nav navbar-right navbar-nav">
-          <li><a href="http://s15.zetaboards.com/espotforum/index/" target="_blank">Forum</a></li>
-          <!-- <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-search"></i></a>
-            <ul class="dropdown-menu" style="padding:12px;">
-                <form class="form-inline">
-     				<button type="submit" class="btn btn-default pull-right"><i class="glyphicon glyphicon-search"></i></button><input type="text" class="form-control pull-left" placeholder="Search">
-                </form>
-             </ul>
-          </li> -->
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> <i class="glyphicon glyphicon-chevron-down"></i></a>
-            <ul class="dropdown-menu">
-              <li *ngIf="!afService.isLoggedIn"><a routerLink="/login">Login</a></li>
-              <li *ngIf="afService.isLoggedIn"><a (click)="logout()">Logout</a></li>
-              <li><a routerLink="/profile-modal">Profile</a></li>
-              <li class="divider"></li>
-              <li><a href="#">About</a></li>
-             </ul>
-          </li>
-        </ul>
+<md-toolbar class="mat-elevation-z5" color="primary">
+    <button md-button routerLink="/">
+      <!-- <h1><md-icon>home</md-icon> 
+          eSpot</h1> -->
+      <img class="img-responsive" style="height:33px;" src="https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/1_Primary_logo_on_transparent_308x66.png?alt=media&token=34697bc5-a91f-4d25-b5f5-98832dff112e" />
+    </button>
+      <!-- This fills the remaining space of the current row -->
+      
+      <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+          <button md-button routerLink="/">News</button>
+          <button md-button routerLink="/dashboard">Matches</button>
       </div>
-    </div>
-</nav><!-- /.navbar -->
+      <span class="fill-remaining-space"></span>
+      <div fxLayout="row" fxShow="false" fxShow.gt-sm>
+          <button md-button routerLink="/login">Login</button>
+      </div>
+      <button md-button [md-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
+       <md-icon>menu</md-icon>
+      </button>
+  </md-toolbar>
 
-<div class="app-content" style="padding-top:50px;"
-  infinite-scroll
- [infiniteScrollDistance]="scrollDistance"
- [infiniteScrollThrottle]="throttle"
- (scrolled)="onScrollDown()">
-  <router-outlet></router-outlet>
-</div>
+  <md-menu x-position="before" #menu="mdMenu">
+      <button md-menu-item routerLink="/">News</button>
+      <button md-menu-item routerLink="/dashboard">Matches</button>
+      <hr style="margin-top: 5px; margin-bottom: 5px;">
+      <button md-menu-item routerLink="/login">Login</button>
+      <!--<button md-menu-item>Help</button>-->
+  </md-menu>
+
+
+        
+        <div class="app-content" style="padding-top:60px">
+          <router-outlet></router-outlet>
+        </div>

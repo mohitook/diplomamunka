@@ -3,227 +3,74 @@
     <script src='https://cdn.html5maker.com/embed.js?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&responsive=1&width=940&height=400&h5mTag=html5maker'></script>
 
 </div> -->
-<header class="masthead">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <h1>
-          <!-- <img class="img-responsive"  src="/app/home-page/giphy.gif" /> -->
-          <img class="img-responsive"  src="https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/1_Primary_logo_on_transparent_308x66.png?alt=media&token=34697bc5-a91f-4d25-b5f5-98832dff112e" />
-          <!-- <a href="#" title="Scroll down for your viewing pleasure">e-Spot</a> -->
-          <!-- <p class="lead">Minden ami e-sports és e-community egy helyen!</p>-->
-        </h1>
-      </div>
-      <div class="col-md-6">
-        <div class="pull-right">
 
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
+<md-sidenav-container fullscreen class="sidenav-container" style="top: 64px !important;">
+    
+  <!-- https://github.com/angular/material2/issues/1130 -->
+  <md-sidenav  #sidenav class="app-sidenav"  mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
+      <md-nav-list >
+          <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
+           BIG League Of Legends
+          </a>
+          <a md-list-item *ngFor="let label of labels | async" 
+          (click)="onLinkClick(sidenav);onDropDownSelected(label)">
+            <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
+          </a>
 
-<!-- Begin Body -->
-<div class="container">
-  <div>
-    <!-- modal here -->
+      </md-nav-list>
+    </md-sidenav>
 
-    <modal #addRemFav>
-      <modal-header>
-        <h1>Your Favourites</h1>
-      </modal-header>
-      <modal-content>
-        <div style="margin:20px">
-          <label class="control-label" for="selectLabels">Favourites</label>
-          <div>
-            <ng-select  [options]="labels | async" [multiple]="true" name="selectLabels" (selected)="onMultipleSelected($event)" (deselected)="onMultipleDeselected($event)" [(ngModel)]="selectedLabels">
-              <div style="cursor:default;">
-
-              </div>
-            </ng-select>
-          </div>
-        </div>
-      </modal-content>
-      <modal-footer>
-        <button class="btn btn-primary" (click)="saveFavourites();addRemFav.close()">OK</button>
-      </modal-footer>
-    </modal>
-
-    <router-outlet></router-outlet>
-  </div>
-
-
-  <div class="no-gutter row">
-    <!-- left side column -->
-    <div class="col-md-2">
-      <div class="panel panel-default" id="sidebar">
-        <div class="panel-heading" style="background-color:#888;color:#fff;">Sidebar</div>
-        <div class="panel-body">
-          <ul class="nav nav-stacked">
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-          </ul>
-
-          <hr>
-
-          <div class="col col-span-12">
-            <i class="icon-2x icon-facebook"></i>&nbsp;
-            <i class="icon-2x icon-twitter"></i>&nbsp;
-            <i class="icon-2x icon-linkedin"></i>&nbsp;
-            <i class="icon-2x icon-pinterest"></i>
-          </div>
-
-        </div>
-        <!--/panel body-->
-      </div>
-      <!--/panel-->
-    </div>
-    <!--/end left column-->
-
-    <!-- <button class="btn toggle-dropdown" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" style="background-color:#555;color:#eee;"> -->
-
-    <!--mid column-->
-    <div class="col-md-3">
-      <!-- http://stackoverflow.com/questions/33833930/bootstrap-3-dropdown-menu-in-panel-header-positioned-wrong -->
-      <div class="panel panel-collapsable panel-chart" id="midCol">
-        <div class="panel-heading" style="background-color:#555;color:#eee;padding:0px">
-          <div class="dropdown">
-            <button (click)="dropdownButtonOnClick()" class="btn dropdown-toggle" data-toggle="dropdown" style="width:100%;padding: 8px 12px;">
-              <div class="pull-left" data-toggle="collapse" aria-expanded="true" style="margin:0px">{{dropdownSelected.label}}</div>
-              <span *ngIf="!dropdownSelected.image" class="glyphicon glyphicon-search pull-right"></span>
-              <img *ngIf="dropdownSelected.image" class="img-responsive pull-right" [src]="dropdownSelected.image" style="height:23px;" />
+      <md-toolbar color="primary" style="margin-left:0px">
+          <button *ngIf="isMobileView" md-icon-button (click)="sidenav.toggle()">
+              <md-icon class="md-24" >menu</md-icon>
           </button>
-            <ul class="dropdown-menu dropdown-menu-right" style="cursor:default;">
+          <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">The Most Popular eSport news in ONE place!</h1>
+          <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
+              
+            {{selectedLabel}} fresh news</h1>
+      </md-toolbar>
 
-              <li *ngFor="let label of labels | async | labelFilter : labelFilter">
-                <a (click)="onDropDownSelected(label)">
-                  <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
-                </a>
-              </li>
-              <li class="divider"></li>
+<div class="container">
 
-              <li *ngIf="afService.uid"><a (click)="addRemFav.open()">Add/Remove Favourites<span class="glyphicon glyphicon-minus pull-right"></span><span class="glyphicon glyphicon-plus pull-right"></span></a></li>
-              <li *ngIf="!afService.uid"><a routerLink="/login">Log In or Register<span class="glyphicon glyphicon-log-in pull-right"></span></a></li>
+          <div class="row row-eq-height pull-left">
+                 <div class="col-md-8"> 
+                   <div *ngFor="let new of specificNews | async" class="col-sm-6 col-md-6">
+                   
+                      <md-card class="example-card">
+                          <md-card-header>
+                            <div md-card-avatar class="example-header-image"></div>
+                            <md-card-title>{{new.title}}</md-card-title>
+                            <md-card-subtitle>
+                                <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+                            </md-card-subtitle>
+                          </md-card-header>
+                          <img md-card-image src="{{new.coverImageUrl}}" alt="Photo of a Shiba Inu">
+                          <md-card-content>
+                            <p>
+                                {{new.summary}}
+                            </p>
+                          </md-card-content>
+                          <md-card-actions>
+                            <button md-button>LIKE</button>
+                            <button md-button>SHARE</button>
+                          </md-card-actions>
+                        </md-card>
+                   </div>
 
-            </ul>
+                </div>
           </div>
-          <div class="clearfix"></div>
-        </div>
 
-        <div class="panel-body">
-          <!-- | paginationPipe: startNumber:endNumber -->
-          <div *ngFor="let new of specificNews | async | paginate: configFavourite ">
-            <div class="well">
-              <img class="img-responsive" src="{{new.coverImageUrl}}" class="img-responsive">
-              <h3>{{new.title}}</h3> {{new.summary}}
-              <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-              <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-              <p><button class="btn btn-default" [routerLink]="['post', new.$key]">More</button></p>
-            </div>
-          </div>
-        </div>
-        <div class="panel-footer">
-          <!-- <pagination-controls class="my-pagination"  [id]="config.id" (pageChange)="config.currentPage = $event"></pagination-controls> -->
-          <pagination-template #p="paginationApi" [id]="configFavourite.id" (pageChange)="configFavourite.currentPage = $event">
-
-
-            <div class="custom-pagination">
-              <div class="pagination-previous" [class.disabled]="p.isFirstPage()">
-                <a *ngIf="!p.isFirstPage()" (click)="p.previous()">
-                  < </a>
-              </div>
-
-              <div *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value">
-                <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">
-                  <span>{{ page.label }}</span>
-                </a>
-                <div *ngIf="p.getCurrent() === page.value">
-                  <span>{{ page.label }}</span>
+          <footer>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-12 text-right">
+                    <h5>©eSpot - Diplomamunka</h5></div>
                 </div>
               </div>
+            </footer>
 
-              <div class="pagination-next" [class.disabled]="p.isLastPage()">
-                <a *ngIf="!p.isLastPage()" (click)="p.next()"> > </a>
-              </div>
-            </div>
-
-          </pagination-template>
-        </div>
-
-      </div>
-
-      <!--/panel-->
-    </div>
-    <!--/end mid column-->
-
-    <!-- right content column-->
-    <div class="col-md-7" id="content">
-      <div class="panel">
-        <div class="panel-heading" style="background-color:#111;color:#fff;">
-          Top News
-          <div class="clearfix"></div>
-        </div>
-        <div class="panel-body">
-
-          <div *ngFor="let new of allNews | async | paginate: configAll">
-            <div class="well">
-              <div>
-                <h5>
-                                <span *ngFor="let label of new.labels | keyValues" style="font-size:100%; margin-right:5px;" class="label label-info">{{label.key}}</span>
-                              </h5>
-              </div>
-              <img class="img-responsive" src="{{new.coverImageUrl}}" class="img-responsive">
-              <h3>{{new.title}}</h3> {{new.summary}}
-              <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-              <!-- <p><button (click)="setSelectedNews(new);newsModal.open()">More</button></p> -->
-              <p><button class="btn btn-default" [routerLink]="['post', new.$key]">More</button></p>
-            </div>
-          </div>
-        </div>
-        <!--/panel-body-->
-        <div class="panel-footer">
-          <!-- <pagination-controls class="my-pagination"  [id]="config.id" (pageChange)="config.currentPage = $event"></pagination-controls> -->
-          <pagination-template #p2="paginationApi" [id]="configAll.id" (pageChange)="configAll.currentPage = $event">
-
-
-            <div class="custom-pagination">
-              <div class="pagination-previous" [class.disabled]="p2.isFirstPage()">
-                <a *ngIf="!p2.isFirstPage()" (click)="p2.previous()">
-                  < </a>
-              </div>
-
-              <div *ngFor="let page of p2.pages" [class.current]="p2.getCurrent() === page.value">
-                <a (click)="p2.setCurrent(page.value)" *ngIf="p2.getCurrent() !== page.value">
-                  <span>{{ page.label }}</span>
-                </a>
-                <div *ngIf="p2.getCurrent() === page.value">
-                  <span>{{ page.label }}</span>
-                </div>
-              </div>
-
-              <div class="pagination-next" [class.disabled]="p2.isLastPage()">
-                <a *ngIf="!p2.isLastPage()" (click)="p2.next()"> > </a>
-              </div>
-            </div>
-
-          </pagination-template>
-        </div>
-        <!--/panel-footer-->
-      </div>
-      <!--/panel-->
-      <!--/end right column-->
-    </div>
-  </div>
 </div>
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 text-right">
-        <h5>©eSpot - Diplomamunka</h5></div>
-    </div>
-  </div>
-</footer>
+</md-sidenav-container>
+
+
+

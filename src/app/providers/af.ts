@@ -9,7 +9,7 @@ export class AF {
 
     public limitNumber : number = 2;
 
-    public selectedLabel:string;
+    
 
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
