@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
-import { HomePageComponent } from './home-page/home-page.component';
+import { HomePageComponent, DialogOverviewExampleDialog } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
 import { DeleteNewsComponent } from './delete-news/delete-news.component';
@@ -77,6 +77,8 @@ import {
   MdTooltipModule,
 } from '@angular/material';
 
+import HLTV from 'hltv';
+
 declare var tinymce: any;
 
 // Must export the config
@@ -91,8 +93,9 @@ export const firebaseConfig = {
 const routes: Routes = [
   { path: '', component: HomePageComponent,
   children: [
-        { path: 'post/:key', component: NewsModalComponent }
+    { path: 'post/:key', component: NewsModalComponent }
       ] },
+      
   { path: 'login', component: LoginPageComponent},
   { path: 'chat', component: ChatPageComponent },
   { path: 'addnew', component: AddNewComponent,
@@ -129,8 +132,10 @@ const routes: Routes = [
     LabelFilterPipe,
     PaginationPipePipe,
     LabelsPageComponent,
-    DeleteNewsComponent
+    DeleteNewsComponent,
+    DialogOverviewExampleDialog
   ],
+  entryComponents:[DialogOverviewExampleDialog],
   imports: [
     BrowserModule,
     FormsModule,

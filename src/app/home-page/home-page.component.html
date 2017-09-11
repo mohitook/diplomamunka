@@ -4,8 +4,8 @@
 
 </div> -->
 
-<md-sidenav-container fullscreen class="sidenav-container" style="top: 64px !important;">
-    
+<md-sidenav-container fullscreen class="sidenav-container">
+  
   <!-- https://github.com/angular/material2/issues/1130 -->
   <md-sidenav  #sidenav class="app-sidenav"  mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
       <md-nav-list >
@@ -20,45 +20,171 @@
       </md-nav-list>
     </md-sidenav>
 
-      <md-toolbar color="primary" style="margin-left:0px">
+      <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
           <button *ngIf="isMobileView" md-icon-button (click)="sidenav.toggle()">
               <md-icon class="md-24" >menu</md-icon>
           </button>
-          <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">The Most Popular eSport news in ONE place!</h1>
+          <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">Fresh News</h1>
           <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
-              
             {{selectedLabel}} fresh news</h1>
       </md-toolbar>
 
 <div class="container">
+    
 
-          <div class="row row-eq-height pull-left">
-                 <div class="col-md-8"> 
+          <div class="row row-eq-height">
+                 <div class="col-md-8">
+                    <router-outlet></router-outlet>
                    <div *ngFor="let new of specificNews | async" class="col-sm-6 col-md-6">
                    
                       <md-card class="example-card">
+                          <img md-card-image src="{{new.coverImageUrl}}">
                           <md-card-header>
-                            <div md-card-avatar class="example-header-image"></div>
-                            <md-card-title>{{new.title}}</md-card-title>
-                            <md-card-subtitle>
-                                <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            </md-card-subtitle>
+                            <!-- <div md-card-avatar class="example-header-image"></div> -->
+                            <md-card-title>
+                                <h4>
+                                    {{new.title}}
+                                </h4>
+                            </md-card-title>
                           </md-card-header>
-                          <img md-card-image src="{{new.coverImageUrl}}" alt="Photo of a Shiba Inu">
                           <md-card-content>
                             <p>
                                 {{new.summary}}
                             </p>
+                            <md-card-subtitle>
+                                <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+                            </md-card-subtitle>
                           </md-card-content>
                           <md-card-actions>
-                            <button md-button>LIKE</button>
+                            <button md-raised-button (click)="openDialog()">Pick one</button>
+                            <button md-button [routerLink]="['post', new.$key]">More</button>
                             <button md-button>SHARE</button>
                           </md-card-actions>
                         </md-card>
                    </div>
 
                 </div>
+
+                <div class="col-md-4" style="padding-left:0px">
+                    <div class="col-sm-6 col-md-6 right-column">
+                      <div>
+                        <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
+                          <md-divider></md-divider>
+                              <md-divider></md-divider>
+                              <button md-raised-button color="default" style="width:100%; padding:0%">
+                                  <md-grid-list cols="4" rowHeight="30px" st>
+                                      <md-grid-tile
+                                        [colspan]="1"
+                                        [rowspan]="2"
+                                        >
+                                        <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
+                                      </md-grid-tile>
+                                      <md-grid-tile
+                                          [colspan]="2"
+                                          [rowspan]="1"
+                                          >
+                                          OG 
+                                          <span class="fill-remaining-space"></span>
+                                          <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
+                                      </md-grid-tile>
+                                      <md-grid-tile
+                                      [colspan]="1"
+                                      [rowspan]="2"
+                                      >
+                                      2h 5m
+                                    </md-grid-tile>
+                                      <md-grid-tile
+                                        [colspan]="2"
+                                        [rowspan]="1"
+                                        >
+                                        Fnatic
+                                        <span class="fill-remaining-space"></span>
+                                        <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
+                                      </md-grid-tile>
+                                      
+                                    </md-grid-list>
+
+                                </button>
+
+                                <md-divider></md-divider>
+                                <button md-raised-button color="default" style="width:100%; padding:0%">
+                                    <md-grid-list cols="4" rowHeight="30px" st>
+                                        <md-grid-tile
+                                          [colspan]="1"
+                                          [rowspan]="2"
+                                          >
+                                          <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
+                                        </md-grid-tile>
+                                        <md-grid-tile
+                                            [colspan]="2"
+                                            [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                            >
+                                            OG
+                                            <span class="fill-remaining-space"></span>
+                                            <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
+                                        </md-grid-tile>
+                                        <md-grid-tile
+                                        [colspan]="1"
+                                        [rowspan]="2"
+                                        >
+                                        2h 5m
+                                      </md-grid-tile>
+                                        <md-grid-tile
+                                          [colspan]="2"
+                                          [rowspan]="1"
+                                          >
+                                          Fnatic
+                                          <span class="fill-remaining-space"></span>
+                                          <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
+                                        </md-grid-tile>
+                                        
+                                      </md-grid-list>
+  
+                                  </button>
+                            
+                                  <md-divider></md-divider>
+                                  <button md-raised-button color="default" style="width:100%; padding:0%">
+                                      <md-grid-list cols="4" rowHeight="30px" st>
+                                          <md-grid-tile
+                                            [colspan]="1"
+                                            [rowspan]="2"
+                                            >
+                                            <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
+                                          </md-grid-tile>
+                                          <md-grid-tile
+                                              [colspan]="2"
+                                              [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                              >
+                                              OG
+                                              <span class="fill-remaining-space"></span>
+                                              <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
+                                          </md-grid-tile>
+                                          <md-grid-tile
+                                          [colspan]="1"
+                                          [rowspan]="2"
+                                          >
+                                          2h 5m
+                                        </md-grid-tile>
+                                          <md-grid-tile
+                                            [colspan]="2"
+                                            [rowspan]="1"
+                                            >
+                                            Fnatic
+                                            <span class="fill-remaining-space"></span>
+                                            <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
+                                          </md-grid-tile>
+                                          
+                                        </md-grid-list>
+    
+                                    </button>
+                            
+                      </div>
+                    </div>
+               </div>
+                
           </div>
+
+          
 
           <footer>
               <div class="container">

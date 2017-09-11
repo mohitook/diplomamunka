@@ -16,7 +16,7 @@ export class NewsModalComponent implements OnInit {
   private key:string;
 
   public selectedNews;
-  private htmlText;
+  public htmlText;
 
   public comments: FirebaseListObservable<any>;
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer, Inject } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
@@ -12,7 +12,7 @@ import { Router } from "@angular/router";
 
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
-import {MdSidenav} from '@angular/material';
+import {MdSidenav, MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 
 
 @Component({
@@ -33,6 +33,10 @@ export class HomePageComponent implements OnInit {
           itemsPerPage: 10,
           currentPage: 1
       };
+
+      //test
+      animal: string;
+      name: string;
 
     selectedLabel:string;
 
@@ -61,7 +65,7 @@ export class HomePageComponent implements OnInit {
     isMobileView: boolean;
     labelsAreAvailable: boolean = false;
 
-    constructor(public afService: AF, private sanitizer: DomSanitizer, private media: ObservableMedia){
+    constructor(public afService: AF, private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog){
 
       this.startNumber = 0;
       this.endNumber = 1;
@@ -89,6 +93,10 @@ export class HomePageComponent implements OnInit {
     ngOnInit() {
 
       console.log('ngOnInit');
+
+      // HLTV.getMatches().then((res) => {
+      //   console.log(res);
+      // });
 
       if(this.afService.uid_prop != null){
         this.afService.getUserLastSelected().subscribe(y=>{
@@ -169,5 +177,41 @@ export class HomePageComponent implements OnInit {
       this.startNumber += 2;
       this.endNumber += 2;
     }
+
+    openDialog(): void {
+      let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+        width: '250px',
+        data: { name: this.name, animal: this.animal }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        this.animal = result;
+      });
+    }
+  
+
+}
+
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  template: `<h2 md-dialog-title>Delete all</h2>
+  <md-dialog-content>Are you sure?</md-dialog-content>
+  <md-dialog-actions>
+    <button md-button md-dialog-close>No</button>
+    <!-- Can optionally provide a result for the closing dialog. -->
+    <button md-button [md-dialog-close]="true">Yes</button>
+  </md-dialog-actions>`,
+})
+export class DialogOverviewExampleDialog {
+
+  constructor(
+    public dialogRef: MdDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MD_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }

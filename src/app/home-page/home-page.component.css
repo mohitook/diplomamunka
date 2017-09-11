@@ -1,4 +1,36 @@
-.row-eq-height {
+.fill-remaining-space {
+  /*This fills the remaining space, by using flexbox.  
+ Every toolbar row uses a flexbox row layout. */
+ flex: 1 1 auto;
+}
+
+@media (min-width: 1000px){
+.col-md-4 {
+    width: 33.33333333%;
+    float: left;
+}}
+
+
+.right-column{
+  background-color: #1A237E;
+  margin-top: 15px;
+  width: 100%
+}
+
+  @media (min-width: 601px){
+    .sidenav-container {
+        width: 100%;
+        top: 64px !important;
+    }}
+
+
+    @media (max-width: 600px){
+      .sidenav-container {
+          width: 100%;
+          top: 56px !important;
+      }}
+
+.col-md-8 .row-eq-height {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -16,13 +48,13 @@ md-card > img{
   margin: 0;
 }
 
-@media (min-width: 992px){
+@media (min-width: 1000px){
 .container {
     width: 100%;
 }}
 
-@media (min-width: 768px){
-  .col-sm-6 {
+@media (min-width: 800px){
+  .col-md-8  .col-sm-6 {
     width: 50%;
     float: left;
   }
