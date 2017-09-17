@@ -44,6 +44,7 @@
                             <md-card-title>
                                 <h4>
                                     {{new.title}}
+                                    
                                 </h4>
                             </md-card-title>
                           </md-card-header>
@@ -56,7 +57,6 @@
                             </md-card-subtitle>
                           </md-card-content>
                           <md-card-actions>
-                            <button md-raised-button (click)="openDialog()">Pick one</button>
                             <button md-button [routerLink]="['post', new.$key]">More</button>
                             <button md-button>SHARE</button>
                           </md-card-actions>
@@ -71,113 +71,39 @@
                         <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
                           <md-divider></md-divider>
                               <md-divider></md-divider>
-                              <button md-raised-button color="default" style="width:100%; padding:0%">
-                                  <md-grid-list cols="4" rowHeight="30px" st>
-                                      <md-grid-tile
-                                        [colspan]="1"
-                                        [rowspan]="2"
-                                        >
-                                        <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
-                                      </md-grid-tile>
-                                      <md-grid-tile
-                                          [colspan]="2"
-                                          [rowspan]="1"
-                                          >
-                                          OG 
-                                          <span class="fill-remaining-space"></span>
-                                          <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
-                                      </md-grid-tile>
-                                      <md-grid-tile
-                                      [colspan]="1"
-                                      [rowspan]="2"
-                                      >
-                                      2h 5m
-                                    </md-grid-tile>
-                                      <md-grid-tile
-                                        [colspan]="2"
-                                        [rowspan]="1"
-                                        >
-                                        Fnatic
-                                        <span class="fill-remaining-space"></span>
-                                        <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
-                                      </md-grid-tile>
-                                      
-                                    </md-grid-list>
-
-                                </button>
-
                                 <md-divider></md-divider>
-                                <button md-raised-button color="default" style="width:100%; padding:0%">
+                                <button md-raised-button *ngFor="let betting of bettings | async" (click)="openDialog(betting.$key);" color="default" style="width:100%; padding:0%">
                                     <md-grid-list cols="4" rowHeight="30px" st>
                                         <md-grid-tile
                                           [colspan]="1"
-                                          [rowspan]="2"
-                                          >
-                                          <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
+                                          [rowspan]="2">
+                                          <img class="pull-right" src="{{betting.game_logo}}" height="40px"> 
                                         </md-grid-tile>
                                         <md-grid-tile
                                             [colspan]="2"
                                             [rowspan]="1" style="border-bottom: #1A237E solid;"
                                             >
-                                            OG
+                                            {{betting.opponents.left.short_name}}
                                             <span class="fill-remaining-space"></span>
-                                            <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
+                                            <img class="pull-right" src="{{betting.opponents.left.logo}}" height="20px"> 
                                         </md-grid-tile>
                                         <md-grid-tile
                                         [colspan]="1"
                                         [rowspan]="2"
                                         >
-                                        2h 5m
+                                        {{ betting.begin_at | betting_hours }}
+                                        <!-- date:'d/M/yy hh:mm:ss' -->
                                       </md-grid-tile>
                                         <md-grid-tile
                                           [colspan]="2"
                                           [rowspan]="1"
                                           >
-                                          Fnatic
+                                          {{betting.opponents.right.short_name}}
                                           <span class="fill-remaining-space"></span>
-                                          <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
+                                          <img class="pull-right" src="{{betting.opponents.right.logo}}" height="20px"> 
                                         </md-grid-tile>
-                                        
                                       </md-grid-list>
-  
                                   </button>
-                            
-                                  <md-divider></md-divider>
-                                  <button md-raised-button color="default" style="width:100%; padding:0%">
-                                      <md-grid-list cols="4" rowHeight="30px" st>
-                                          <md-grid-tile
-                                            [colspan]="1"
-                                            [rowspan]="2"
-                                            >
-                                            <img class="pull-right" src="https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png" height="40px"> 
-                                          </md-grid-tile>
-                                          <md-grid-tile
-                                              [colspan]="2"
-                                              [rowspan]="1" style="border-bottom: #1A237E solid;"
-                                              >
-                                              OG
-                                              <span class="fill-remaining-space"></span>
-                                              <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/f/fd/Team_icon_OG.png/256px-Team_icon_OG.png?version=e6292f7faf8dcf71683552c10bc376ae" height="20px"> 
-                                          </md-grid-tile>
-                                          <md-grid-tile
-                                          [colspan]="1"
-                                          [rowspan]="2"
-                                          >
-                                          2h 5m
-                                        </md-grid-tile>
-                                          <md-grid-tile
-                                            [colspan]="2"
-                                            [rowspan]="1"
-                                            >
-                                            Fnatic
-                                            <span class="fill-remaining-space"></span>
-                                            <img class="pull-right" src="https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/2/22/Team_logo_Fnatic.png/256px-Team_logo_Fnatic.png?version=d145a3fb25acc76e81bcce32922f6246" height="20px"> 
-                                          </md-grid-tile>
-                                          
-                                        </md-grid-list>
-    
-                                    </button>
-                            
                       </div>
                     </div>
                </div>

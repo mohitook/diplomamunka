@@ -2,6 +2,8 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef,FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import "rxjs/add/operator/share";
 @Injectable()
 export class AF {
 
@@ -9,8 +11,9 @@ export class AF {
 
     public limitNumber : number = 2;
 
+    private clock: Observable<Date>;
     
-
+    public upcomingBettings : FirebaseListObservable<any>;
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
     public comments: FirebaseListObservable<any>;
@@ -57,6 +60,32 @@ export class AF {
                 orderByChild: 'labels/All',
                 equalTo: true,
             }
+        });
+
+        //refactor this to a method
+        //this handles the still tip'able matches. if the timestamp of the match is bigger then the current time: it is not tipable anymore
+        //and not 'future'
+
+        this.upcomingBettings = this.af.database.list('bettings',{
+            query:{
+                orderByChild: 'status',
+                equalTo: 'future'
+            }
+        });
+
+        this.clock = Observable.interval(1000).map(tick => new Date()).share();
+
+        this.upcomingBettings.subscribe(x => {
+            console.log(x);
+            this.clock.subscribe(y => {
+                x.forEach(z => {
+                    if(z.begin_at < y){
+                        this.af.database.object('bettings/' + z.$key).update({
+                            status : "notFuture"
+                        });
+                    }
+                });
+            });
         });
 
         this.af.auth.subscribe(
@@ -169,7 +198,7 @@ export class AF {
           });
           if(isItNew){
             this.labels.$ref.ref.child(l).set({
-              image:"https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3",
+              image: 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3',
               label: l,
               value: l
             })
@@ -316,5 +345,12 @@ export class AF {
             });
     }
     //++Email/PW Registration
+
+    //mindenki csak egyszer fogadhat, többszöri fogadással az elején tévútra lehetne terelni a többséget és ezzel a végén kaszálni!
+    placeTip(matchId: string, team: string, tip: number){
+        return this.af.database.object('bettings/' + matchId + '/betHistory/' + this.uid).set({
+                [team]: tip
+        });
+    }
 
 }

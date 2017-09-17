@@ -1,6 +1,8 @@
+import { BettingPercentagePipe } from './pipes/betting-percentage.pipe';
+import { BettingHoursPipe } from './pipes/betting-hours.pipe';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from "@angular/router";
 import {ShareButtonsModule} from 'ngx-sharebuttons';
@@ -14,7 +16,7 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
-import { HomePageComponent, DialogOverviewExampleDialog } from './home-page/home-page.component';
+import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
 import { DeleteNewsComponent } from './delete-news/delete-news.component';
@@ -78,6 +80,7 @@ import {
 } from '@angular/material';
 
 import HLTV from 'hltv';
+import { BetModalComponent } from './bet-modal/bet-modal.component';
 
 declare var tinymce: any;
 
@@ -133,9 +136,11 @@ const routes: Routes = [
     PaginationPipePipe,
     LabelsPageComponent,
     DeleteNewsComponent,
-    DialogOverviewExampleDialog
-  ],
-  entryComponents:[DialogOverviewExampleDialog],
+    BetModalComponent,
+    BettingHoursPipe,
+    BettingPercentagePipe
+],
+  entryComponents:[BetModalComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -181,7 +186,8 @@ const routes: Routes = [
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

@@ -1,9 +1,11 @@
+import { BetModalComponent } from './../bet-modal/bet-modal.component';
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer, Inject } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import {Observable} from 'rxjs/Observable';
 import "rxjs/add/operator/map";
+import 'rxjs/add/observable/interval';
 import { Subject } from 'rxjs/Subject';
 
 import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
@@ -48,6 +50,7 @@ export class HomePageComponent implements OnInit {
     userLabels: FirebaseListObservable<any>;
     allNews: FirebaseListObservable<any>;
     specificNews: FirebaseListObservable<any>;
+    bettings: FirebaseListObservable<any>;
 
     public valueSubject: Subject<any>;
 
@@ -63,10 +66,13 @@ export class HomePageComponent implements OnInit {
     dropdownSelected: any = {label:"Favourites", image:''};
 
     isMobileView: boolean;
-    labelsAreAvailable: boolean = false;
+    labelsAreAvailable = false;
+
+    public whatTime;
 
     constructor(public afService: AF, private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog){
-
+ 
+      this.whatTime = Observable.interval(1000).map(x => new Date());
       this.startNumber = 0;
       this.endNumber = 1;
 
@@ -75,13 +81,15 @@ export class HomePageComponent implements OnInit {
 
       this.allNews = this.afService.allNews;
 
+      this.bettings = this.afService.upcomingBettings;
+
       // https://github.com/angular/material2/issues/1130
       this.isMobileView = (this.media.isActive('xs') || this.media.isActive('sm'));
       this.media.subscribe((change: MediaChange) => {
           this.isMobileView = (change.mqAlias === 'xs' || change.mqAlias === 'sm');
       });
 
-      this.labels.subscribe(x=>{
+      this.labels.subscribe(x => {
         if(x != null){
           this.labelsAreAvailable = true;
         }
@@ -178,40 +186,15 @@ export class HomePageComponent implements OnInit {
       this.endNumber += 2;
     }
 
-    openDialog(): void {
-      let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-        width: '250px',
-        data: { name: this.name, animal: this.animal }
+    openDialog(key: string): void {
+      console.log('key: '+key);
+      const dialogRef = this.dialog.open(BetModalComponent, {
+        width: '400px',
+        data: { key: key }
       });
-  
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
         this.animal = result;
       });
     }
-  
-
-}
-
-
-@Component({
-  selector: 'dialog-overview-example-dialog',
-  template: `<h2 md-dialog-title>Delete all</h2>
-  <md-dialog-content>Are you sure?</md-dialog-content>
-  <md-dialog-actions>
-    <button md-button md-dialog-close>No</button>
-    <!-- Can optionally provide a result for the closing dialog. -->
-    <button md-button [md-dialog-close]="true">Yes</button>
-  </md-dialog-actions>`,
-})
-export class DialogOverviewExampleDialog {
-
-  constructor(
-    public dialogRef: MdDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MD_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
 }

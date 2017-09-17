@@ -1,8 +1,4 @@
-.fill-remaining-space {
-  /*This fills the remaining space, by using flexbox.  
- Every toolbar row uses a flexbox row layout. */
- flex: 1 1 auto;
-}
+
 
 @media (min-width: 1000px){
 .col-md-4 {
@@ -14,7 +10,8 @@
 .right-column{
   background-color: #1A237E;
   margin-top: 15px;
-  width: 100%
+  width: 100%;
+  border-radius: 5px;
 }
 
   @media (min-width: 601px){

@@ -1,0 +1,12 @@
+md-chip {
+    width: 200px;
+  }
+  .mat-dialog-container{
+      background-color: red;
+      border-radius: 5px;
+  }
+
+  md-dialog-container{
+    background-color: red;
+    border-radius: 5px;
+}
