@@ -1,3 +1,4 @@
+import { NewsListComponent } from './home-page/news-list/news-list.component';
 import { BettingPercentagePipe } from './pipes/betting-percentage.pipe';
 import { BettingHoursPipe } from './pipes/betting-hours.pipe';
 import { BrowserModule } from '@angular/platform-browser';
@@ -96,9 +97,14 @@ export const firebaseConfig = {
 const routes: Routes = [
   { path: '', component: HomePageComponent,
   children: [
-    { path: 'post/:key', component: NewsModalComponent }
+    {
+      path: '',
+      pathMatch: 'full',
+      redirectTo: 'gamenews/All'
+    },
+    { path: 'news/:key', component: NewsModalComponent },
+    { path: 'gamenews/:game', component: NewsListComponent }
       ] },
-      
   { path: 'login', component: LoginPageComponent},
   { path: 'chat', component: ChatPageComponent },
   { path: 'addnew', component: AddNewComponent,
@@ -138,7 +144,8 @@ const routes: Routes = [
     DeleteNewsComponent,
     BetModalComponent,
     BettingHoursPipe,
-    BettingPercentagePipe
+    BettingPercentagePipe,
+    NewsListComponent
 ],
   entryComponents:[BetModalComponent],
   imports: [

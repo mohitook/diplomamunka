@@ -3,112 +3,83 @@
     <script src='https://cdn.html5maker.com/embed.js?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&responsive=1&width=940&height=400&h5mTag=html5maker'></script>
 
 </div> -->
-
-<md-sidenav-container fullscreen class="sidenav-container">
-  
   <!-- https://github.com/angular/material2/issues/1130 -->
-  <md-sidenav  #sidenav class="app-sidenav"  mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
+  <md-sidenav-container fullscreen class="sidenav-container">
+  <md-sidenav  #sidenav class="app-sidenav" mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
       <md-nav-list >
           <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
            BIG League Of Legends
           </a>
           <a md-list-item *ngFor="let label of labels | async" 
-          (click)="onLinkClick(sidenav);onDropDownSelected(label)">
+          (click)="onLinkClick(sidenav);onSidenavClick(label)">
             <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
           </a>
 
       </md-nav-list>
-    </md-sidenav>
+  </md-sidenav>
 
-      <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
+  <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
           <button *ngIf="isMobileView" md-icon-button (click)="sidenav.toggle()">
               <md-icon class="md-24" >menu</md-icon>
           </button>
           <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">Fresh News</h1>
           <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
             {{selectedLabel}} fresh news</h1>
-      </md-toolbar>
-
+  </md-toolbar>
+ 
 <div class="container">
-    
-
-          <div class="row row-eq-height">
-                 <div class="col-md-8">
-                    <router-outlet></router-outlet>
-                   <div *ngFor="let new of specificNews | async" class="col-sm-6 col-md-6">
-                   
-                      <md-card class="example-card">
-                          <img md-card-image src="{{new.coverImageUrl}}">
-                          <md-card-header>
-                            <!-- <div md-card-avatar class="example-header-image"></div> -->
-                            <md-card-title>
-                                <h4>
-                                    {{new.title}}
-                                    
-                                </h4>
-                            </md-card-title>
-                          </md-card-header>
-                          <md-card-content>
-                            <p>
-                                {{new.summary}}
-                            </p>
-                            <md-card-subtitle>
-                                <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-                            </md-card-subtitle>
-                          </md-card-content>
-                          <md-card-actions>
-                            <button md-button [routerLink]="['post', new.$key]">More</button>
-                            <button md-button>SHARE</button>
-                          </md-card-actions>
-                        </md-card>
-                   </div>
-
-                </div>
-
-                <div class="col-md-4" style="padding-left:0px">
-                    <div class="col-sm-6 col-md-6 right-column">
-                      <div>
-                        <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
-                          <md-divider></md-divider>
-                              <md-divider></md-divider>
-                                <md-divider></md-divider>
-                                <button md-raised-button *ngFor="let betting of bettings | async" (click)="openDialog(betting.$key);" color="default" style="width:100%; padding:0%">
-                                    <md-grid-list cols="4" rowHeight="30px" st>
-                                        <md-grid-tile
-                                          [colspan]="1"
-                                          [rowspan]="2">
-                                          <img class="pull-right" src="{{betting.game_logo}}" height="40px"> 
-                                        </md-grid-tile>
-                                        <md-grid-tile
-                                            [colspan]="2"
-                                            [rowspan]="1" style="border-bottom: #1A237E solid;"
-                                            >
-                                            {{betting.opponents.left.short_name}}
-                                            <span class="fill-remaining-space"></span>
-                                            <img class="pull-right" src="{{betting.opponents.left.logo}}" height="20px"> 
-                                        </md-grid-tile>
-                                        <md-grid-tile
-                                        [colspan]="1"
-                                        [rowspan]="2"
-                                        >
-                                        {{ betting.begin_at | betting_hours }}
-                                        <!-- date:'d/M/yy hh:mm:ss' -->
-                                      </md-grid-tile>
-                                        <md-grid-tile
-                                          [colspan]="2"
-                                          [rowspan]="1"
-                                          >
-                                          {{betting.opponents.right.short_name}}
-                                          <span class="fill-remaining-space"></span>
-                                          <img class="pull-right" src="{{betting.opponents.right.logo}}" height="20px"> 
-                                        </md-grid-tile>
-                                      </md-grid-list>
-                                  </button>
-                      </div>
-                    </div>
-               </div>
-                
-          </div>
+    <div class="row row-eq-height">
+        
+        <div class="col-md-8">
+            
+            <router-outlet></router-outlet>
+         
+         </div>
+       <div class="col-md-4" style="padding-left:0px">
+           <div class="col-sm-6 col-md-6 right-column">
+             <div>
+               <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
+                 <md-divider></md-divider>
+                     <md-divider></md-divider>
+                       <md-divider></md-divider>
+                       <button md-raised-button *ngFor="let betting of bettings | async" (click)="openDialog(betting.$key);" color="default" style="width:100%; padding:0%">
+                           <md-grid-list cols="4" rowHeight="30px" st>
+                               <md-grid-tile
+                                 [colspan]="1"
+                                 [rowspan]="2">
+                                 <img class="pull-right" src="{{betting.game_logo}}" height="40px"> 
+                               </md-grid-tile>
+                               <md-grid-tile
+                                   [colspan]="2"
+                                   [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                   >
+                                   {{betting.opponents.left.short_name}}
+                                   <span class="fill-remaining-space"></span>
+                                   <img class="pull-right" src="{{betting.opponents.left.logo}}" height="20px"> 
+                               </md-grid-tile>
+                               <md-grid-tile
+                               [colspan]="1"
+                               [rowspan]="2"
+                               >
+                               {{ betting.begin_at | betting_hours }}
+                               <!-- date:'d/M/yy hh:mm:ss' -->
+                             </md-grid-tile>
+                               <md-grid-tile
+                                 [colspan]="2"
+                                 [rowspan]="1"
+                                 >
+                                 {{betting.opponents.right.short_name}}
+                                 <span class="fill-remaining-space"></span>
+                                 <img class="pull-right" src="{{betting.opponents.right.logo}}" height="20px"> 
+                               </md-grid-tile>
+                             </md-grid-list>
+                         </button>
+             </div>
+           </div>
+      </div>
+       
+    </div>
+          
 
           
 
@@ -122,7 +93,7 @@
             </footer>
 
 </div>
-</md-sidenav-container>
 
+</md-sidenav-container>
 
 

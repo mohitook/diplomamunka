@@ -1,11 +1,8 @@
-
-
 @media (min-width: 1000px){
 .col-md-4 {
     width: 33.33333333%;
     float: left;
 }}
-
 
 .right-column{
   background-color: #1A237E;
@@ -14,36 +11,17 @@
   border-radius: 5px;
 }
 
-  @media (min-width: 601px){
-    .sidenav-container {
-        width: 100%;
-        top: 64px !important;
-    }}
+@media (min-width: 601px){
+.sidenav-container {
+    width: 100%;
+    top: 64px !important;
+}}
 
-
-    @media (max-width: 600px){
-      .sidenav-container {
-          width: 100%;
-          top: 56px !important;
-      }}
-
-.col-md-8 .row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.example-card {
-  display: inline-block;
-  padding: 15px;
-  position: relative;
-}
-
-md-card > img{
-  width: 100%;
-  margin: 0;
-}
+@media (max-width: 600px){
+.sidenav-container {
+    width: 100%;
+    top: 56px !important;
+}}
 
 @media (min-width: 1000px){
 .container {
@@ -62,7 +40,6 @@ md-card > img{
   min-height: 1px;
   padding: 15px;
 }
-
 .app-sidenav{
   background-color: white;
   color: rgba(0, 0, 0, 0.87);

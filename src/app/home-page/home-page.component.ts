@@ -10,7 +10,7 @@ import { Subject } from 'rxjs/Subject';
 
 import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
@@ -24,62 +24,16 @@ import {MdSidenav, MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/materia
 })
 export class HomePageComponent implements OnInit {
 
-  public configFavourite: PaginationInstance = {
-        id: 'configFavourite',
-        itemsPerPage: 10,
-        currentPage: 1
-    };
-
-    public configAll: PaginationInstance = {
-          id: 'configAll',
-          itemsPerPage: 10,
-          currentPage: 1
-      };
-
-      //test
-      animal: string;
-      name: string;
-
-    selectedLabel:string;
-
-    startNumber:number = 0;
-    endNumber:number = 1;
-
-    news: FirebaseListObservable<any>;
+    selectedLabel;
     labels: FirebaseListObservable<any>;
-    userLabels: FirebaseListObservable<any>;
-    allNews: FirebaseListObservable<any>;
-    specificNews: FirebaseListObservable<any>;
     bettings: FirebaseListObservable<any>;
-
-    public valueSubject: Subject<any>;
-
-    labelFilter:  any[] = [{ label: '' }];
-
-    selectedLabels: Array<any>;
-
-    selectedLabelsToSend: Array<any>;
-
-    ///default selected value in the specific news /ng-select
-    currentItem : string;
-
-    dropdownSelected: any = {label:"Favourites", image:''};
-
     isMobileView: boolean;
     labelsAreAvailable = false;
 
-    public whatTime;
-
-    constructor(public afService: AF, private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog){
- 
-      this.whatTime = Observable.interval(1000).map(x => new Date());
-      this.startNumber = 0;
-      this.endNumber = 1;
+    constructor(public afService: AF, public route: ActivatedRoute, public router: Router,
+       private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog) {
 
       this.labels = this.afService.labels;
-      this.selectedLabelsToSend = new Array<any>();
-
-      this.allNews = this.afService.allNews;
 
       this.bettings = this.afService.upcomingBettings;
 
@@ -93,97 +47,23 @@ export class HomePageComponent implements OnInit {
         if(x != null){
           this.labelsAreAvailable = true;
         }
-      })
-
+      });
       console.log('home-page constructor end');
     }
 
     ngOnInit() {
-
       console.log('ngOnInit');
-
-      // HLTV.getMatches().then((res) => {
-      //   console.log(res);
-      // });
-
-      if(this.afService.uid_prop != null){
-        this.afService.getUserLastSelected().subscribe(y=>{
-          this.specificNews = this.afService.selectSpecificNews(y.$value);
-        });
-      }
-      else {
-        this.afService.uidUpdate.subscribe(x=>{
-          console.log(x);
-          this.afService.getUserLastSelected().subscribe(y=>{
-            this.selectedLabel = y.$value;
-            this.specificNews = this.afService.selectSpecificNews(y.$value);
-            this.specificNews.subscribe(xxx => console.log(xxx));
-          });
-        });
-      }
     }
 
-    onLinkClick(menuSidenav : MdSidenav):void {
+    onLinkClick(menuSidenav: MdSidenav): void {
       if (this.isMobileView) {
         menuSidenav.close();
       }
     }
 
-    dropdownButtonOnClick(){
-      //itt használom mivel az afservice.user még nicns inicializálva amikor ráhívnék a constructorban
-
-      if(this.afService.user == null){
-        return;
-      }
-
-      this.afService.user.subscribe(x => {
-        this.selectedLabels = new Array<any>();
-        this.selectedLabelsToSend = new Array<any>();
-        this.labelFilter = new Array<any>();
-        if(x.labels == null){
-          return;
-        }
-        x.labels.forEach(y=>{
-          this.selectedLabels.push(y);
-          this.selectedLabelsToSend.push(y);
-          this.labelFilter.push({label:y});
-        });
-      });
-    }
-
-    onMultipleSelected(item) {
-        this.selectedLabelsToSend.push(item.label);
-    }
-
-    onMultipleDeselected(item) {
-        this.selectedLabelsToSend = this.selectedLabelsToSend.filter(x => x !== item.label);
-    }
-
-    onSingleSelected(item) {
-        console.log('- selected (value: ' + item.value  + ', label:' +
-                       item.label + ')');
-
-        // this.afService.filterBy('labels/'+item.label,true);
-        this.selectedLabel = item.label;
-        this.specificNews = this.afService.selectSpecificNews(item.label);
-    }
-
-    onDropDownSelected(item){
-      console.log(item);
-      this.dropdownSelected = item;
-      this.specificNews = this.afService.selectSpecificNews(item.label);
-    }
-
-    saveFavourites(){
-      this.afService.setUserLabels(this.selectedLabelsToSend);
-    }
-
-    onNextPage(){
-      this.afService.limitNumber += 2;
-      console.log(this.selectedLabel);
-      this.specificNews = this.afService.selectSpecificNews(this.selectedLabel);
-      this.startNumber += 2;
-      this.endNumber += 2;
+    onSidenavClick(label: any){
+      this.selectedLabel = label.label;
+      this.router.navigate(['./gamenews', label.label]);
     }
 
     openDialog(key: string): void {
@@ -194,7 +74,6 @@ export class HomePageComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
-        this.animal = result;
       });
     }
 }

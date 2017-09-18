@@ -1,0 +1,27 @@
+<div *ngFor="let new of specificNews | async" class="col-sm-6 col-md-6">
+    
+       <md-card class="example-card">
+           <img md-card-image src="{{new.coverImageUrl}}">
+           <md-card-header>
+             <!-- <div md-card-avatar class="example-header-image"></div> -->
+             <md-card-title>
+                 <h4>
+                     {{new.title}}
+                     
+                 </h4>
+             </md-card-title>
+           </md-card-header>
+           <md-card-content>
+             <p>
+                 {{new.summary}}
+             </p>
+             <md-card-subtitle>
+                 <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
+             </md-card-subtitle>
+           </md-card-content>
+           <md-card-actions>
+             <button md-button [routerLink]="['../../news', new.$key]">More</button>
+             <button md-button>SHARE</button>
+           </md-card-actions>
+         </md-card>
+</div>
