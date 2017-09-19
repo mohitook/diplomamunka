@@ -17,7 +17,8 @@
       <span class="fill-remaining-space"></span>
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
         <button md-button routerLink="/addnew">Administrator page</button>
-        <button md-button routerLink="/login">Login</button>
+        <button md-button routerLink="/login" *ngIf="!afService.isLoggedIn">Login</button>
+        <button md-button *ngIf="afService.isLoggedIn" (click)="logout()">Logout</button>
       </div>
       <button md-button [md-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
        <md-icon>menu</md-icon>
@@ -28,7 +29,8 @@
       <button md-menu-item routerLink="/">News</button>
       <button md-menu-item routerLink="/dashboard">Matches</button>
       <hr style="margin-top: 5px; margin-bottom: 5px;">
-      <button md-menu-item routerLink="/login">Login</button>
+      <button *ngIf="!afService.isLoggedIn" md-menu-item routerLink="/login">Login</button>
+      <button  *ngIf="afService.isLoggedIn" md-menu-item (click)="logout()">Logout</button>
       <!--<button md-menu-item>Help</button>-->
   </md-menu>
 

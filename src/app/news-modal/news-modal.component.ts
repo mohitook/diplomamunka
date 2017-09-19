@@ -12,19 +12,19 @@ import { ShareButton, ShareProvider } from 'ngx-sharebuttons';
   styleUrls: ['./news-modal.component.css']
 })
 export class NewsModalComponent implements OnInit {
-  private sub: any;
-  private key:string;
+  public sub: any;
+  public key:string;
 
   public selectedNews;
   public htmlText;
 
   public comments: FirebaseListObservable<any>;
 
-  private commentsOpened :boolean = false;
+  public commentsOpened :boolean = false;
 
-  private newCommentText:string;
+  public newCommentText:string;
 
-  private commentsLength:number = 0;
+  public commentsLength:number = 0;
 
   fbButton;
 

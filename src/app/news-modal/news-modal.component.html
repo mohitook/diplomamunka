@@ -4,7 +4,7 @@
         <h1 >{{selectedNews.title}}</h1>
     </md-toolbar> -->
     <!-- <div style="display: flex; justify-content: center;" >   </div> -->
-    <div>
+    <div class="center10padding">
       <img class="img-responsive" src="{{selectedNews.coverImageUrl}}" align="middle">
     </div>
 
@@ -19,7 +19,8 @@
           </div>
           <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
           <div>
-            <share-buttons [description]="selectedNews.summary" [url]="myUrl" [title]="selectedNews.title" [image]="selectedNews.coverImageUrl"
+              <!-- https://github.com/MurhafSousli/ngx-sharebuttons/issues/145 it wont work anymore! :(  [url]="myUrl") -->
+            <share-buttons [description]="selectedNews.summary"  [title]="selectedNews.title" [image]="selectedNews.coverImageUrl"
               [linkedIn]="false"
               [tumblr]="false"
               [pinterest]="false"
@@ -28,9 +29,17 @@
             ></share-buttons>
           </div>
     
+          
+  <div class="center10padding">
+    <button *ngIf="!commentsOpened" (click)="onComments()" class="btn btn-success">Comments</button>
+  </div>
+          
+
           <hr *ngIf="commentsOpened" />
           <div *ngIf="comments">
-    
+              <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
+                  <h2>Comments</h2>
+              </md-toolbar>
             <div class="well" *ngFor="let comment of comments | async | paginate: config">
               <p class="media-comment">
                 {{comment.message}}
@@ -68,9 +77,6 @@
             <button [disabled]="!newCommentText" (click)="addComment()" class="btn btn-success">Send</button>
     
           </div>
-
-          <button *ngIf="!commentsOpened" (click)="onComments()" class="btn btn-success pull-left">Comments</button>
-          <button class="btn btn-primary" [routerLink]="['/']">close</button>
     <!-- content end -->
 
     

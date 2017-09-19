@@ -25,16 +25,15 @@ import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 import {SelectModule} from 'ng-select';
 
-import { CKEditorModule } from 'ng2-ckeditor';
+//import { CKEditorModule } from 'ng2-ckeditor';
 import { NewsModalComponent } from './news-modal/news-modal.component';
 import {ModalModule} from "ngx-modal";
 import { SafePipe } from './safe.pipe';
 import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 
-//import { TinymceModule } from 'angular2-tinymce'; issue: https://github.com/Ledzz/angular2-tinymce/issues/11
-
-import 'tinymce/tinymce.min';
+//import { TinymceModule } from 'angular2-tinymce'; //issue: https://github.com/Ledzz/angular2-tinymce/issues/11
+import { FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
@@ -152,7 +151,7 @@ const routes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
-    CKEditorModule,
+    //CKEditorModule,
     ModalModule,
     AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes),
@@ -194,7 +193,8 @@ const routes: Routes = [
     MdToolbarModule,
     MdTooltipModule,
     FlexLayoutModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

@@ -39,15 +39,15 @@
             </md-grid-tile>
             
         </md-grid-list>
-        
-        
-    
-       
-        
     </md-dialog-content>
+
     <md-dialog-actions style="text-align: center;display: block;" *ngIf="selectedTeam!=''">
     
-        <form >
+        <button md-raised-button *ngIf="!afService.isLoggedIn" routerLink="/login" (click)="dialogRef.close()" color="primary">
+            Login to Tip
+        </button>
+
+        <form *ngIf="afService.isLoggedIn">
             <md-form-field *ngIf="!alreadyTiped">
               <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet" min="0" step="1" [formControl]="betFormControl">
               <md-error *ngIf="betFormControl.hasError('pattern')">

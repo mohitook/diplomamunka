@@ -81,7 +81,8 @@ export class AF {
                 x.forEach(z => {
                     if(z.begin_at < y){
                         this.af.database.object('bettings/' + z.$key).update({
-                            status : "notFuture"
+                            status : "notFuture",
+                            currentTime: y
                         });
                     }
                 });
