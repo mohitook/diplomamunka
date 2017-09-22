@@ -5,6 +5,8 @@ import { Directive, ElementRef, Input, Renderer } from '@angular/core';
 })
 export class MyMasonryDirective {
 
+  num:0;
+
   constructor(public el: ElementRef, public renderer: Renderer) {}
 
   ngOnInit(){
@@ -12,6 +14,8 @@ export class MyMasonryDirective {
   }
 
   sortElements(){
+    this.num++;
+    console.log('called ' + this.num);
     var left=0;
     var right=0;
 
@@ -25,7 +29,7 @@ export class MyMasonryDirective {
 
     array.forEach(element => {
       //console.log(element.style);
-      if (left >= right) //left is longer... go to right column
+      if (left > right) //left is longer... go to right column
       {
         this.renderer.setElementStyle(element, 'top', right+'px');
         this.renderer.setElementStyle(element, 'left', '50%');
@@ -34,6 +38,7 @@ export class MyMasonryDirective {
       else  //go to the left column
       {
         this.renderer.setElementStyle(element, 'top', left+'px');
+        this.renderer.setElementStyle(element, 'left', ''); //fix in case of mixed picture loading
         left += parseInt(getComputedStyle(element).height); 
       }
     });

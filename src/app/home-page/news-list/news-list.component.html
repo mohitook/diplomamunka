@@ -1,5 +1,5 @@
 <div class="flexbox" appMyMasonry>
-        <div *ngFor="let new of specificNews | async" class="box">
+        <div *ngFor="let new of specificNews | async | paginate: { itemsPerPage: 3, currentPage: p }" class="box">
                 
                    <md-card class="example-card">
                        <img md-card-image src="{{new.coverImageUrl}}">
@@ -23,8 +23,9 @@
                          <button md-button [routerLink]="['../../news', new.$key]">More</button>
                        </md-card-actions>
                      </md-card>
-        </div>
+        </div> 
 </div>
+<pagination-controls (pageChange)="p = $event"></pagination-controls>
 
 
 

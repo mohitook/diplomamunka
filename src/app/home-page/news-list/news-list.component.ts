@@ -30,7 +30,7 @@ export class NewsListComponent implements OnInit, AfterViewInit, AfterViewChecke
   loadedIn = false;
   game;
 
-  @ViewChild(MyMasonryDirective) directive = null
+  @ViewChild(MyMasonryDirective) directive = null;
 
   constructor(public afService: AF, public route: ActivatedRoute, public router: Router,
     private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog) {
@@ -54,6 +54,5 @@ export class NewsListComponent implements OnInit, AfterViewInit, AfterViewChecke
 
   ngAfterViewChecked(): void {
     this.directive.sortElements();
-     //console.log('ngAfterViewChecked end')
   }
 }
