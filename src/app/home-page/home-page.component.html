@@ -32,7 +32,13 @@
         
         <div class="col-md-8">
             
-            <router-outlet></router-outlet>
+            <div fxLayout="column" fxFlexFill>
+                <div fxFlex>
+                 <router-outlet class="hidden-router"></router-outlet>
+                </div>
+              </div>
+
+            <!-- <router-outlet style="width:100%"></router-outlet> -->
          
          </div>
        <div class="col-md-4" style="padding-left:0px">

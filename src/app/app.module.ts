@@ -82,7 +82,8 @@ import {
 import HLTV from 'hltv';
 import { BetModalComponent } from './bet-modal/bet-modal.component';
 
-declare var tinymce: any;
+import { MasonryModule } from 'angular2-masonry';
+import { MyMasonryDirective } from './myMasonry.directive';
 
 // Must export the config
 export const firebaseConfig = {
@@ -144,7 +145,8 @@ const routes: Routes = [
     BetModalComponent,
     BettingHoursPipe,
     BettingPercentagePipe,
-    NewsListComponent
+    NewsListComponent,
+    MyMasonryDirective
 ],
   entryComponents:[BetModalComponent],
   imports: [
@@ -194,7 +196,8 @@ const routes: Routes = [
     MdTooltipModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
+    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+    MasonryModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]

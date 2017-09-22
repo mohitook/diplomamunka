@@ -1,3 +1,9 @@
+.hidden-router {
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
+}
+
 @media (min-width: 1000px){
 .col-md-4 {
     width: 33.33333333%;
