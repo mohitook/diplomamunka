@@ -29,19 +29,21 @@ export class MyMasonryDirective {
 
     array.forEach(element => {
       //console.log(element.style);
-      if (left > right) //left is longer... go to right column
-      {
-        this.renderer.setElementStyle(element, 'top', right+'px');
-        this.renderer.setElementStyle(element, 'left', '50%');
-        right+= parseInt(getComputedStyle(element).height);
-      }
-      else  //go to the left column
-      {
-        this.renderer.setElementStyle(element, 'top', left+'px');
-        this.renderer.setElementStyle(element, 'left', ''); //fix in case of mixed picture loading
-        left += parseInt(getComputedStyle(element).height); 
-      }
-    });
+
+          //correction if the viewport change!
+          if ((left > right) && $(window).width()>799) //left is longer... go to right column
+            {
+              this.renderer.setElementStyle(element, 'top', right+'px');
+              this.renderer.setElementStyle(element, 'left', '50%');
+              right+= parseInt(getComputedStyle(element).height);
+            }
+            else  //go to the left column
+            {
+              this.renderer.setElementStyle(element, 'top', left+'px');
+              this.renderer.setElementStyle(element, 'left', ''); //fix in case of mixed picture loading
+              left += parseInt(getComputedStyle(element).height); 
+            }
+        });
      var heighest = left > right ? left : right;
 
      this.renderer.setElementStyle(this.el.nativeElement, 'height', heighest+"px");
