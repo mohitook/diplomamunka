@@ -15,7 +15,7 @@ export class MyMasonryDirective {
 
   sortElements(){
     this.num++;
-    console.log('called ' + this.num);
+    //console.log('called ' + this.num);
     var left=0;
     var right=0;
 

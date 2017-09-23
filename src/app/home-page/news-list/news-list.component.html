@@ -1,5 +1,5 @@
 <div class="flexbox" appMyMasonry>
-        <div *ngFor="let new of specificNews | async | paginate: { itemsPerPage: 3, currentPage: p }" class="box">
+        <div *ngFor="let new of specificNews | async | paginate: { itemsPerPage: 10, currentPage: p }" class="box">
                 
                    <md-card class="example-card">
                        <img md-card-image src="{{new.coverImageUrl}}">

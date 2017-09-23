@@ -51,7 +51,9 @@ export class NewsListComponent implements OnInit, AfterViewInit, AfterViewChecke
   ngAfterViewInit(): void {
     
   }
-
+  //being called in every sec, doesn't affect that much on cpu and memory..
+  //it is needed in case if a new content arrives and the client page is already loaded(calculate again)
+  //also it is needed to calculate paginator page item positions
   ngAfterViewChecked(): void {
     this.directive.sortElements();
   }
