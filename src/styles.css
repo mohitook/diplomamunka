@@ -11,6 +11,34 @@
     margin: auto;
 }
 
-/* .fr-toolbar{
-    z-index: 1 !important;; 
-} */
+
+.my-pagination .ngx-pagination {
+    background: red;
+  }
+
+.custom-pagination {
+      display: flex;
+      max-width: 300px;
+      margin: auto;
+      cursor: default;
+  }
+
+.custom-pagination > div{
+  flex: 1;
+  font-size: 18px;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  cursor: pointer;
+}
+
+.custom-pagination > div.current{
+  border-color: red;
+}
+
+.custom-pagination > div > a{
+  display: block;
+  height: 100%;
+}

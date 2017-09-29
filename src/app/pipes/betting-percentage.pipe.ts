@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class BettingPercentagePipe implements PipeTransform {
 
   transform(value: any, otherValue: any): any {
-    console.log('first:' + value + ' | second: ' + otherValue);
+    //console.log('first:' + value + ' | second: ' + otherValue);
 
     const returnValue = Math.floor(value / ((value + otherValue) / 100));
 

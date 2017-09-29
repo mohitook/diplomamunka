@@ -13,6 +13,7 @@ export class AF {
 
     private clock: Observable<Date>;
 
+    public userBets : FirebaseListObservable<any>;    
     public pendingBets : FirebaseListObservable<any>;
     public upcomingMatches : FirebaseListObservable<any>;
     public notFutureMatches : FirebaseListObservable<any>;
@@ -39,6 +40,8 @@ export class AF {
     uidUpdate: EventEmitter<string> = new EventEmitter();
 
     public authState : FirebaseAuthState;
+
+    public userBettings = {};
 
     get uid_prop(): string {
     return this.uid;
@@ -92,6 +95,25 @@ export class AF {
             }
         });
 
+        //I have to get the bets related to the current user, and store them in the service
+        this.userBets = this.af.database.list('bets',{
+            query:{
+                orderByChild: this.propertySubject,
+                startAt: ''
+            }
+        });
+
+        this.uidUpdate.subscribe(uid => {
+            this.propertySubject.next(uid);
+        });
+
+        this.userBets.subscribe(bets=>{
+            bets.forEach(bet => {
+                this.userBettings[bet.$key] = bet[this.uid];
+            });
+            console.log(this.userBettings);
+        });
+
         //this.clock = Observable.interval(1000).map(tick => new Date()).share();
 
         //átirni olyanra, hogy csak csekkoljon valamit be a DB-be, amitől 
@@ -99,6 +121,7 @@ export class AF {
         this.upcomingMatches.subscribe(matches => {
             matches.forEach(match => {
                 if(match.begin_at <= new Date().getTime()){
+                    console.log('én pingetem ezt a szart');
                     this.af.database.object('checkMatchDate/' + match.$key).set(match.begin_at);
                 }
             });
@@ -311,8 +334,8 @@ export class AF {
     }
 
     checkIfAlreadyTiped(matchKey) {
-      console.log('checkIfAlreadyTiped');
-      console.log(this.uid);
+      //console.log('checkIfAlreadyTiped');
+      //console.log(this.uid);
       return this.af.database.object('bets/' + matchKey + '/' + this.uid);
     }
 

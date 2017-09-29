@@ -5,6 +5,7 @@ import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import { BetModalComponent } from './../bet-modal/bet-modal.component';
 import { MobileViewService } from "../providers/mobileView.service";
 import {Observable} from 'rxjs/Observable';
+import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 
 @Component({
   selector: 'app-matches-page',
@@ -12,7 +13,7 @@ import {Observable} from 'rxjs/Observable';
   styleUrls: ['./matches-page.component.css']
 })
 export class MatchesPageComponent implements OnInit {
-
+ 
   upcomingMatches: FirebaseListObservable<any>;
   notFutureMatches: FirebaseListObservable<any>;
   finishedMatches: Observable<any>;
@@ -20,10 +21,26 @@ export class MatchesPageComponent implements OnInit {
   selectedLabel;
   labelsAreAvailable = false;
 
-  gameFilter = '';
-
   finishedMatchesPerUser = {};
   notFutureMatchesPerUser = {};
+
+  public config: PaginationInstance = {
+    id: 'config',
+    itemsPerPage: 1,
+    currentPage: 1
+};
+
+public config2: PaginationInstance = {
+  id: 'config2',
+  itemsPerPage: 1,
+  currentPage: 1
+};
+
+public config3: PaginationInstance = {
+  id: 'config3',
+  itemsPerPage: 1,
+  currentPage: 1
+};
 
   constructor(public afService: AF ,public mobView: MobileViewService,  public dialog: MdDialog) {
     this.upcomingMatches = afService.upcomingMatches;
@@ -31,6 +48,10 @@ export class MatchesPageComponent implements OnInit {
     //to order them by date ascending, because the original list is descending by timestamp..
     this.finishedMatches = afService.finishedMatches.map( (arr) => { return arr.reverse(); } );
     this.labels = this.afService.labels;
+
+    this.afService.userBets.subscribe(x=>{
+      console.log(x);
+    })
 
     this.labels.subscribe(x => {
       if(x != null){
@@ -98,69 +119,59 @@ export class MatchesPageComponent implements OnInit {
           break;
       }
     }
-    //console.log(event);
   }
 
-  setColorBasedOnBet(match, competitor, live = false){
-
-    if(live){
-      if(this.notFutureMatchesPerUser != null){
-        if (competitor === this.notFutureMatchesPerUser[match].team)
-          return '#e65100';
-      }
-    }
-
-    if(this.finishedMatchesPerUser[match] != null){
-      if(competitor == this.finishedMatchesPerUser[match].team){
-        if(this.finishedMatchesPerUser[match].result == 'win'){
-          return '#00c853';
-        }
-        else if(this.finishedMatchesPerUser[match].result == 'lose'){
-          return '#d50000';
-        }
-      }
-    }
-  }
-
-  getTeamFontStyle(matchKey, competitor, live = false){
+  getTeamFontStyle(matchKey, competitor){
     var color;
     var fontWeight;
-    if(live && this.notFutureMatchesPerUser[matchKey] != null && competitor === this.notFutureMatchesPerUser[matchKey].team){
-      color = '#e65100';
-      fontWeight = 900;
-    }
-    else if(!live && this.finishedMatchesPerUser[matchKey] != null){
-      if(this.finishedMatchesPerUser[matchKey].team == competitor && this.finishedMatchesPerUser[matchKey].result == 'win'){
-        color = '#b9f6ca';
+
+    if(this.afService.userBettings[matchKey] != null){
+
+        //in case of live matches
+      if(this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team){
+        color = '#e65100';
         fontWeight = 900;
       }
-      else if(this.finishedMatchesPerUser[matchKey].team == competitor && this.finishedMatchesPerUser[matchKey].result == 'lose'){
-        color = '#ffcdd2';
+      //in case of finished matches
+      else if(this.afService.userBettings[matchKey].status == 'finished'){
+        if(this.afService.userBettings[matchKey].team == competitor){
+          if(this.afService.userBettings[matchKey].result == 'win'){
+            color = '#00c853';
+            fontWeight = 900;
+          }
+          else if(this.afService.userBettings[matchKey].result == 'lose'){
+            color = '#d50000';
+          }
+        }
+        if(this.afService.userBettings[matchKey].team != competitor 
+          && this.afService.userBettings[matchKey].result == 'lose'){
+            fontWeight = 900;
+        }
       }
-    }
 
-    return {
-      'color': color,
-      'font-weight': fontWeight
-    };
-  }
-
-  setBorderBasedOnBet(matchKey, live = false){
-
-    if(live){
-      if(this.notFutureMatchesPerUser[matchKey]!=null){
-        return '#fff176';
-      }
-    }
-
-    if(this.finishedMatchesPerUser[matchKey] != null){
-      if(this.finishedMatchesPerUser[matchKey].result == 'win'){
-        return '#b9f6ca';
-      }
-      else{
-        return '#ffcdd2';
-      }
+      return {
+        'color': color,
+        'font-weight': fontWeight
+      };
     }
   }
 
+  setBackgroundOnBet(matchKey){
+
+    if(this.afService.userBettings[matchKey] != null){
+
+      if(this.afService.userBettings[matchKey].status == 'inProgress'){
+        return '#fff176';      
+      }
+      if(this.afService.userBettings[matchKey].status == 'finished'){
+        if(this.afService.userBettings[matchKey].result == 'win'){
+          return '#b9f6ca';
+        }
+        else{
+          return '#ffcdd2';
+        }
+      }
+    
+    }
+  }
 }

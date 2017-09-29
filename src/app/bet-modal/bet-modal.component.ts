@@ -39,7 +39,7 @@ export class BetModalComponent implements OnInit {
             this.selectedTeam = matchBet.team;
             this.alreadyTiped = true;
             this.tip = matchBet.tip;
-            if(match.status != 'finished')
+            if(match.status == 'future')
               this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
           }
           else if(match.status == 'future'){
