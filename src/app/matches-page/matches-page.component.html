@@ -1,0 +1,203 @@
+ 
+<md-sidenav-container fullscreen class="sidenav-container">
+    <md-sidenav  #sidenav class="app-sidenav" mode="{{mobView.isMobileView?'over':'side'}}" opened="{{!mobView.isMobileView}}" disableClose="{{!mobView.isMobileView}}">
+        <md-nav-list >
+            <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
+             BIG League Of Legends
+            </a>
+            <a md-list-item *ngFor="let label of labels | async" 
+            (click)="mobView.onLinkClick(sidenav);onSidenavClick(label)">
+              <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
+            </a>
+  
+        </md-nav-list>
+    </md-sidenav>
+  
+    <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
+            <button *ngIf="mobView.isMobileView" md-icon-button (click)="sidenav.toggle()">
+                <md-icon class="md-24" >menu</md-icon>
+            </button>
+            <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">All matches</h1>
+            <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
+              {{selectedLabel}} matches</h1>
+    </md-toolbar>
+
+  <div class="container">
+    
+    <div class="row">
+      <!-- upcoming matches -->
+      <div class="col-md-4">
+          <div class="col-sm-6 col-md-6 left-column">
+            <div>
+              <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
+                <md-divider></md-divider>
+                    <md-divider></md-divider>
+                      <md-divider></md-divider>
+                      <button md-raised-button *ngFor="let match of upcomingMatches | async" (click)="openDialog(match.$key);" color="default" style="width:100%; padding:0%">
+                          <md-grid-list cols="6" rowHeight="30px" st>
+                              <md-grid-tile
+                                [colspan]="1"
+                                [rowspan]="2">
+                                <img class="pull-right" src="{{match.game_logo}}" height="40px"> 
+                              </md-grid-tile>
+                              <md-grid-tile
+                                  [colspan]="4"
+                                  [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                  >
+                                  <!-- {{match.opponents.left.short_name}} -->
+                                  {{match.opponents.left.name}}
+                                  <span class="fill-remaining-space"></span>
+                                  <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.left.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                            >
+                                <b>{{ match.begin_at | betting_hours: true }}</b>
+                            </md-grid-tile>
+                              <md-grid-tile
+                                [colspan]="4"
+                                [rowspan]="1"
+                                >
+                                <!-- {{match.opponents.right.short_name}} -->
+                                {{match.opponents.right.name}}
+                                <span class="fill-remaining-space"></span>
+                                <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.right.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                              >
+                              <b>{{ match.begin_at | betting_hours}}</b>
+                            </md-grid-tile>
+                            </md-grid-list>
+                        </button>
+            </div>
+          </div>
+      </div>
+      <!-- upcoming matches end -->
+      
+      <!-- inProgress matches /notFuture -->
+      <div class="col-md-4">
+          <div class="col-sm-6 col-md-6 mid-column">
+            <div>
+              <h3 md-header style="color:rgba(255,255,255,.87);">Live matches</h3>
+                <md-divider></md-divider>
+                    <md-divider></md-divider>
+                      <md-divider></md-divider>
+                      <button md-raised-button *ngFor="let match of notFutureMatches | async" 
+                      (click)="openDialog(match.$key);" color="default" 
+                      style="width:100%; padding:0%"
+                      [ngStyle]="{'background-color':setBorderBasedOnBet(match.$key, true)}">
+                          <md-grid-list cols="6" rowHeight="30px" st>
+                              <md-grid-tile
+                                [colspan]="1"
+                                [rowspan]="2">
+                                <img class="pull-right" src="{{match.game_logo}}" height="40px"> 
+                              </md-grid-tile>
+                              <md-grid-tile
+                                  [colspan]="4"
+                                  [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                  >
+                                  <div style="font-weight: 900;" [ngStyle]="getTeamFontStyle(match.$key, 'left', true)">
+                                      {{match.opponents.left.name}}
+                                  </div>
+                                  <span class="fill-remaining-space"></span>
+                                  <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.left.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                            >
+                                <b>{{match.opponents.left.bets | betting_percentage: match.opponents.right.bets}}</b>
+                            </md-grid-tile>
+                              <md-grid-tile
+                                [colspan]="4"
+                                [rowspan]="1"
+                                >
+                                <div style="font-weight: 900;" [ngStyle]="getTeamFontStyle(match.$key, 'right', true)">
+                                  {{match.opponents.right.name}}                                
+                                </div>
+                                <span class="fill-remaining-space"></span>
+                                <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.right.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                              >
+                              <b>{{match.opponents.right.bets | betting_percentage: match.opponents.left.bets}}</b>
+                            </md-grid-tile>
+                            </md-grid-list>
+                        </button>
+            </div>
+          </div>
+      </div>
+      <!-- inProgress matches /notFuture end-->
+
+      <!-- match history -->
+      <div class="col-md-4">
+          <div class="col-sm-6 col-md-6 right-column">
+            <div>
+              <h3 md-header style="color:rgba(255,255,255,.87);">Finished matches</h3>
+                <md-divider></md-divider>
+                    <md-divider></md-divider>
+                      <md-divider></md-divider>
+                      <button md-raised-button *ngFor="let match of finishedMatches | async" 
+                      (click)="openDialog(match.$key);" color="default"
+                       style="width:100%; padding:0%"
+                       [ngStyle]="{'background-color':setBorderBasedOnBet(match.$key)}">
+                          <md-grid-list cols="6" rowHeight="30px" st>
+                              <md-grid-tile
+                                [colspan]="1"
+                                [rowspan]="2">
+                                <img class="pull-right" src="{{match.game_logo}}" height="40px"> 
+                              </md-grid-tile>
+                              <md-grid-tile
+                                  [colspan]="4"
+                                  [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                  >
+                                  <div *ngIf="match.winner=='left'" style="font-weight: 900;" [ngStyle]="{'color':setColorBasedOnBet(match.$key, 'left')}">
+                                      {{match.opponents.left.name}}
+                                  </div>
+                                  <div *ngIf="match.winner!='left'" [ngStyle]="{'color':setColorBasedOnBet(match.$key, 'left')}">
+                                      {{match.opponents.left.name}}
+                                  </div>
+
+                                  <span class="fill-remaining-space"></span>
+                                  <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.left.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                            >
+                              <b>{{match.opponents.left.bets | betting_percentage: match.opponents.right.bets}}</b>
+                            </md-grid-tile>
+                              <md-grid-tile
+                                [colspan]="4"
+                                [rowspan]="1"
+                                >
+                                <div *ngIf="match.winner=='right'" style="font-weight: 900;" [ngStyle]="{'color':setColorBasedOnBet(match.$key, 'right')}">
+                                    {{match.opponents.right.name}}
+                                </div>
+                                <div *ngIf="match.winner!='right'" [ngStyle]="{'color':setColorBasedOnBet(match.$key, 'right')}">
+                                    {{match.opponents.right.name}}
+                                </div>
+                                <span class="fill-remaining-space"></span>
+                                <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.right.logo" height="25px"> 
+                              </md-grid-tile>
+                            <md-grid-tile
+                              [colspan]="1"
+                              [rowspan]="1"
+                              >
+                              <b>{{match.opponents.right.bets | betting_percentage: match.opponents.left.bets}}</b>
+                            </md-grid-tile>
+                            </md-grid-list>
+                        </button>
+            </div>
+          </div>
+      </div>
+      <!-- match history end -->
+
+    </div>
+  </div>
+</md-sidenav-container>

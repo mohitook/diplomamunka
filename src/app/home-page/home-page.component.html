@@ -5,13 +5,13 @@
 </div> -->
   <!-- https://github.com/angular/material2/issues/1130 -->
   <md-sidenav-container fullscreen class="sidenav-container">
-  <md-sidenav  #sidenav class="app-sidenav" mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
+  <md-sidenav  #sidenav class="app-sidenav" mode="{{mobView.isMobileView?'over':'side'}}" opened="{{!mobView.isMobileView}}" disableClose="{{!mobView.isMobileView}}">
       <md-nav-list >
           <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
            BIG League Of Legends
           </a>
           <a md-list-item *ngFor="let label of labels | async" 
-          (click)="onLinkClick(sidenav);onSidenavClick(label)">
+          (click)="mobView.onLinkClick(sidenav);onSidenavClick(label)">
             <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
           </a>
 
@@ -19,7 +19,7 @@
   </md-sidenav>
 
   <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
-          <button *ngIf="isMobileView" md-icon-button (click)="sidenav.toggle()">
+          <button *ngIf="mobView.isMobileView" md-icon-button (click)="sidenav.toggle()">
               <md-icon class="md-24" >menu</md-icon>
           </button>
           <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">Fresh News</h1>
@@ -36,7 +36,7 @@
                 <div fxFlex>
                  <router-outlet class="hidden-router"></router-outlet>
                 </div>
-              </div>
+            </div>
 
             <!-- <router-outlet style="width:100%"></router-outlet> -->
          
@@ -59,9 +59,10 @@
                                    [colspan]="2"
                                    [rowspan]="1" style="border-bottom: #1A237E solid;"
                                    >
-                                   {{betting.opponents.left.short_name}}
+                                   <!-- {{betting.opponents.left.short_name}} -->
+                                   {{betting.opponents.left.name}}
                                    <span class="fill-remaining-space"></span>
-                                   <img class="pull-right" src="{{betting.opponents.left.logo}}" height="20px"> 
+                                   <img class="pull-right" (load)="onImgLoad($event,betting.game)" [src]="betting.opponents.left.logo" height="25px"> 
                                </md-grid-tile>
                                <md-grid-tile
                                [colspan]="1"
@@ -74,9 +75,10 @@
                                  [colspan]="2"
                                  [rowspan]="1"
                                  >
-                                 {{betting.opponents.right.short_name}}
+                                 <!-- {{betting.opponents.right.short_name}} -->
+                                 {{betting.opponents.right.name}}
                                  <span class="fill-remaining-space"></span>
-                                 <img class="pull-right" src="{{betting.opponents.right.logo}}" height="20px"> 
+                                 <img class="pull-right" (load)="onImgLoad($event,betting.game)" [src]="betting.opponents.right.logo" height="25px"> 
                                </md-grid-tile>
                              </md-grid-list>
                          </button>

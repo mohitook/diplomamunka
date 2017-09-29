@@ -1,6 +1,6 @@
 
     <h2 md-dialog-title>Place your bets</h2>
-    <md-dialog-content>
+    <md-dialog-content *ngIf="everythingLoaded">
     
         <md-grid-list cols="4" rowHeight="50px">
             <md-grid-tile [colspan]="1">
@@ -8,7 +8,8 @@
                  height="40px">
             </md-grid-tile>
             <md-grid-tile [colspan]="2">
-                <h3>{{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
+                <h3 *ngIf="(selectedBetting | async)?.status=='future'">{{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
+                <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>                
             </md-grid-tile>
             <md-grid-tile [colspan]="1">
                 <img class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}"
@@ -33,7 +34,7 @@
                         <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
                     </div>
                     <div class="pull-right" >
-                        {{(selectedBetting | async)?.opponents.right.short_name}}
+                        {{(selectedBetting | async)?.opponents.right.name}}
                     </div>
                 </button>
             </md-grid-tile>

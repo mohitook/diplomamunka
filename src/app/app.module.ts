@@ -1,3 +1,4 @@
+import { MobileViewService } from './providers/mobileView.service';
 import { NewsListComponent } from './home-page/news-list/news-list.component';
 import { BettingPercentagePipe } from './pipes/betting-percentage.pipe';
 import { BettingHoursPipe } from './pipes/betting-hours.pipe';
@@ -81,9 +82,8 @@ import {
 
 import HLTV from 'hltv';
 import { BetModalComponent } from './bet-modal/bet-modal.component';
-
-import { MasonryModule } from 'angular2-masonry';
 import { MyMasonryDirective } from './myMasonry.directive';
+import { MatchesPageComponent } from './matches-page/matches-page.component';
 
 // Must export the config
 export const firebaseConfig = {
@@ -115,7 +115,8 @@ const routes: Routes = [
   { path: 'profile-modal', component: ProfileModalComponent },
   { path: 'register', component: RegistrationPageComponent},
   { path: 'labelsPage', component: LabelsPageComponent},
-  { path: 'deleteNews', component: DeleteNewsComponent}
+  { path: 'deleteNews', component: DeleteNewsComponent},
+  { path: 'matches', component: MatchesPageComponent}
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -146,7 +147,8 @@ const routes: Routes = [
     BettingHoursPipe,
     BettingPercentagePipe,
     NewsListComponent,
-    MyMasonryDirective
+    MyMasonryDirective,
+    MatchesPageComponent
 ],
   entryComponents:[BetModalComponent],
   imports: [
@@ -196,10 +198,9 @@ const routes: Routes = [
     MdTooltipModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
-    MasonryModule
+    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
   ],
-  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF,{ provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

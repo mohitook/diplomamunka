@@ -15,6 +15,8 @@ export class BetModalComponent implements OnInit {
   public tip;
   selectedBetting: FirebaseObjectObservable<any>;
   alreadyTiped = false;
+  everythingLoaded = false;
+  
 
   BET_REGEX = /^\d+$/;
   BET_REGEX_Not0 = /^[1-9][0-9]*$/;
@@ -28,30 +30,29 @@ export class BetModalComponent implements OnInit {
     public dialogRef: MdDialogRef<BetModalComponent>,
     @Inject(MD_DIALOG_DATA) public data: any) { 
 
-      this.selectedBetting = this.afService.af.database.object('bettings/'+data.key);
-      this.selectedBetting.subscribe(x=>{
-        console.log(x);
-        this.checkIfAlreadyTiped(x);
-      })
+      this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
+      this.selectedBetting.subscribe(match=>{
+        console.log(match);
+        this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
+          console.log(matchBet);
+          if(matchBet.status!=null){ 
+            this.selectedTeam = matchBet.team;
+            this.alreadyTiped = true;
+            this.tip = matchBet.tip;
+            if(match.status != 'finished')
+              this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
+          }
+          else if(match.status == 'future'){
+            //triggers the function to check if it is still able to bet!
+            this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
+          }
+          this.everythingLoaded = true; //to fix the little 'available time' till the request is processed
+        });
+      });
+      //this.alreadyTiped = true;
     }
 
  ngOnInit(): void { }
-
-    checkIfAlreadyTiped(betting: any){
-      if(betting.betHistory != null){
-        if(betting.betHistory[this.afService.uid] != null){
-          this.alreadyTiped = true;
-          if(betting.betHistory[this.afService.uid].left != null){
-            this.selectedTeam = 'left';
-            this.tip = betting.betHistory[this.afService.uid].left;
-          }
-          else{
-            this.selectedTeam = 'right';
-            this.tip = betting.betHistory[this.afService.uid].right;
-          }
-        }
-      }
-    }
 
   onNoClick(): void {
     this.dialogRef.close();

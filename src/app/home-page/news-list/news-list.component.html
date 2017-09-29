@@ -1,8 +1,9 @@
+
 <div class="flexbox" appMyMasonry>
         <div *ngFor="let new of specificNews | async | paginate: { itemsPerPage: 10, currentPage: p }" class="box">
                 
                    <md-card class="example-card">
-                       <img md-card-image src="{{new.coverImageUrl}}">
+                       <img (load)="onImgLoad($event.target)" md-card-image src="{{new.coverImageUrl}}">
                        <md-card-header>
                          <md-card-title>
                              <h4>

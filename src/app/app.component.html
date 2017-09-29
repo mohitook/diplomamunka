@@ -12,7 +12,7 @@
       
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
           <button md-button routerLink="/">News</button>
-          <button md-button routerLink="/dashboard">Matches</button>
+          <button md-button routerLink="/matches">Matches</button>
       </div>
       <span class="fill-remaining-space"></span>
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
@@ -27,7 +27,8 @@
 
   <md-menu x-position="before" #menu="mdMenu">
       <button md-menu-item routerLink="/">News</button>
-      <button md-menu-item routerLink="/dashboard">Matches</button>
+      <button md-menu-item routerLink="/matches">Matches</button>
+      <button md-menu-item routerLink="/addnew">Administrator page</button>
       <hr style="margin-top: 5px; margin-bottom: 5px;">
       <button *ngIf="!afService.isLoggedIn" md-menu-item routerLink="/login">Login</button>
       <button  *ngIf="afService.isLoggedIn" md-menu-item (click)="logout()">Logout</button>

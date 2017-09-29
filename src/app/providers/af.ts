@@ -12,8 +12,11 @@ export class AF {
     public limitNumber : number = 2;
 
     private clock: Observable<Date>;
-    
-    public upcomingBettings : FirebaseListObservable<any>;
+
+    public pendingBets : FirebaseListObservable<any>;
+    public upcomingMatches : FirebaseListObservable<any>;
+    public notFutureMatches : FirebaseListObservable<any>;
+    public finishedMatches : FirebaseListObservable<any>;
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
     public comments: FirebaseListObservable<any>;
@@ -55,6 +58,8 @@ export class AF {
         this.labels = this.af.database.list('labels');
         this.users = this.af.database.list('users');
 
+        this.pendingBets = this.af.database.list('pendingBets');
+
         this.allNews = this.af.database.list('news', {
             query: {
                 orderByChild: 'labels/All',
@@ -66,26 +71,36 @@ export class AF {
         //this handles the still tip'able matches. if the timestamp of the match is bigger then the current time: it is not tipable anymore
         //and not 'future'
 
-        this.upcomingBettings = this.af.database.list('bettings',{
+        this.upcomingMatches = this.af.database.list('matches',{
             query:{
                 orderByChild: 'status',
                 equalTo: 'future'
             }
         });
 
-        this.clock = Observable.interval(1000).map(tick => new Date()).share();
+        this.notFutureMatches = this.af.database.list('matches',{
+            query:{
+                orderByChild: 'status',
+                equalTo: 'notFuture'
+            }
+        });
 
-        this.upcomingBettings.subscribe(x => {
-            console.log(x);
-            this.clock.subscribe(y => {
-                x.forEach(z => {
-                    if(z.begin_at < y){
-                        this.af.database.object('bettings/' + z.$key).update({
-                            status : "notFuture",
-                            currentTime: y
-                        });
-                    }
-                });
+        this.finishedMatches = this.af.database.list('matches',{
+            query:{
+                orderByChild: 'status',
+                equalTo: 'finished'
+            }
+        });
+
+        //this.clock = Observable.interval(1000).map(tick => new Date()).share();
+
+        //átirni olyanra, hogy csak csekkoljon valamit be a DB-be, amitől 
+        //triggerelődik a dátumvizsgálat!
+        this.upcomingMatches.subscribe(matches => {
+            matches.forEach(match => {
+                if(match.begin_at <= new Date().getTime()){
+                    this.af.database.object('checkMatchDate/' + match.$key).set(match.begin_at);
+                }
             });
         });
 
@@ -141,6 +156,7 @@ export class AF {
         return this.af.database.object('users/' + this.uid).update({
             displayName: this.displayName,
             email: this.email,
+            //coins: 1000
         });
     }
 
@@ -294,6 +310,12 @@ export class AF {
         return this.specificNews;
     }
 
+    checkIfAlreadyTiped(matchKey) {
+      console.log('checkIfAlreadyTiped');
+      console.log(this.uid);
+      return this.af.database.object('bets/' + matchKey + '/' + this.uid);
+    }
+
     //++Email/PW Registration
 
     /**
@@ -319,6 +341,7 @@ export class AF {
         return this.af.database.object('users/' + uid).set({
             displayName: name,
             email: email,
+            coin:1000
         });
     }
 
@@ -349,9 +372,15 @@ export class AF {
 
     //mindenki csak egyszer fogadhat, többszöri fogadással az elején tévútra lehetne terelni a többséget és ezzel a végén kaszálni!
     placeTip(matchId: string, team: string, tip: number){
-        return this.af.database.object('bettings/' + matchId + '/betHistory/' + this.uid).set({
-                [team]: tip
+        return this.af.database.object('pendingBets/' + this.uid).set({
+            matchId: matchId,
+            team: team,
+            tip: tip,
+            status: 'new'
         });
+        // return this.af.database.object('Matches/' + matchId + '/betHistory/' + this.uid).set({
+        //         [team]: tip
+        // });
     }
 
 }

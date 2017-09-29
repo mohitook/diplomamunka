@@ -1,6 +1,6 @@
 import { MyMasonryDirective } from './../../myMasonry.directive';
 import { BetModalComponent } from '../../bet-modal/bet-modal.component';
-import { Component, OnInit, AfterViewChecked, AfterViewInit ,ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer, Inject } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewChecked, AfterViewInit ,ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer, Inject } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
@@ -17,6 +17,8 @@ import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
 import {MdSidenav, MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 
+import 'imagesLoaded';
+
 declare var $ :any; //for custom buttons in text editor
 
 @Component({
@@ -24,7 +26,7 @@ declare var $ :any; //for custom buttons in text editor
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.css']
 })
-export class NewsListComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class NewsListComponent implements OnInit, AfterViewChecked {
 
   specificNews: FirebaseListObservable<any>;
   loadedIn = false;
@@ -43,18 +45,30 @@ export class NewsListComponent implements OnInit, AfterViewInit, AfterViewChecke
      });
      console.log('route navigated to new label category:' + this.game);
    });
+
+ }
+
+ //to make sure the elements won't callopse if you change view on mobile!
+ @HostListener('window:resize', ['$event'])
+ onResize(event){
+    //console.log("Width: " + event.target.innerWidth);
+    this.directive.sortElements();
  }
 
   ngOnInit() {
   }
 
-  ngAfterViewInit(): void {
-    
-  }
   //being called in every sec, doesn't affect that much on cpu and memory..
   //it is needed in case if a new content arrives and the client page is already loaded(calculate again)
   //also it is needed to calculate paginator page item positions
   ngAfterViewChecked(): void {
+    //this.directive.sortElements();
+
+    //commented out because it doesn't work as expected
+  }
+
+  onImgLoad(image: any){
+    //$(image).parent().parent()[0].hidden = false; //this can cose unexpected behaviour!
     this.directive.sortElements();
   }
 }

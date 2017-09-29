@@ -4,8 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'betting_hours'
 })
 export class BettingHoursPipe implements PipeTransform {
-
-  transform(value: any, args?: any): any {
+  //set hours true if you will get the remaining hours, set it false if you'll get the minutes
+  transform(value: any, hours: boolean): any {
 
     var timeDifference = Math.abs(value - Date.now());
 
@@ -13,7 +13,12 @@ export class BettingHoursPipe implements PipeTransform {
 
     var difInMinutes = Math.floor((timeDifference - (difInHours * 60*60*1000)) /(60*1000));
 
-    return difInHours + 'h ' + difInMinutes + 'm';
+    if(hours){
+      return difInHours + 'h';
+    }
+    else
+      return difInMinutes + 'm';
+
   }
 
 }
