@@ -4,7 +4,7 @@
     
         <md-grid-list cols="4" rowHeight="50px">
             <md-grid-tile [colspan]="1">
-                <img src="{{(selectedBetting | async)?.opponents.left.logo}}"
+                <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}"
                  height="40px">
             </md-grid-tile>
             <md-grid-tile [colspan]="2">
@@ -12,7 +12,7 @@
                 <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>                
             </md-grid-tile>
             <md-grid-tile [colspan]="1">
-                <img class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}"
+                <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}"
                  height="40px"> 
             </md-grid-tile>
             <md-grid-tile [colspan]="2">

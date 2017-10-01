@@ -17,7 +17,7 @@ export class MatchesPageComponent implements OnInit {
   upcomingMatches: FirebaseListObservable<any>;
   notFutureMatches: FirebaseListObservable<any>;
   finishedMatches: Observable<any>;
-  labels: FirebaseListObservable<any>;
+  labels: Array<any>; 
   selectedLabel;
   labelsAreAvailable = false;
 
@@ -26,38 +26,40 @@ export class MatchesPageComponent implements OnInit {
 
   public config: PaginationInstance = {
     id: 'config',
-    itemsPerPage: 1,
+    itemsPerPage: 10,
     currentPage: 1
 };
 
 public config2: PaginationInstance = {
   id: 'config2',
-  itemsPerPage: 1,
+  itemsPerPage: 10,
   currentPage: 1
 };
 
 public config3: PaginationInstance = {
   id: 'config3',
-  itemsPerPage: 1,
+  itemsPerPage: 10,
   currentPage: 1
 };
+
+p;
+p2;
+p3;
 
   constructor(public afService: AF ,public mobView: MobileViewService,  public dialog: MdDialog) {
     this.upcomingMatches = afService.upcomingMatches;
     this.notFutureMatches = afService.notFutureMatches;
     //to order them by date ascending, because the original list is descending by timestamp..
     this.finishedMatches = afService.finishedMatches.map( (arr) => { return arr.reverse(); } );
-    this.labels = this.afService.labels;
+
+    this.labels = [{name: 'Dota 2', image: 'https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png'},
+    {name: 'Counter Strike GO', image: 'https://seeklogo.com/images/C/Counter-Strike-logo-EAC70C9C3A-seeklogo.com.png'},
+    {name: 'League of Legends', image: 'https://vignette.wikia.nocookie.net/leagueoflegends/images/1/12/League_of_Legends_Icon.png/revision/latest?cb=20150402234343'}
+    ];
 
     this.afService.userBets.subscribe(x=>{
       console.log(x);
-    })
-
-    this.labels.subscribe(x => {
-      if(x != null){
-        this.labelsAreAvailable = true;
-      }
-    });
+      });
 
     this.finishedMatches.subscribe(matches=>{
       matches.forEach(match => {
@@ -87,7 +89,12 @@ public config3: PaginationInstance = {
   }
 
   onSidenavClick(label: any){
-    this.selectedLabel = label.label;
+    this.selectedLabel = label.name;
+  }
+
+  labelImgLoad(){
+    //clear the placeholder in time    
+    this.labelsAreAvailable = true;    
   }
 
   openDialog(key: string): void {
@@ -173,5 +180,7 @@ public config3: PaginationInstance = {
       }
     
     }
+
+    return '#8c9eff';
   }
 }

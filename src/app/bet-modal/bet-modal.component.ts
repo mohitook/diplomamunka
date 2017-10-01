@@ -16,7 +16,7 @@ export class BetModalComponent implements OnInit {
   selectedBetting: FirebaseObjectObservable<any>;
   alreadyTiped = false;
   everythingLoaded = false;
-  
+  game;
 
   BET_REGEX = /^\d+$/;
   BET_REGEX_Not0 = /^[1-9][0-9]*$/;
@@ -33,6 +33,7 @@ export class BetModalComponent implements OnInit {
       this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
       this.selectedBetting.subscribe(match=>{
         console.log(match);
+        this.game = match.game;
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
           console.log(matchBet);
           if(matchBet.status!=null){ 
@@ -79,4 +80,25 @@ export class BetModalComponent implements OnInit {
   placeBets(){
     this.afService.placeTip(this.data.key,this.selectedTeam,this.tip);
   }
+
+  //from the rest api sometimes there is no real picture, only a 1px*1px ****thing
+  onImgLoad(event: any, gameName: string){
+    if(event.target.naturalHeight <= 1){
+      switch (gameName) {
+        case 'Dota 2':
+          event.target.src = 'https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/e/ea/Animal_Courier_Dire_model.png/250px-Animal_Courier_Dire_model.png?version=f0215138b198d530a16d2f5e2f08dcc2';
+          break;
+        case 'CS GO':
+          event.target.src = 'http://www.freeiconspng.com/uploads/cs-go-csgo-inventory-icon-27.png';
+          break;
+        case 'LoL':
+          event.target.src = 'http://news.cdn.leagueoflegends.com/public/images/pages/2015/sno/img/icon2.png';
+          break;
+        default:
+          event.target.src = 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3';        
+          break;
+      }
+    }
+  }
+
 }

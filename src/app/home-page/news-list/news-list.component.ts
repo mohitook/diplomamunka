@@ -31,6 +31,8 @@ export class NewsListComponent implements OnInit, AfterViewChecked {
   specificNews: FirebaseListObservable<any>;
   loadedIn = false;
   game;
+  
+  p;
 
   @ViewChild(MyMasonryDirective) directive = null;
 

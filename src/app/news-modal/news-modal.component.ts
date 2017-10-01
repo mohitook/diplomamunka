@@ -33,6 +33,7 @@ export class NewsModalComponent implements OnInit {
         itemsPerPage: 10,
         currentPage: 1
     };
+    p;
 
   constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer) {
     //predefine to avoid errors

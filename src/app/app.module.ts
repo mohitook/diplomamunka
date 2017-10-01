@@ -1,3 +1,4 @@
+import { MatchFilterPipe } from './pipes/match-filter.pipe';
 import { MobileViewService } from './providers/mobileView.service';
 import { NewsListComponent } from './home-page/news-list/news-list.component';
 import { BettingPercentagePipe } from './pipes/betting-percentage.pipe';
@@ -148,7 +149,8 @@ const routes: Routes = [
     BettingPercentagePipe,
     NewsListComponent,
     MyMasonryDirective,
-    MatchesPageComponent
+    MatchesPageComponent,
+    MatchFilterPipe
 ],
   entryComponents:[BetModalComponent],
   imports: [

@@ -7,6 +7,44 @@ var functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+//++++++++++++++++++++++++++++ 
+//check in every 12 hours. If the a match doesn't have result in 8 hours from the begin_at ->
+//-> give back every bet to the users
+exports.matchResultCheck = functions.https.onRequest((request, response) =>{
+
+  var matches = admin.database().ref('matches');
+  matches.once('value',function(matchesSnapShot){
+      matchesSnapShot.forEach(function(match){
+        if(match.val().status == 'notFuture'){
+          //4800000 is 8 hours in milliseconds
+          if((match.val().begin_at + 4800000) <= new Date().getTime()){
+            admin.database().ref('bets/'+match.key).once('value',function(betSnapShot){
+              betSnapShot.forEach(function(userBet){
+                //just to secure the bets with log
+                if(userBet.val().status != 'inProgress'){
+                  console.log('data inconsistency: ' + match.key + '/' + userBet.key);
+                  return;
+                }
+                userBet.ref.child('status').set('rejected-noResultInTime');
+                //give the coins back to the users
+                admin.database().ref('users/'+userBet.key).once('value',function(userSnap){
+                  userSnap.ref.child('coins').set(userSnap.val().coins + userBet.val().tip)
+                });
+              });
+            });
+          }
+        }
+    });
+  });
+
+  response.send('process started');
+  
+})
+
+
+//--------------------------- 
+
+
 //++++++++++++++++++++++++++++ fiveMinuteMatchTimeCheck
 
 //in every 5 minutes compare the current time to the matches begin_at! (less datecheck call from clients)
@@ -124,7 +162,7 @@ function dailyScheduleToDb(gameName, request, response){
             game_logo = "https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png"
             break;
           case 'LoL':
-            game_logo = "https://seeklogo.com/images/C/Counter-Strike-logo-EAC70C9C3A-seeklogo.com.png"
+            game_logo = "https://vignette.wikia.nocookie.net/leagueoflegends/images/1/12/League_of_Legends_Icon.png/revision/latest?cb=20150402234343"
             break;
           default:
             break;

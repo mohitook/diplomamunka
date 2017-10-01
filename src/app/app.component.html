@@ -16,7 +16,17 @@
       </div>
       <span class="fill-remaining-space"></span>
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-        <button md-button routerLink="/addnew">Administrator page</button>
+        <button md-button routerLink="/addnew" style="color:#ffd54f">Administrator page</button>
+        <md-chip-list *ngIf="afService.isLoggedIn">
+                <md-chip style="background-color:#1a237e;color:rgba(255,255,255,.87);">
+                        <b>{{(afService.user | async)?.coins}}</b> &nbsp;
+                        <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
+                </md-chip>
+        </md-chip-list>
+        <!-- <button  md-button *ngIf="afService.isLoggedIn">
+            <b>{{(afService.user | async)?.coins}}</b>
+            <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
+        </button> -->
         <button md-button routerLink="/login" *ngIf="!afService.isLoggedIn">Login</button>
         <button md-button *ngIf="afService.isLoggedIn" (click)="logout()">Logout</button>
       </div>
@@ -28,7 +38,11 @@
   <md-menu x-position="before" #menu="mdMenu">
       <button md-menu-item routerLink="/">News</button>
       <button md-menu-item routerLink="/matches">Matches</button>
-      <button md-menu-item routerLink="/addnew">Administrator page</button>
+      <button md-menu-item routerLink="/addnew" style="color:#ff6f00">Administrator page</button>
+      <div md-menu-item *ngIf="afService.isLoggedIn" >
+              <b>{{(afService.user | async)?.coins}}</b> &nbsp;
+              <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
+      </div>
       <hr style="margin-top: 5px; margin-bottom: 5px;">
       <button *ngIf="!afService.isLoggedIn" md-menu-item routerLink="/login">Login</button>
       <button  *ngIf="afService.isLoggedIn" md-menu-item (click)="logout()">Logout</button>
