@@ -3,105 +3,121 @@
     <script src='https://cdn.html5maker.com/embed.js?id=a9644991b543dc0dc888d4471fdf010d8dac5094eaa8&responsive=1&width=940&height=400&h5mTag=html5maker'></script>
 
 </div> -->
-  <!-- https://github.com/angular/material2/issues/1130 -->
-  <md-sidenav-container fullscreen class="sidenav-container">
-  <md-sidenav  #sidenav class="app-sidenav" mode="{{mobView.isMobileView?'over':'side'}}" opened="{{!mobView.isMobileView}}" disableClose="{{!mobView.isMobileView}}">
-      <md-nav-list >
-          <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
+<!-- https://github.com/angular/material2/issues/1130 -->
+<md-sidenav-container fullscreen class="sidenav-container">
+  <md-sidenav #sidenav class="app-sidenav" mode="{{mobView.isMobileView?'over':'side'}}" opened="{{!mobView.isMobileView}}"
+    disableClose="{{!mobView.isMobileView}}">
+    <md-nav-list>
+      <a md-list-item *ngIf="!labelsAreAvailable" style="color:white;">
            BIG League Of Legends
           </a>
-          <a md-list-item *ngFor="let label of labels | async" 
-          (click)="mobView.onLinkClick(sidenav);onSidenavClick(label)">
+      <a md-list-item *ngFor="let label of labels | async" (click)="mobView.onLinkClick(sidenav);onSidenavClick(label)">
             <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
           </a>
 
-      </md-nav-list>
+    </md-nav-list>
   </md-sidenav>
 
   <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
-          <button *ngIf="mobView.isMobileView" md-icon-button (click)="sidenav.toggle()">
+    <button *ngIf="mobView.isMobileView" md-icon-button (click)="sidenav.toggle()">
               <md-icon class="md-24" >format_indent_increase</md-icon>
           </button>
-          <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">Fresh News</h1>
-          <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
-            {{selectedLabel}} fresh news</h1>
+    <h1 *ngIf="selectedLabel==null || selectedLabel=='All'">Fresh News</h1>
+    <h1 *ngIf="selectedLabel!=null && selectedLabel!='All'">
+      {{selectedLabel}} fresh news</h1>
   </md-toolbar>
- 
-<div class="container">
+
+  <div class="container">
     <div class="row row-eq-height">
-        
-        <div class="col-md-8">
-            
-            <div fxLayout="column" fxFlexFill>
-                <div fxFlex>
-                 <router-outlet class="hidden-router"></router-outlet>
-                </div>
-            </div>
 
-            <!-- <router-outlet style="width:100%"></router-outlet> -->
-         
-         </div>
-       <div class="col-md-4" style="padding-left:0px">
-           <div class="col-sm-6 col-md-6 right-column">
-             <div>
-               <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
-                 <md-divider></md-divider>
-                     <md-divider></md-divider>
-                       <md-divider></md-divider>
-                       <button md-raised-button *ngFor="let betting of bettings | async" (click)="openDialog(betting.$key);" color="default" style="width:100%; padding:0%">
-                           <md-grid-list cols="4" rowHeight="30px" st>
-                               <md-grid-tile
-                                 [colspan]="1"
-                                 [rowspan]="2">
-                                 <img class="pull-right" src="{{betting.game_logo}}" height="40px"> 
-                               </md-grid-tile>
-                               <md-grid-tile
-                                   [colspan]="2"
-                                   [rowspan]="1" style="border-bottom: #1A237E solid;"
-                                   >
-                                   <!-- {{betting.opponents.left.short_name}} -->
-                                   {{betting.opponents.left.name}}
-                                   <span class="fill-remaining-space"></span>
-                                   <img class="pull-right" (load)="onImgLoad($event,betting.game)" [src]="betting.opponents.left.logo" height="25px"> 
-                               </md-grid-tile>
-                               <md-grid-tile
-                               [colspan]="1"
-                               [rowspan]="2"
-                               >
-                               {{ betting.begin_at | betting_hours }}
-                               <!-- date:'d/M/yy hh:mm:ss' -->
-                             </md-grid-tile>
-                               <md-grid-tile
-                                 [colspan]="2"
-                                 [rowspan]="1"
-                                 >
-                                 <!-- {{betting.opponents.right.short_name}} -->
-                                 {{betting.opponents.right.name}}
-                                 <span class="fill-remaining-space"></span>
-                                 <img class="pull-right" (load)="onImgLoad($event,betting.game)" [src]="betting.opponents.right.logo" height="25px"> 
-                               </md-grid-tile>
-                             </md-grid-list>
-                         </button>
-             </div>
-           </div>
+      <div class="col-md-8">
+
+        <div fxLayout="column" fxFlexFill>
+          <div fxFlex>
+            <router-outlet class="hidden-router"></router-outlet>
+          </div>
+        </div>
+
+        <!-- <router-outlet style="width:100%"></router-outlet> -->
+
       </div>
-       
-    </div>
-          
 
-          
-
-          <footer>
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-12 text-right">
-                    <h5>©eSpot - Diplomamunka</h5></div>
+      <!-- upcoming matches -->
+      
+      <div class="col-md-4" style="padding-left:0px">
+          <div class="col-sm-6 col-md-6 right-column">
+              <div>
+                  <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
+                  <md-divider></md-divider>
+                  <md-divider></md-divider>
+                  <md-divider></md-divider>
+                  <button md-raised-button *ngFor="let match of upcomingMatches | async | match_filter: selectedLabel" (click)="openDialog(match.$key);"
+                    color="default" style="width:100%; padding:0%; background-color:#8c9eff;" [ngStyle]="{'background-color':setBackgroundOnBet(match.$key)}">
+                                <md-grid-list cols="6" rowHeight="30px" st>
+                                    <md-grid-tile
+                                      [colspan]="1"
+                                      [rowspan]="2">
+                                      <img class="pull-right" src="{{match.game_logo}}" height="40px"> 
+                                    </md-grid-tile>
+                                    <md-grid-tile
+                                        [colspan]="4"
+                                        [rowspan]="1" style="border-bottom: #1A237E solid;"
+                                        >
+                                        <div [ngStyle]="getTeamFontStyle(match.$key, 'left')">
+                                          {{match.opponents.left.name}}                                
+                                        </div>
+                                        <span class="fill-remaining-space"></span>
+                                        <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.left.logo" height="25px"> 
+                                    </md-grid-tile>
+                                  <md-grid-tile
+                                    [colspan]="1"
+                                    [rowspan]="1"
+                                  >
+                                      <b>{{ match.begin_at | betting_hours: true }}</b>
+                                  </md-grid-tile>
+                                    <md-grid-tile
+                                      [colspan]="4"
+                                      [rowspan]="1"
+                                      >
+                                      <div [ngStyle]="getTeamFontStyle(match.$key, 'right')">
+                                        {{match.opponents.right.name}}                                
+                                      </div>
+                                      <span class="fill-remaining-space"></span>
+                                      <img class="pull-right" (load)="onImgLoad($event,match.game)" [src]="match.opponents.right.logo" height="25px"> 
+                                    </md-grid-tile>
+                                  <md-grid-tile
+                                    [colspan]="1"
+                                    [rowspan]="1"
+                                    >
+                                    <b>{{ match.begin_at | betting_hours}}</b>
+                                  </md-grid-tile>
+                                  </md-grid-list>
+                              </button>
                 </div>
-              </div>
-            </footer>
+          </div>
+        </div>
 
-</div>
+
+      <!-- upcoming matches end -->
+
+
+      
+
+    </div>
+
+
+
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-right">
+            <h5>©eSpot - Diplomamunka</h5>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
 
 </md-sidenav-container>
-
-

@@ -1,22 +1,23 @@
+<h2 md-dialog-title *ngIf="!matchIsInProgress">
+    Place your bets</h2>
+<h2 md-dialog-title *ngIf="matchIsInProgress">Match is in progress</h2>
 
-    <h2 md-dialog-title>Place your bets</h2>
-    <md-dialog-content *ngIf="everythingLoaded">
-    
-        <md-grid-list cols="4" rowHeight="50px">
-            <md-grid-tile [colspan]="1">
-                <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}"
-                 height="40px">
-            </md-grid-tile>
-            <md-grid-tile [colspan]="2">
-                <h3 *ngIf="(selectedBetting | async)?.status=='future'">{{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
-                <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>                
-            </md-grid-tile>
-            <md-grid-tile [colspan]="1">
-                <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}"
-                 height="40px"> 
-            </md-grid-tile>
-            <md-grid-tile [colspan]="2">
-                <button [disabled]="alreadyTiped" md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
+<md-dialog-content *ngIf="everythingLoaded && !afService.userHasAlreadyPendingBet && matchIsFuture">
+
+    <md-grid-list cols="4" rowHeight="50px">
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <h3 *ngIf="(selectedBetting | async)?.status=='future'">{{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
+            <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>
+        </md-grid-tile>
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button [disabled]="alreadyTiped" md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
                   <div class="pull-left">
                     {{(selectedBetting | async)?.opponents.left.name}}
                     </div>
@@ -26,9 +27,10 @@
                         
                     </div>
                 </button>
-            </md-grid-tile>
-            <md-grid-tile [colspan]="2">
-                <button [disabled]="alreadyTiped"  md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button [disabled]="alreadyTiped" md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
                     <div class="pull-left">
                         {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
                         <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
@@ -37,39 +39,123 @@
                         {{(selectedBetting | async)?.opponents.right.name}}
                     </div>
                 </button>
-            </md-grid-tile>
-            
-        </md-grid-list>
-    </md-dialog-content>
+        </md-grid-tile>
 
-    <md-dialog-actions style="text-align: center;display: block;" *ngIf="selectedTeam!=''">
-    
-        <button md-raised-button *ngIf="!afService.isLoggedIn" routerLink="/login" (click)="dialogRef.close()" color="primary">
+    </md-grid-list>
+</md-dialog-content>
+
+<md-dialog-content *ngIf="everythingLoaded && matchIsInProgress">
+
+    <md-grid-list cols="4" rowHeight="50px">
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <h3 *ngIf="(selectedBetting | async)?.status=='notFuture'" style="color:red">-- --</h3>
+            <h3 *ngIf="(selectedBetting | async)?.status=='notFuture' && streamIsAvailable" style="color:red">stream</h3>
+        </md-grid-tile>
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
+                          <div class="pull-left">
+                            {{(selectedBetting | async)?.opponents.left.name}}
+                            </div>
+                            <div class="pull-right" >
+                                <!-- <small>({{(selectedBetting | async)?.opponents.left.bets}})</small> -->
+                                {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
+                                
+                            </div>
+                        </button>
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
+                            <div class="pull-left">
+                                {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
+                                <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
+                            </div>
+                            <div class="pull-right" >
+                                {{(selectedBetting | async)?.opponents.right.name}}
+                            </div>
+                        </button>
+        </md-grid-tile>
+
+    </md-grid-list>
+</md-dialog-content>
+
+<md-dialog-content *ngIf="everythingLoaded && matchIsFinished">
+        
+            <md-grid-list cols="4" rowHeight="50px">
+                <md-grid-tile [colspan]="1">
+                    <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
+                </md-grid-tile>
+                <md-grid-tile [colspan]="2">
+                    <!-- <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">{{(selectedBetting | async)?.result}}</h3> -->
+                    <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">2 / 1</h3>                    
+                </md-grid-tile>
+                <md-grid-tile [colspan]="1">
+                    <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
+                </md-grid-tile>
+                <md-grid-tile [colspan]="2">
+                    <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                        [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
+                                  <div class="pull-left">
+                                    {{(selectedBetting | async)?.opponents.left.name}}
+                                    </div>
+                                    <div class="pull-right" >
+                                        <!-- <small>({{(selectedBetting | async)?.opponents.left.bets}})</small> -->
+                                        {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
+                                        
+                                    </div>
+                                </button>
+                </md-grid-tile>
+                <md-grid-tile [colspan]="2">
+                    <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
+                        [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
+                                    <div class="pull-left">
+                                        {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
+                                        <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
+                                    </div>
+                                    <div class="pull-right" >
+                                        {{(selectedBetting | async)?.opponents.right.name}}
+                                    </div>
+                                </button>
+                </md-grid-tile>
+        
+            </md-grid-list>
+        </md-dialog-content>
+
+<md-dialog-actions style="text-align: center;display: block;" *ngIf="selectedTeam!=''">
+
+    <button md-raised-button *ngIf="!afService.isLoggedIn" routerLink="/login" (click)="dialogRef.close()" color="primary">
             Login to Tip
         </button>
 
-        <form *ngIf="afService.isLoggedIn">
-            <md-form-field *ngIf="!alreadyTiped">
-              <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet" min="0" step="1" [formControl]="betFormControl">
-              <md-error *ngIf="betFormControl.hasError('pattern')">
-                  Please use only Integers
-                </md-error>
-                <md-error *ngIf="betFormControl.hasError('required')">
-                  Please take your bets
-                </md-error>
-            </md-form-field>
+    <form *ngIf="afService.isLoggedIn">
+        <md-form-field *ngIf="!alreadyTiped">
+            <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet" min="0" step="1" [formControl]="betFormControl">
+            <md-error *ngIf="betFormControl.hasError('pattern')">
+                Please use only Integers
+            </md-error>
+            <md-error *ngIf="betFormControl.hasError('required')">
+                Please take your bets
+            </md-error>
+        </md-form-field>
 
-           <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped">
-                   <md-chip  color="primary" style="display: inline-block;background-color: #ffab00;">
-                        <b>Your tip: {{tip}}</b>
-                   </md-chip>
-           </md-chip-list>
+        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped">
+            <md-chip color="primary" style="display: inline-block;background-color: #ffab00;">
+                <b>Your tip: {{tip}}</b>
+            </md-chip>
+        </md-chip-list>
 
-        </form>
-        <button *ngIf="!betFormControl.hasError('pattern') && !betFormControl.hasError('required') && !alreadyTiped" (click)="placeBets()" style="width:200px" md-raised-button color="primary" md-dialog-close>Tip</button>
-    
-      <!-- <button md-button md-dialog-close>{{data.name}}</button>
+    </form>
+    <button *ngIf="!betFormControl.hasError('pattern') && !betFormControl.hasError('required') && !alreadyTiped" (click)="placeBets()"
+        style="width:200px" md-raised-button color="primary" md-dialog-close>Tip</button>
+
+    <!-- <button md-button md-dialog-close>{{data.name}}</button>
        Can optionally provide a result for the closing dialog.
       <button md-button [md-dialog-close]="true">{{data.animal}}</button> -->
-    </md-dialog-actions>
-
+</md-dialog-actions>

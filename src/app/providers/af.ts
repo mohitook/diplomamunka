@@ -14,7 +14,7 @@ export class AF {
     private clock: Observable<Date>;
 
     public userBets : FirebaseListObservable<any>;    
-    public pendingBets : FirebaseListObservable<any>;
+    public pendingBetsForUser : FirebaseObjectObservable<any>;
     public upcomingMatches : FirebaseListObservable<any>;
     public notFutureMatches : FirebaseListObservable<any>;
     public finishedMatches : FirebaseListObservable<any>;
@@ -31,6 +31,8 @@ export class AF {
     public displayName: string;
     public email: string;
     public firstLogin: boolean = false;
+
+    public userHasAlreadyPendingBet = false;
 
 
     public propertySubject: Subject<any>;
@@ -60,8 +62,6 @@ export class AF {
         this.news = this.af.database.list('news');
         this.labels = this.af.database.list('labels');
         this.users = this.af.database.list('users');
-
-        this.pendingBets = this.af.database.list('pendingBets');
 
         this.allNews = this.af.database.list('news', {
             query: {
@@ -105,9 +105,21 @@ export class AF {
 
         this.uidUpdate.subscribe(uid => {
             this.propertySubject.next(uid);
+            this.pendingBetsForUser = this.af.database.object('pendingBets/' + uid);
+            this.pendingBetsForUser.subscribe(x => {
+                //this is for the client check, to disable all bet functions till there is a pending bet related to the current user!
+                if(x.matchId!= null){
+                    this.userHasAlreadyPendingBet = true;
+                }
+                else{
+                    this.userHasAlreadyPendingBet = false;
+                }
+            });
         });
 
         this.userBets.subscribe(bets=>{
+            //make sure reInitialize it! (basically it is important just for test purposes)
+            this.userBettings = {};
             bets.forEach(bet => {
                 this.userBettings[bet.$key] = bet[this.uid];
             });
@@ -395,15 +407,14 @@ export class AF {
 
     //mindenki csak egyszer fogadhat, többszöri fogadással az elején tévútra lehetne terelni a többséget és ezzel a végén kaszálni!
     placeTip(matchId: string, team: string, tip: number){
-        return this.af.database.object('pendingBets/' + this.uid).set({
-            matchId: matchId,
-            team: team,
-            tip: tip,
-            status: 'new'
-        });
-        // return this.af.database.object('Matches/' + matchId + '/betHistory/' + this.uid).set({
-        //         [team]: tip
-        // });
+
+            //so the user won't be able to set pendingBet till he/she has one!
+            this.af.database.object('pendingBets/' + this.uid).set({
+                matchId: matchId,
+                team: team,
+                tip: tip,
+                status: 'new'
+            });
     }
 
 }

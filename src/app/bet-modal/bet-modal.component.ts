@@ -17,6 +17,10 @@ export class BetModalComponent implements OnInit {
   alreadyTiped = false;
   everythingLoaded = false;
   game;
+  matchIsFuture = false;
+  matchIsInProgress = false;
+  matchIsFinished = false;
+  streamIsAvailable = false; //feature!
 
   BET_REGEX = /^\d+$/;
   BET_REGEX_Not0 = /^[1-9][0-9]*$/;
@@ -32,6 +36,15 @@ export class BetModalComponent implements OnInit {
 
       this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
       this.selectedBetting.subscribe(match=>{
+        if(match.status == 'notFuture'){
+          this.matchIsInProgress = true;
+        }
+        else if(match.status == 'finished'){
+          this.matchIsFinished = true;
+        }
+        else{
+          this.matchIsFuture = true;
+        }
         console.log(match);
         this.game = match.game;
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
