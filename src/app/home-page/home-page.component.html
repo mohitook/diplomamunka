@@ -43,17 +43,17 @@
       </div>
 
       <!-- upcoming matches -->
-      
+
       <div class="col-md-4" style="padding-left:0px">
-          <div class="col-sm-6 col-md-6 right-column">
-              <div>
-                  <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
-                  <md-divider></md-divider>
-                  <md-divider></md-divider>
-                  <md-divider></md-divider>
-                  <button md-raised-button *ngFor="let match of upcomingMatches | async | match_filter: selectedLabel" (click)="openDialog(match.$key);"
-                    color="default" style="width:100%; padding:0%; background-color:#8c9eff;" [ngStyle]="{'background-color':setBackgroundOnBet(match.$key)}">
-                                <md-grid-list cols="6" rowHeight="30px" st>
+        <div class="col-sm-6 col-md-6 right-column">
+          <div>
+            <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
+            <md-divider></md-divider>
+            <md-divider></md-divider>
+            <md-divider></md-divider>
+            <button md-raised-button *ngFor="let match of upcomingMatches | async ; let i=index" (click)="openDialog(match.$key);" color="default"
+              style="width:100%; padding:0%; background-color:#8c9eff;" [ngStyle]="{'background-color':setBackgroundOnBet(match.$key)}">
+                                <md-grid-list cols="6" rowHeight="30px" st *ngIf="i<5">
                                     <md-grid-tile
                                       [colspan]="1"
                                       [rowspan]="2">
@@ -93,15 +93,15 @@
                                   </md-grid-tile>
                                   </md-grid-list>
                               </button>
-                </div>
           </div>
         </div>
+      </div>
 
 
       <!-- upcoming matches end -->
 
 
-      
+
 
     </div>
 

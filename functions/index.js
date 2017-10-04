@@ -96,14 +96,22 @@ function resultsToDb(gameName, request, response) {
           );
           if (match.sport_event_status.winner_id == dbMatchData.opponents.left.id) {
             admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('left');
+            admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
+              match.sport_event_status.home_score + '/' +
+              match.sport_event_status.away_score
+            );
           }
-          else {
+          else if(match.sport_event_status.winner_id == dbMatchData.opponents.right.id){
             admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('right');
+            admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
+              match.sport_event_status.home_score + '/' +
+              match.sport_event_status.away_score
+            );
           }
-          admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
-            match.sport_event_status.home_score + '/' +
-            match.sport_event_status.away_score
-          );
+          else{
+            //todo: visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
+          }
+          
         }
       }, this);
       //this log is enough on the firebase administrator page.
@@ -287,6 +295,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/winner')
               userSnap.forEach(function (user) {
                 if (userCoin.key == user.key) {
                   admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userCoin.value);
+                  admin.database().ref('bets/' + matchSnap.key + '/' + user.key + '/won').set(userCoin.value);//not tested!
                   console.log(user.val().coins + userCoin.value);
                 }
               });

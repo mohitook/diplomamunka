@@ -13,6 +13,7 @@ export class BetModalComponent implements OnInit {
 
   selectedTeam = '';
   public tip;
+  public prizeWon;
   selectedBetting: FirebaseObjectObservable<any>;
   alreadyTiped = false;
   everythingLoaded = false;
@@ -53,6 +54,7 @@ export class BetModalComponent implements OnInit {
             this.selectedTeam = matchBet.team;
             this.alreadyTiped = true;
             this.tip = matchBet.tip;
+            this.prizeWon = matchBet.won;
             if(match.status == 'future')
               this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
           }

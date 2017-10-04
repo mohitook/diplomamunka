@@ -52,7 +52,9 @@ p3;
     //to order them by date ascending, because the original list is descending by timestamp..
     this.finishedMatches = afService.finishedMatches.map( (arr) => { return arr.reverse(); } );
 
-    this.labels = [{name: 'Dota 2', image: 'https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png'},
+    this.labels = [
+      {name: 'All', image: 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3'},
+      {name: 'Dota 2', image: 'https://orig05.deviantart.net/97fe/f/2013/332/c/4/dota_2_icon_by_benashvili-d6w0695.png'},
     {name: 'Counter Strike GO', image: 'https://seeklogo.com/images/C/Counter-Strike-logo-EAC70C9C3A-seeklogo.com.png'},
     {name: 'League of Legends', image: 'https://vignette.wikia.nocookie.net/leagueoflegends/images/1/12/League_of_Legends_Icon.png/revision/latest?cb=20150402234343'}
     ];
@@ -128,7 +130,7 @@ p3;
     }
   }
 
-  getTeamFontStyle(matchKey, competitor){
+  getTeamFontStyle(matchKey, competitor, winner = ''){
     var color;
     var fontWeight;
 
@@ -160,6 +162,11 @@ p3;
         'color': color,
         'font-weight': fontWeight
       };
+    }
+    else{
+      if(competitor == winner){
+        return {'font-weight' : 900 };
+      }
     }
   }
 

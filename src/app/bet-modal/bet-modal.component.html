@@ -1,6 +1,8 @@
-<h2 md-dialog-title *ngIf="!matchIsInProgress">
-    Place your bets</h2>
+<h2 md-dialog-title *ngIf="matchIsFuture">Place your bets</h2>
 <h2 md-dialog-title *ngIf="matchIsInProgress">Match is in progress</h2>
+<h2 md-dialog-title *ngIf="matchIsFinished">Match is finished</h2>
+
+<h3 md-dialog-title *ngIf="afService.userHasAlreadyPendingBet">Your current Bet is under process, please wait!</h3>
 
 <md-dialog-content *ngIf="everythingLoaded && !afService.userHasAlreadyPendingBet && matchIsFuture">
 
@@ -9,7 +11,9 @@
             <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
-            <h3 *ngIf="(selectedBetting | async)?.status=='future'">{{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
+            <h3 *ngIf="(selectedBetting | async)?.status=='future'">
+                {{(selectedBetting | async)?.begin_at | betting_hours: true}} 
+                {{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
             <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>
         </md-grid-tile>
         <md-grid-tile [colspan]="1">
@@ -18,26 +22,47 @@
         <md-grid-tile [colspan]="2">
             <button [disabled]="alreadyTiped" md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
                 [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
-                  <div class="pull-left">
-                    {{(selectedBetting | async)?.opponents.left.name}}
-                    </div>
-                    <div class="pull-right" >
-                        <!-- <small>({{(selectedBetting | async)?.opponents.left.bets}})</small> -->
-                        {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
-                        
-                    </div>
-                </button>
+                <md-grid-list cols="4" rowHeight="20px">
+                        <md-grid-tile [colspan]="3" [rowspan]="2">
+                            <div class="workingLineBreaker">
+                                {{(selectedBetting | async)?.opponents.left.name}}
+                            </div>
+                        </md-grid-tile> 
+
+                        <md-grid-tile [rowspan]="2">
+                            <div class="workingLineBreaker">
+                                {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
+                                <small>({{(selectedBetting | async)?.opponents.left.bets}})</small>
+                            </div>
+                        </md-grid-tile>
+                </md-grid-list>
+            </button>
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
             <button [disabled]="alreadyTiped" md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
                 [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
-                    <div class="pull-left">
+                    <!-- <div class="pull-left">
                         {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
-                        <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
                     </div>
                     <div class="pull-right" >
                         {{(selectedBetting | async)?.opponents.right.name}}
-                    </div>
+                    </div> -->
+
+                    <md-grid-list cols="4" rowHeight="20px">
+                            
+                            <md-grid-tile [rowspan]="2">
+                                <div class="workingLineBreaker">
+                                    {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
+                                    <small>({{(selectedBetting | async)?.opponents.right.bets}})</small>
+                                </div>
+                            </md-grid-tile>
+                            <md-grid-tile [colspan]="3" [rowspan]="2">
+                                <div class="workingLineBreaker">
+                                    {{(selectedBetting | async)?.opponents.right.name}}
+                                </div>
+                            </md-grid-tile>
+                    </md-grid-list>
+
                 </button>
         </md-grid-tile>
 
@@ -60,26 +85,47 @@
         <md-grid-tile [colspan]="2">
             <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
                 [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
-                          <div class="pull-left">
-                            {{(selectedBetting | async)?.opponents.left.name}}
+
+                <md-grid-list cols="4" rowHeight="20px">
+                        <md-grid-tile [colspan]="3" [rowspan]="2">
+                            <div class="workingLineBreaker">
+                                {{(selectedBetting | async)?.opponents.left.name}}
                             </div>
-                            <div class="pull-right" >
-                                <!-- <small>({{(selectedBetting | async)?.opponents.left.bets}})</small> -->
+                        </md-grid-tile> 
+
+                        <md-grid-tile [rowspan]="2">
+                            <div class="workingLineBreaker">
                                 {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
-                                
+                                <small>({{(selectedBetting | async)?.opponents.left.bets}})</small>
                             </div>
+                        </md-grid-tile>
+                </md-grid-list>
                         </button>
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
             <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
                 [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
-                            <div class="pull-left">
+                            <!-- <div class="pull-left">
                                 {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
-                                <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
                             </div>
                             <div class="pull-right" >
                                 {{(selectedBetting | async)?.opponents.right.name}}
-                            </div>
+                            </div> -->
+
+                            <md-grid-list cols="4" rowHeight="20px">
+                                    
+                                    <md-grid-tile [rowspan]="2">
+                                        <div class="workingLineBreaker">
+                                            {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
+                                            <small>({{(selectedBetting | async)?.opponents.right.bets}})</small>
+                                        </div>
+                                    </md-grid-tile>
+                                    <md-grid-tile [colspan]="3" [rowspan]="2">
+                                        <div class="workingLineBreaker">
+                                            {{(selectedBetting | async)?.opponents.right.name}}
+                                        </div>
+                                    </md-grid-tile>
+                            </md-grid-list>
                         </button>
         </md-grid-tile>
 
@@ -93,8 +139,8 @@
                     <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
                 </md-grid-tile>
                 <md-grid-tile [colspan]="2">
-                    <!-- <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">{{(selectedBetting | async)?.result}}</h3> -->
-                    <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">2 / 1</h3>                    
+                    <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:orange">{{(selectedBetting | async)?.result}}</h3>
+                    <!-- <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">2 / 1</h3>                     -->
                 </md-grid-tile>
                 <md-grid-tile [colspan]="1">
                     <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
@@ -102,26 +148,49 @@
                 <md-grid-tile [colspan]="2">
                     <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
                         [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
-                                  <div class="pull-left">
-                                    {{(selectedBetting | async)?.opponents.left.name}}
+                                  
+                        <md-grid-list cols="4" rowHeight="20px">
+                                <md-grid-tile [colspan]="3" [rowspan]="2">
+                                    <div class="workingLineBreaker">
+                                        {{(selectedBetting | async)?.opponents.left.name}}
                                     </div>
-                                    <div class="pull-right" >
-                                        <!-- <small>({{(selectedBetting | async)?.opponents.left.bets}})</small> -->
+                                </md-grid-tile> 
+        
+                                <md-grid-tile [rowspan]="2">
+                                    <div class="workingLineBreaker">
                                         {{(selectedBetting | async)?.opponents.left.bets | betting_percentage: (selectedBetting | async)?.opponents.right.bets}}
-                                        
+                                        <small>({{(selectedBetting | async)?.opponents.left.bets}})</small>
                                     </div>
+                                </md-grid-tile>
+                        </md-grid-list>
+
                                 </button>
                 </md-grid-tile>
                 <md-grid-tile [colspan]="2">
                     <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
                         [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
-                                    <div class="pull-left">
+                                    <!-- <div class="pull-left">
                                         {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
-                                        <!-- <small>({{(selectedBetting | async)?.opponents.right.bets}})</small> -->
+                                       
                                     </div>
                                     <div class="pull-right" >
                                         {{(selectedBetting | async)?.opponents.right.name}}
-                                    </div>
+                                    </div> -->
+
+                                    <md-grid-list cols="4" rowHeight="20px">
+                                            
+                                            <md-grid-tile [rowspan]="2">
+                                                <div class="workingLineBreaker">
+                                                    {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
+                                                    <small>({{(selectedBetting | async)?.opponents.right.bets}})</small>
+                                                </div>
+                                            </md-grid-tile>
+                                            <md-grid-tile [colspan]="3" [rowspan]="2">
+                                                <div class="workingLineBreaker">
+                                                    {{(selectedBetting | async)?.opponents.right.name}}
+                                                </div>
+                                            </md-grid-tile>
+                                    </md-grid-list>
                                 </button>
                 </md-grid-tile>
         
@@ -145,9 +214,21 @@
             </md-error>
         </md-form-field>
 
-        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped">
-            <md-chip color="primary" style="display: inline-block;background-color: #ffab00;">
-                <b>Your tip: {{tip}}</b>
+        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && !matchIsFinished">
+                <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #ffab00;">
+                    <b>Your tip: {{tip}}</b>
+                </md-chip>
+                <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #ffab00;">
+                    <b>Your won: {{prizeWon}}</b>
+                </md-chip>
+        </md-chip-list>
+
+        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && matchIsFinished">
+            <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #f44336;">
+                <b>You lost: {{tip}}</b>
+            </md-chip>
+            <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #64dd17;">
+                <b>You won: {{prizeWon}}</b>
             </md-chip>
         </md-chip-list>
 
