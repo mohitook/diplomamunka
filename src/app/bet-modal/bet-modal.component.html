@@ -1,10 +1,10 @@
-<h2 md-dialog-title *ngIf="matchIsFuture">Place your bets</h2>
-<h2 md-dialog-title *ngIf="matchIsInProgress">Match is in progress</h2>
-<h2 md-dialog-title *ngIf="matchIsFinished">Match is finished</h2>
+<h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'future'">Place your bets</h2>
+<h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'notFuture'">Match is in progress</h2>
+<h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'finished'">Match is finished</h2>
 
 <h3 md-dialog-title *ngIf="afService.userHasAlreadyPendingBet">Your current Bet is under process, please wait!</h3>
 
-<md-dialog-content *ngIf="everythingLoaded && !afService.userHasAlreadyPendingBet && matchIsFuture">
+<md-dialog-content *ngIf="everythingLoaded && !afService.userHasAlreadyPendingBet && (selectedBetting | async)?.status == 'future'">
 
     <md-grid-list cols="4" rowHeight="50px">
         <md-grid-tile [colspan]="1">
@@ -12,8 +12,7 @@
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
             <h3 *ngIf="(selectedBetting | async)?.status=='future'">
-                {{(selectedBetting | async)?.begin_at | betting_hours: true}} 
-                {{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
+                {{(selectedBetting | async)?.begin_at | betting_hours: true}} {{(selectedBetting | async)?.begin_at | betting_hours}}</h3>
             <h3 *ngIf="(selectedBetting | async)?.status!='future'" style="color:red">-- --</h3>
         </md-grid-tile>
         <md-grid-tile [colspan]="1">
@@ -69,7 +68,7 @@
     </md-grid-list>
 </md-dialog-content>
 
-<md-dialog-content *ngIf="everythingLoaded && matchIsInProgress">
+<md-dialog-content *ngIf="everythingLoaded && (selectedBetting | async)?.status == 'notFuture'">
 
     <md-grid-list cols="4" rowHeight="50px">
         <md-grid-tile [colspan]="1">
@@ -77,14 +76,13 @@
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
             <h3 *ngIf="(selectedBetting | async)?.status=='notFuture'" style="color:red">-- --</h3>
-            <h3 *ngIf="(selectedBetting | async)?.status=='notFuture' && streamIsAvailable" style="color:red">stream</h3>
+            <!-- <h3 *ngIf="(selectedBetting | async)?.status=='notFuture'" style="color:red">{{(selectedBetting | async)?.stream}}</h3> -->
         </md-grid-tile>
         <md-grid-tile [colspan]="1">
             <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
-            <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
-                [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
+            <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
 
                 <md-grid-list cols="4" rowHeight="20px">
                         <md-grid-tile [colspan]="3" [rowspan]="2">
@@ -103,8 +101,7 @@
                         </button>
         </md-grid-tile>
         <md-grid-tile [colspan]="2">
-            <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
-                [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
+            <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
                             <!-- <div class="pull-left">
                                 {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
                             </div>
@@ -130,24 +127,34 @@
         </md-grid-tile>
 
     </md-grid-list>
+ 
+    <!-- https://www.smashingmagazine.com/2014/02/making-embedded-content-work-in-responsive-design/ -->
+    <div class="video-container" *ngIf="streamLink!=''">
+        <iframe [src]="streamLink | safeUrl" height="315" width="560" frameborder="0" scrolling="no"
+            allowfullscreen="false">
+        </iframe>
+    </div>
+
+    <!-- <iframe src="http://player.twitch.tv/?channel=esl_csgob&muted=true" height="250" width="350" frameborder="0" scrolling="no"
+    allowfullscreen="false"> 
+</iframe>-->
 </md-dialog-content>
 
-<md-dialog-content *ngIf="everythingLoaded && matchIsFinished">
-        
-            <md-grid-list cols="4" rowHeight="50px">
-                <md-grid-tile [colspan]="1">
-                    <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
-                </md-grid-tile>
-                <md-grid-tile [colspan]="2">
-                    <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:orange">{{(selectedBetting | async)?.result}}</h3>
-                    <!-- <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">2 / 1</h3>                     -->
-                </md-grid-tile>
-                <md-grid-tile [colspan]="1">
-                    <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
-                </md-grid-tile>
-                <md-grid-tile [colspan]="2">
-                    <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;"
-                        [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
+<md-dialog-content *ngIf="everythingLoaded && (selectedBetting | async)?.status == 'finished'">
+
+    <md-grid-list cols="4" rowHeight="50px">
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" src="{{(selectedBetting | async)?.opponents.left.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:orange">{{(selectedBetting | async)?.result}}</h3>
+            <!-- <h3 *ngIf="(selectedBetting | async)?.status=='finished'" style="color:red">2 / 1</h3>                     -->
+        </md-grid-tile>
+        <md-grid-tile [colspan]="1">
+            <img (load)="onImgLoad($event,game)" class="pull-right" src="{{(selectedBetting | async)?.opponents.right.logo}}" height="40px">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button disabled md-raised-button (click)="onTeamClick(true)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(true)}">
                                   
                         <md-grid-list cols="4" rowHeight="20px">
                                 <md-grid-tile [colspan]="3" [rowspan]="2">
@@ -165,10 +172,9 @@
                         </md-grid-list>
 
                                 </button>
-                </md-grid-tile>
-                <md-grid-tile [colspan]="2">
-                    <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;"
-                        [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
+        </md-grid-tile>
+        <md-grid-tile [colspan]="2">
+            <button disabled md-raised-button (click)="onTeamClick(false)" style="width:100%; font-weight: bold; padding:0px 5px;" [ngStyle]="{ 'background-color': getBackgroundColor(false)}">
                                     <!-- <div class="pull-left">
                                         {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
                                        
@@ -192,10 +198,10 @@
                                             </md-grid-tile>
                                     </md-grid-list>
                                 </button>
-                </md-grid-tile>
-        
-            </md-grid-list>
-        </md-dialog-content>
+        </md-grid-tile>
+
+    </md-grid-list>
+</md-dialog-content>
 
 <md-dialog-actions style="text-align: center;display: block;" *ngIf="selectedTeam!=''">
 
@@ -214,16 +220,16 @@
             </md-error>
         </md-form-field>
 
-        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && !matchIsFinished">
-                <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #ffab00;">
-                    <b>Your tip: {{tip}}</b>
-                </md-chip>
-                <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #ffab00;">
-                    <b>Your won: {{prizeWon}}</b>
-                </md-chip>
+        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && (selectedBetting | async)?.status != 'finished'">
+            <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #ffab00;">
+                <b>Your tip: {{tip}}</b>
+            </md-chip>
+            <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #ffab00;">
+                <b>Your won: {{prizeWon}}</b>
+            </md-chip>
         </md-chip-list>
 
-        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && matchIsFinished">
+        <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && (selectedBetting | async)?.status == 'finished'">
             <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #f44336;">
                 <b>You lost: {{tip}}</b>
             </md-chip>
@@ -240,3 +246,10 @@
        Can optionally provide a result for the closing dialog.
       <button md-button [md-dialog-close]="true">{{data.animal}}</button> -->
 </md-dialog-actions>
+
+
+
+<div>
+    for debug:
+    <p>{{(selectedBetting | async)?.$key}}</p>
+</div>

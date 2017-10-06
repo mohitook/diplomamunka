@@ -51,9 +51,9 @@
             <md-divider></md-divider>
             <md-divider></md-divider>
             <md-divider></md-divider>
-            <button md-raised-button *ngFor="let match of upcomingMatches | async ; let i=index" (click)="openDialog(match.$key);" color="default"
+            <button md-raised-button *ngFor="let match of upcomingMatches | async" (click)="openDialog(match.$key);" color="default"
               style="width:100%; padding:0%; background-color:#8c9eff;" [ngStyle]="{'background-color':setBackgroundOnBet(match.$key)}">
-                                <md-grid-list cols="6" rowHeight="30px" st *ngIf="i<5">
+                                <md-grid-list cols="6" rowHeight="30px" st>
                                     <md-grid-tile
                                       [colspan]="1"
                                       [rowspan]="2">

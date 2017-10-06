@@ -35,7 +35,7 @@ export class HomePageComponent implements OnInit {
 
     this.labels = this.afService.labels;
 
-    this.upcomingMatches = this.afService.upcomingMatches;
+    this.upcomingMatches = this.afService.upcomingMatchesForNewsPage;
 
     this.labels.subscribe(x => {
       if (x != null) {

@@ -18,10 +18,7 @@ export class BetModalComponent implements OnInit {
   alreadyTiped = false;
   everythingLoaded = false;
   game;
-  matchIsFuture = false;
-  matchIsInProgress = false;
-  matchIsFinished = false;
-  streamIsAvailable = false; //feature!
+  streamLink = '';
 
   BET_REGEX = /^\d+$/;
   BET_REGEX_Not0 = /^[1-9][0-9]*$/;
@@ -34,20 +31,13 @@ export class BetModalComponent implements OnInit {
   constructor(public afService: AF,
     public dialogRef: MdDialogRef<BetModalComponent>,
     @Inject(MD_DIALOG_DATA) public data: any) { 
-
       this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
       this.selectedBetting.subscribe(match=>{
-        if(match.status == 'notFuture'){
-          this.matchIsInProgress = true;
-        }
-        else if(match.status == 'finished'){
-          this.matchIsFinished = true;
-        }
-        else{
-          this.matchIsFuture = true;
-        }
         console.log(match);
         this.game = match.game;
+        if(match.stream!=null && match.stream!=''){
+          this.streamLink = 'http://player.twitch.tv/?channel='+match.stream+'&muted=true';
+        }
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
           console.log(matchBet);
           if(matchBet.status!=null){ 

@@ -16,6 +16,7 @@ export class AF {
     public userBets : FirebaseListObservable<any>;    
     public pendingBetsForUser : FirebaseObjectObservable<any>;
     public upcomingMatches : FirebaseListObservable<any>;
+    public upcomingMatchesForNewsPage : FirebaseListObservable<any>;
     public notFutureMatches : FirebaseListObservable<any>;
     public finishedMatches : FirebaseListObservable<any>;
     public messages: FirebaseListObservable<any>;
@@ -81,6 +82,14 @@ export class AF {
             }
         });
 
+        this.upcomingMatchesForNewsPage = this.af.database.list('matches',{
+            query:{
+                orderByChild: 'status',
+                equalTo: 'future',
+                limitToFirst: 5
+            }
+        });
+
         this.notFutureMatches = this.af.database.list('matches',{
             query:{
                 orderByChild: 'status',
@@ -128,12 +137,9 @@ export class AF {
 
         //this.clock = Observable.interval(1000).map(tick => new Date()).share();
 
-        //átirni olyanra, hogy csak csekkoljon valamit be a DB-be, amitől 
-        //triggerelődik a dátumvizsgálat!
         this.upcomingMatches.subscribe(matches => {
             matches.forEach(match => {
                 if(match.begin_at <= new Date().getTime()){
-                    console.log('én pingetem ezt a szart');
                     this.af.database.object('checkMatchDate/' + match.$key).set(match.begin_at);
                 }
             });

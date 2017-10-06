@@ -1,3 +1,4 @@
+import { SafeUrlPipe } from './pipes/safeUrl.pipe';
 import { MatchFilterPipe } from './pipes/match-filter.pipe';
 import { MobileViewService } from './providers/mobileView.service';
 import { NewsListComponent } from './home-page/news-list/news-list.component';
@@ -150,7 +151,8 @@ const routes: Routes = [
     NewsListComponent,
     MyMasonryDirective,
     MatchesPageComponent,
-    MatchFilterPipe
+    MatchFilterPipe,
+    SafeUrlPipe
 ],
   entryComponents:[BetModalComponent],
   imports: [

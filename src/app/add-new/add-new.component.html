@@ -23,7 +23,7 @@
 <form class="example-form">
     <md-form-field class="example-full-width">
       <!-- <input mdInput placeholder="Company (disabled)" disabled value="Google"> -->
-      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title">
+      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" value="Alma">
       <md-hint align="end">{{title.value.length}} / 50</md-hint>
     </md-form-field>
     <md-form-field class="example-full-width">

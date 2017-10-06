@@ -1,4 +1,5 @@
 var functions = require('firebase-functions');
+var requestHandler = require('request');
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/functions/write-firebase-functions
@@ -6,6 +7,11 @@ var functions = require('firebase-functions');
 // The Firebase Admin SDK to access the Firebase Realtime Database. 
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
+
+//global variables:
+var apiKeyForCsGo = 'k772vgds4x3x875gep7cq9dh';
+var apiKeyForDota2 = '4xrzt3cygq3rs5ghv4khqft7';
+var apiKeyForLoL = '3atqmme9np7jwe9gbx5texn5';
 
 //++++++++++++++++++++++++++++ 
 //check in every 12 hours. If the a match doesn't have result in 8 hours from the begin_at ->
@@ -70,7 +76,7 @@ exports.fiveMinuteMatchTimeCheck = functions.https.onRequest((request, response)
 
 //++++++++++++++++++++++++++++ EVERY GAME resultsToDb
 
-function resultsToDb(gameName, request, response) {
+function resultsToDb(gameName, body) {
   console.log(gameName + ' Results to DB');
 
   var matches = admin.database().ref('matches');
@@ -85,7 +91,7 @@ function resultsToDb(gameName, request, response) {
       var matchFound = false;
       var tmpMatchId;
 
-      request.body.results.forEach(function (match) {
+      body.results.forEach(function (match) {
         //for log!
         tmpMatchId = match.sport_event.id;
         if (match.sport_event.id == dbMatchId) {
@@ -101,17 +107,19 @@ function resultsToDb(gameName, request, response) {
               match.sport_event_status.away_score
             );
           }
-          else if(match.sport_event_status.winner_id == dbMatchData.opponents.right.id){
+          else if (match.sport_event_status.winner_id == dbMatchData.opponents.right.id) {
             admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('right');
             admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
               match.sport_event_status.home_score + '/' +
               match.sport_event_status.away_score
             );
           }
-          else{
+          else {
             //todo: visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
+            console.log(matchSnapShot.key + ' was abandoned! Bets goes back to users!');
+            admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('abandoned'); //the prize.. function listen!
           }
-          
+
         }
       }, this);
       //this log is enough on the firebase administrator page.
@@ -120,29 +128,102 @@ function resultsToDb(gameName, request, response) {
       }
     });
   });
-  response.send(request.body.generated_at);
+  //response.send(request.body.generated_at);
 }
 
 exports.resultsCsGo = functions.https.onRequest((request, response) => {
-  resultsToDb('CS GO', request, response);
+  var currentDate = new Date();
+
+  if (request.body.previousDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/csgo-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForCsGo, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      resultsToDb('CS GO', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 
 exports.resultsLoL = functions.https.onRequest((request, response) => {
-  resultsToDb('LoL', request, response);
+
+  var currentDate = new Date();
+
+  if (request.body.previousDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/lol-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForLoL, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      resultsToDb('LoL', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 
 exports.resultsDota2 = functions.https.onRequest((request, response) => {
-  resultsToDb('Dota 2', request, response);
+
+  var currentDate = new Date();
+
+  if (request.body.previousDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/dota2-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForDota2, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      resultsToDb('Dota 2', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 //--------------------------- EVERY GAME resultsToDb
 
 
 //++++++++++++++++++++++++++++ EVERY GAME dailyScheduleToDb
 
-function dailyScheduleToDb(gameName, request, response) {
-  console.log(request.body.generated_at);
-  console.log(request.body.sport_events);
-  request.body.sport_events.forEach(function (match) {
+function dailyScheduleToDb(gameName, body) {
+  console.log('in method:');
+  console.log(body);
+  console.log(body.generated_at);
+  console.log(body.sport_events);
+  body.sport_events.forEach(function (match) {
     console.log(match.scheduled);
 
     //just to test results!
@@ -160,9 +241,9 @@ function dailyScheduleToDb(gameName, request, response) {
         if (match.id == dbMatchId) {
           return; //there is already a created match in the db -> mivan ha van TBD, vagy hasonló/esetleg változás? összehasonlítás írása! 
           //Csak a bets-maradjon + az eredetileg lekreált key! mert a ../bets ehhez van igazítva!
+          //logikusabb így hagyni a már megtett fogadások miatt, ráadásul TBD példát sem találni..
         }
       });
-
       var newObjectKey = (new Date(match.scheduled).getTime()) + '-' + match.id;
       newObjectKey = newObjectKey.replace('.', '');
       game_logo = '';
@@ -179,12 +260,21 @@ function dailyScheduleToDb(gameName, request, response) {
         default:
           break;
       }
+      //todo: continuehere
+      var stream = "";
+
+      //select the first, 1 stream is enough on the page
+      if(match.streams[0] != null){
+        lastSlash = match.streams[0].url.lastIndexOf('/');
+        stream = match.streams[0].url.substring(lastSlash  + 1);
+      }
 
       admin.database().ref('matches/' + newObjectKey).set({
         begin_at: new Date(match.scheduled).getTime(),
         game: gameName,
         game_logo: game_logo,
         status: 'future',
+        stream:  stream,
         opponents: {
           left: {
             id: match.competitors[0].id,
@@ -207,20 +297,91 @@ function dailyScheduleToDb(gameName, request, response) {
       });
     });
   });
-
-  response.send(request.body.generated_at);
+  //response.send(request.body.generated_at);
 }
 
 exports.dailyScheduleCsGo = functions.https.onRequest((request, response) => {
-  dailyScheduleToDb('CS GO', request, response);
+
+  var currentDate = new Date();
+
+  if (request.body.nextDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/csgo-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForCsGo, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      dailyScheduleToDb('CS GO', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 
 exports.dailyScheduleDota2 = functions.https.onRequest((request, response) => {
-  dailyScheduleToDb('Dota 2', request, response);
+
+  var currentDate = new Date();
+
+  if (request.body.nextDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/dota2-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForDota2, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      dailyScheduleToDb('Dota 2', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 
 exports.dailyScheduleLoL = functions.https.onRequest((request, response) => {
-  dailyScheduleToDb('LoL', request, response);
+
+  var currentDate = new Date();
+
+  if (request.body.nextDayRequest == true) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  var year = currentDate.getUTCFullYear();
+  var month = currentDate.getUTCMonth() + 1;
+  var day = ("0" + currentDate.getUTCDate()).slice(-2);
+
+  var requestDate = year + '-' + month + '-' + day;
+
+  requestHandler('http://api.sportradar.us/lol-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForLoL, function (error, responseInner, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body);
+      console.log(JSON.parse(body));
+      dailyScheduleToDb('LoL', JSON.parse(body));
+    }
+    else {
+      console.log('ERROR');
+      console.log(response.statusCode);
+    }
+    response.send(JSON.parse(body).generated_at);
+  });
 })
 
 //--------------------------- EVERY GAME dailyScheduleToDb
@@ -235,13 +396,36 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/winner')
     // if(event.data.val()==null){
     //   return;
     // }
+
     var winner = event.data.val();
+
     event.data.ref.parent.once('value', function (matchSnap) {
       if (matchSnap.val().prizeDivided == null || matchSnap.val().prizeDivided != true) {
         //set it as soon as possible
         event.data.ref.parent.child('prizeDivided').set(true);
-        event.data.ref.parent.child('status').set('finished');
+        if(winner == 'abandoned'){
+          event.data.ref.parent.child('status').set('abandoned');
+        }
+        else{
+          event.data.ref.parent.child('status').set('finished');
+        }
+
         admin.database().ref('bets/' + matchSnap.key).once('value', function (betSnap) {
+          //give back the bets to the users
+          if(winner == 'abandoned'){
+
+            admin.database().ref('users').once('value', function (userSnap) {
+                userSnap.forEach(function (user) {
+                  betSnap.forEach(function (userBet) {
+                    if (userBet.key == user.key) {
+                      admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userBet.val().tip);
+                      userBet.ref.child('status').set('abandoned');
+                    }
+                  });
+                });
+            });
+            return;
+          }
 
           //logic: sum both opponents bets, and divide them between the winners
           var opponents = matchSnap.val().opponents;
@@ -377,7 +561,7 @@ function pendingBetsHandler(event, userId, matchId) {
               currentBetsOnTeam + event.data.child('tip').val()
               );
           }
-          
+
           return event.data.ref.parent.parent.child('bets').child(matchId)
             .child(event.params.userID).set({
               //userId: event.data.key,
