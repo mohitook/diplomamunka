@@ -210,8 +210,9 @@
         </button>
 
     <form *ngIf="afService.isLoggedIn">
-        <md-form-field *ngIf="!alreadyTiped">
-            <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet" min="0" step="1" [formControl]="betFormControl">
+        <md-form-field *ngIf="!alreadyTiped" floatPlaceholder="never">
+            <!-- placeholder="Bet" -->
+            <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet"  min="0" step="1" [formControl]="betFormControl">
             <md-error *ngIf="betFormControl.hasError('pattern')">
                 Please use only Integers
             </md-error>

@@ -1,0 +1,49 @@
+.form-inline{
+    display:inline-block;
+}
+.container{
+  margin-top: 20px;
+  width: 100%; 
+}
+
+.example-form {
+    min-width: 150px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+
+  @media (min-width: 601px){
+    .sidenav-container {
+        width: 100%;
+        top: 64px !important;
+    }}
+    
+    @media (max-width: 600px){
+    .sidenav-container {
+        width: 100%;
+        top: 56px !important;
+    }}
+    .app-sidenav{
+        background-color: white;
+        color: rgba(0, 0, 0, 0.87);
+        margin-left: 0px;
+      }
+      
+      .app-sidenav md-nav-list > a{
+        color: rgba(0, 0, 0, 0.54);
+      }
+      
+      .app-sidenav md-nav-list>a{
+        box-sizing: border-box;
+        display: block;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 47px;
+        text-decoration: none;
+        transition: all .3s;
+        padding: 0 16px;
+        position: relative;
+      }

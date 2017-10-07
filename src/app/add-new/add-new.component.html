@@ -1,46 +1,25 @@
-
-<md-sidenav-container fullscreen class="sidenav-container">
-    <md-sidenav  #sidenav class="app-sidenav" mode="{{isMobileView?'over':'side'}}" opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
-        <md-nav-list >
-            <!-- <a md-list-item>
-                <md-icon class="md-24" aria-label="Example icon-button with a heart icon">add</md-icon>Add news
-            </a> --> 
-            <a md-list-item *ngFor="let sidenavItem of sidenavLabels" 
-            (click)="onLinkClick(sidenav);onSidenavClick(sidenavItem)">
-            <md-icon class="md-24" aria-label="Example icon-button with a heart icon">{{sidenavItem.icon}}</md-icon> {{sidenavItem.name}}
-            </a>
-        </md-nav-list>
-    </md-sidenav>
-  
-    <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
-            <button *ngIf="isMobileView" md-icon-button (click)="sidenav.toggle()">
-                <md-icon class="md-24" >menu</md-icon>
-            </button>
-            <h1 *ngIf="selectedSidenav!=null">{{selectedSidenav.name}}</h1>
-    </md-toolbar>
-
 <div class="container">
-<form class="example-form">
-    <md-form-field class="example-full-width">
+  <form class="example-form"> 
+    <md-form-field class="example-full-width" floatPlaceholder="never">
       <!-- <input mdInput placeholder="Company (disabled)" disabled value="Google"> -->
-      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" value="Alma">
+      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" >
       <md-hint align="end">{{title.value.length}} / 50</md-hint>
     </md-form-field>
-    <md-form-field class="example-full-width">
+    <md-form-field class="example-full-width" floatPlaceholder="never">
       <input mdInput type="url" placeholder="Cover image Url" [(ngModel)]="newsModel.coverImageUrl" name="coverImage">
     </md-form-field>
-
-    <md-form-field class="example-full-width">
+  
+    <md-form-field class="example-full-width" floatPlaceholder="never">
       <textarea mdInput #summary maxlength="300" placeholder="Summary" [(ngModel)]="newsModel.summary" name="summary"></textarea>
       <md-hint align="end">{{summary.value.length}} / 300</md-hint>
     </md-form-field>
-
+  
     <div class="form-group">
         <label for="text">Text:</label>
         <div [froalaEditor]="options" [(froalaModel)]="editorContent" [(ngModel)]="newsModel.text" name="text"></div>
         <!-- <div [froalaView]="editorContent"></div> -->
       </div>
-
+  
       <div class="form-group">
         <label for="labels">Labels:</label><br>
         <tag-input id="labels" [(ngModel)]='labels' name="tagInput" [modelAsStrings]="true">
@@ -52,9 +31,6 @@
       <div class="form-group">
         <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
       </div>
-
+  
   </form>
-</div>
-
-
-</md-sidenav-container>
+  </div>

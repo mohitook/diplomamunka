@@ -23,7 +23,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent } from './add-new/add-new.component';
-import { DeleteNewsComponent } from './delete-news/delete-news.component';
+import { DeleteNewsComponent, DeleteDialog } from './delete-news/delete-news.component';
 import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 import {SelectModule} from 'ng-select';
@@ -86,6 +86,7 @@ import HLTV from 'hltv';
 import { BetModalComponent } from './bet-modal/bet-modal.component';
 import { MyMasonryDirective } from './myMasonry.directive';
 import { MatchesPageComponent } from './matches-page/matches-page.component';
+import { AdministratorPageComponent } from './administratorPage/administratorPage.component';
 
 // Must export the config
 export const firebaseConfig = {
@@ -109,15 +110,21 @@ const routes: Routes = [
       ] },
   { path: 'login', component: LoginPageComponent},
   { path: 'chat', component: ChatPageComponent },
-  { path: 'addnew', component: AddNewComponent,
+  { path: 'administrator', component: AdministratorPageComponent,
   children: [
-        { path: 'preview/:preview', component: NewsModalComponent }
+    {
+      path: '',
+      pathMatch: 'full',
+      redirectTo: 'addNews'
+    },
+        { path: 'addNews', component: AddNewComponent},
+        { path: 'deleteNews', component: DeleteNewsComponent},
+        { path: 'labelsPage', component: LabelsPageComponent}
       ]  },
   { path: 'settings', component: SettingsComponent },
   { path: 'profile-modal', component: ProfileModalComponent },
   { path: 'register', component: RegistrationPageComponent},
-  { path: 'labelsPage', component: LabelsPageComponent},
-  { path: 'deleteNews', component: DeleteNewsComponent},
+  
   { path: 'matches', component: MatchesPageComponent}
 ];
 
@@ -152,9 +159,11 @@ const routes: Routes = [
     MyMasonryDirective,
     MatchesPageComponent,
     MatchFilterPipe,
-    SafeUrlPipe
+    SafeUrlPipe,
+    AdministratorPageComponent,
+    DeleteDialog
 ],
-  entryComponents:[BetModalComponent],
+  entryComponents:[BetModalComponent, DeleteDialog],
   imports: [
     BrowserModule,
     FormsModule,

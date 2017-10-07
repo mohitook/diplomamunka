@@ -16,7 +16,7 @@
       </div>
       <span class="fill-remaining-space"></span>
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-        <button md-button routerLink="/addnew" style="color:#ffd54f">Administrator page</button>
+        <button md-button routerLink="/administrator" style="color:#ffd54f">Administrator page</button>
         <md-chip-list *ngIf="afService.isLoggedIn">
                 <md-chip style="background-color:#1a237e;color:rgba(255,255,255,.87);">
                         <b>{{(afService.user | async)?.coins}}</b> &nbsp;

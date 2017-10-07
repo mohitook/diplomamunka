@@ -135,7 +135,7 @@ exports.resultsCsGo = functions.https.onRequest((request, response) => {
   var currentDate = new Date();
 
   if (request.body.previousDayRequest == true) {
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate.setDate(currentDate.getDate() - 1);
   }
 
   var year = currentDate.getUTCFullYear();
@@ -163,7 +163,7 @@ exports.resultsLoL = functions.https.onRequest((request, response) => {
   var currentDate = new Date();
 
   if (request.body.previousDayRequest == true) {
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate.setDate(currentDate.getDate() - 1);
   }
 
   var year = currentDate.getUTCFullYear();
@@ -191,7 +191,7 @@ exports.resultsDota2 = functions.https.onRequest((request, response) => {
   var currentDate = new Date();
 
   if (request.body.previousDayRequest == true) {
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate.setDate(currentDate.getDate() - 1);
   }
 
   var year = currentDate.getUTCFullYear();

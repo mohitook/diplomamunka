@@ -1,0 +1,25 @@
+
+<md-sidenav-container fullscreen class="sidenav-container">
+  <md-sidenav  #sidenav class="app-sidenav" mode="{{mobView.isMobileView?'over':'side'}}" opened="{{!mobView.isMobileView}}" disableClose="{{!mobView.isMobileView}}">
+      <md-nav-list >
+          <!-- <a md-list-item>
+              <md-icon class="md-24" aria-label="Example icon-button with a heart icon">add</md-icon>Add news
+          </a> --> 
+          <a md-list-item *ngFor="let sidenavItem of sidenavLabels" 
+          (click)="mobView.onLinkClick(sidenav);onSidenavClick(sidenavItem)">
+          <md-icon class="md-24" aria-label="Example icon-button with a heart icon">{{sidenavItem.icon}}</md-icon> {{sidenavItem.name}}
+          </a>
+      </md-nav-list>
+  </md-sidenav>
+
+  <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
+          <button *ngIf="mobView.isMobileView" md-icon-button (click)="sidenav.toggle()">
+              <md-icon class="md-24" >menu</md-icon>
+          </button>
+          <h1 *ngIf="selectedSidenav!=null">{{selectedSidenav.name}}</h1>
+  </md-toolbar>
+
+  <router-outlet></router-outlet>
+
+
+</md-sidenav-container>

@@ -27,21 +27,13 @@ declare var $ :any; //for custom buttons in text editor
 })
 export class AddNewComponent implements OnInit {
 
-   editorContent;
+   editorContent; 
     
     newsModel : NewsModel;
 
     public title;
 
     labels = ['All'];
-
-    isMobileView: boolean;
-
-    sidenavLabels = [
-      {name: 'Add news', icon: 'add'},
-      {name: 'Delete news', icon: 'delete'},
-      {name: 'Modify categories', icon: 'class'}
-    ];
 
     selectedSidenav;
 
@@ -60,14 +52,6 @@ export class AddNewComponent implements OnInit {
           this.existingLabelsValue.push(y.value);
         })
       });
-
-      // https://github.com/angular/material2/issues/1130
-      this.isMobileView = (this.media.isActive('xs') || this.media.isActive('sm'));
-      this.media.subscribe((change: MediaChange) => {
-          this.isMobileView = (change.mqAlias === 'xs' || change.mqAlias === 'sm');
-      });
-
-      this.selectedSidenav = this.sidenavLabels[0];
     }
 
     ngOnInit() {
@@ -109,12 +93,6 @@ export class AddNewComponent implements OnInit {
           this.existingLabelsValue.push(y.value);
         })
       });
-    }
-
-    onLinkClick(menuSidenav: MdSidenav): void {
-      if (this.isMobileView) {
-        menuSidenav.close();
-      }
     }
 
     onSidenavClick(sidenavItem: any){
