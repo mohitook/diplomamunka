@@ -11,7 +11,7 @@ import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from "@angular/router";
 import {ShareButtonsModule} from 'ngx-sharebuttons';
 
-import {LabelsPageComponent} from './labels-page/labels-page.component';
+import {LabelsPageComponent, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog} from './labels-page/labels-page.component';
 
 import {LocationStrategy, HashLocationStrategy} from "@angular/common";
 
@@ -151,6 +151,9 @@ const routes: Routes = [
     LabelFilterPipe,
     PaginationPipePipe,
     LabelsPageComponent,
+    LabelDeleteDialog,
+    LabelModifyDialog,
+    LabelNewDialog,
     DeleteNewsComponent,
     BetModalComponent,
     BettingHoursPipe,
@@ -163,7 +166,7 @@ const routes: Routes = [
     AdministratorPageComponent,
     DeleteDialog
 ],
-  entryComponents:[BetModalComponent, DeleteDialog],
+  entryComponents:[BetModalComponent, DeleteDialog, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog],
   imports: [
     BrowserModule,
     FormsModule,

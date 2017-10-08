@@ -1,0 +1,28 @@
+<h2 md-dialog-title>Modify {{selectedLabel.value}} category's image</h2>
+
+<md-dialog-content>
+    <div>
+        <label for="selectedImage">Current Image:</label>
+        <img id="selectedImage" [src]="selectedLabel.image" style="height:23px;" />
+    </div>
+    <div>
+        <!-- <label for="newImageUrl">New Image:</label>
+        <input [(ngModel)]="newImageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Url" class="form-control" />
+        <label *ngIf="newImageUrl" for="newselectedImage">Preview:</label>
+        <img *ngIf="newImageUrl" id="newselectedImage" [src]="newImageUrl" style="height:23px;" /> -->
+
+        <form class="example-form">
+            <md-form-field class="example-full-width" floatPlaceholder="never">
+                <!-- <label for="newImageUrl">New Image</label> -->
+                <input mdInput [(ngModel)]="newImageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="New Image Url">
+            </md-form-field>
+        </form>
+        <label *ngIf="newImageUrl" for="newselectedImage">New Image preview:</label>
+        <img *ngIf="newImageUrl" id="newselectedImage" [src]="newImageUrl" style="height:23px;" />
+    </div>
+</md-dialog-content>
+
+<md-dialog-actions style="display: block">
+    <button md-raised-button (click)="onNoClick()" class="pull-left">Cencel</button>
+    <button md-raised-button color="warn" (click)="saveModifications();onNoClick()" class="pull-right">Save</button>
+</md-dialog-actions>

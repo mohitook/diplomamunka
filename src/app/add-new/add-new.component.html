@@ -1,36 +1,39 @@
 <div class="container">
-  <form class="example-form"> 
+  <form class="example-form">
+
+    <div class="form-group">
+      <label for="labels">Labels:</label><br>
+      <tag-input id="labels" [(ngModel)]='labels' name="tagInput" [modelAsStrings]="true" [onlyFromAutocomplete]="true">
+        <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="existingLabelsValue">
+        </tag-input-dropdown>
+      </tag-input>
+    </div>
+
     <md-form-field class="example-full-width" floatPlaceholder="never">
       <!-- <input mdInput placeholder="Company (disabled)" disabled value="Google"> -->
-      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" >
+      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title">
       <md-hint align="end">{{title.value.length}} / 50</md-hint>
     </md-form-field>
     <md-form-field class="example-full-width" floatPlaceholder="never">
       <input mdInput type="url" placeholder="Cover image Url" [(ngModel)]="newsModel.coverImageUrl" name="coverImage">
     </md-form-field>
-  
+
     <md-form-field class="example-full-width" floatPlaceholder="never">
       <textarea mdInput #summary maxlength="300" placeholder="Summary" [(ngModel)]="newsModel.summary" name="summary"></textarea>
       <md-hint align="end">{{summary.value.length}} / 300</md-hint>
     </md-form-field>
-  
+
     <div class="form-group">
-        <label for="text">Text:</label>
-        <div [froalaEditor]="options" [(froalaModel)]="editorContent" [(ngModel)]="newsModel.text" name="text"></div>
-        <!-- <div [froalaView]="editorContent"></div> -->
-      </div>
-  
-      <div class="form-group">
-        <label for="labels">Labels:</label><br>
-        <tag-input id="labels" [(ngModel)]='labels' name="tagInput" [modelAsStrings]="true">
-          <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="existingLabelsValue">
-          </tag-input-dropdown>
-        </tag-input>
-      </div>
-    
-      <div class="form-group">
-        <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
-      </div>
-  
+      <label for="text">Text:</label>
+      <div style="margin:20px" [froalaEditor]="options" [(froalaModel)]="editorContent" [(ngModel)]="newsModel.text" name="text"></div>
+      <!-- <div [froalaView]="editorContent"></div> -->
+    </div>
+
+
+
+    <div class="form-group">
+      <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
   </form>
-  </div>
+</div>

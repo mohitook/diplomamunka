@@ -1,0 +1,24 @@
+<h2 md-dialog-title>Add new category</h2>
+
+<md-dialog-content>
+    <form class="example-form">
+        <md-form-field class="example-full-width" floatPlaceholder="never">
+            <input mdInput [(ngModel)]="newLabel.label" name="label" id="label" type="text" placeholder="Category Name">
+        </md-form-field>
+        <md-form-field class="example-full-width" floatPlaceholder="never">
+            <input mdInput [(ngModel)]="newLabel.imageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Image Url">
+        </md-form-field>
+    </form>
+    <div *ngIf="newLabel.label!=''" >
+        <label for="newselectedImage">Category preview:</label>
+        <div style="display:flex">
+            <img class="img-responsive" [src]="newLabel.imageUrl" style="height:23px;" /> &nbsp; <b>{{newLabel.label}}</b>        
+        </div>
+    </div>
+
+</md-dialog-content>
+
+<md-dialog-actions style="display: block">
+    <button md-raised-button (click)="onNoClick()" class="pull-left">Cencel</button>
+    <button md-raised-button style="background-color:#00c853" (click)="addLabel();onNoClick()" class="pull-right">Add</button>
+</md-dialog-actions>

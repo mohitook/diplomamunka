@@ -1,0 +1,13 @@
+<h2 md-dialog-title>Delete {{selectedLabel.value}} category</h2>
+
+<md-dialog-content> 
+        <div style="text-align:center">
+        <img id="selectedImage" src="http://www.freeiconspng.com/uploads/warning-icon-24.png" style="height:50px;" />
+        <h2>Are you sure?</h2>
+      </div>
+</md-dialog-content>
+
+<md-dialog-actions style="display: block">
+        <button md-raised-button (click)="onNoClick()" class="pull-left">Keep it</button>
+        <button md-raised-button color="warn" (click)="deleteSelected();onNoClick()" class="pull-right">Delete</button>
+</md-dialog-actions>

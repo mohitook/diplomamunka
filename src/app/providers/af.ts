@@ -245,6 +245,14 @@ export class AF {
         return this.comments.push(message);
     }
 
+    addNewLabel(label: any){
+        this.labels.$ref.ref.child(label.label).set({
+            image: label.imageUrl,
+            label: label.label,
+            value: label.label
+          })
+    }
+
     checkAndUpdateLabels(labels: Array<string>){
       this.labels.subscribe(originalList=>{
         labels.forEach(l=>{
