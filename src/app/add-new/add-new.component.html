@@ -11,16 +11,34 @@
 
     <md-form-field class="example-full-width" floatPlaceholder="never">
       <!-- <input mdInput placeholder="Company (disabled)" disabled value="Google"> -->
-      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title">
+      <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" [formControl]="titleFormControl">
       <md-hint align="end">{{title.value.length}} / 50</md-hint>
+      <md-error *ngIf="titleFormControl.hasError('required')">
+          Please write your Title
+      </md-error>
+      <md-error *ngIf="titleFormControl.hasError('pattern')">
+          Not just whitespaces!
+      </md-error>
     </md-form-field>
     <md-form-field class="example-full-width" floatPlaceholder="never">
-      <input mdInput type="url" placeholder="Cover image Url" [(ngModel)]="newsModel.coverImageUrl" name="coverImage">
+      <input mdInput type="url" placeholder="Cover image Url" [(ngModel)]="newsModel.coverImageUrl" name="coverImage" [formControl]="imageUrlFormControl">
+      <md-error *ngIf="imageUrlFormControl.hasError('required')">
+          Please add the cover image url
+      </md-error>
+      <md-error *ngIf="imageUrlFormControl.hasError('pattern')">
+          Please add a valid url! (starts with http or https)
+      </md-error>
     </md-form-field>
 
     <md-form-field class="example-full-width" floatPlaceholder="never">
-      <textarea mdInput #summary maxlength="300" placeholder="Summary" [(ngModel)]="newsModel.summary" name="summary"></textarea>
+      <textarea mdInput #summary maxlength="300" placeholder="Summary" [(ngModel)]="newsModel.summary" name="summary" [formControl]="summaryFormControl"></textarea>
       <md-hint align="end">{{summary.value.length}} / 300</md-hint>
+      <md-error *ngIf="summaryFormControl.hasError('required')">
+          Please write your summary
+      </md-error>
+      <md-error *ngIf="summaryFormControl.hasError('pattern')">
+          Not just whitespaces!
+      </md-error>
     </md-form-field>
 
     <div class="form-group">
@@ -32,7 +50,10 @@
 
 
     <div class="form-group">
-      <button (click)="onSubmit()" type="submit" class="btn btn-primary">Submit</button>
+      <button (click)="onSubmit()" type="submit" class="btn btn-primary" 
+        [disabled]="!summaryFormControl.valid || !imageUrlFormControl.valid || !titleFormControl.valid" >
+        Submit
+      </button>
     </div>
 
   </form>

@@ -234,16 +234,22 @@ function dailyScheduleToDb(gameName, body) {
     var matches = admin.database().ref('matches');
     matches.once('value', function (matchesSnapShot) {
 
+      var shouldReturn = false;
       matchesSnapShot.forEach(function (matchSnapShot) {
         //get the key
         var dbMatchId = matchSnapShot.key.split('-')[1];
 
         if (match.id == dbMatchId) {
-          return; //there is already a created match in the db -> mivan ha van TBD, vagy hasonló/esetleg változás? összehasonlítás írása! 
+          shouldReturn = true; //there is already a created match in the db -> mivan ha van TBD, vagy hasonló/esetleg változás? összehasonlítás írása! 
           //Csak a bets-maradjon + az eredetileg lekreált key! mert a ../bets ehhez van igazítva!
           //logikusabb így hagyni a már megtett fogadások miatt, ráadásul TBD példát sem találni..
         }
       });
+      //
+      if(shouldReturn){
+        return;
+      }
+
       var newObjectKey = (new Date(match.scheduled).getTime()) + '-' + match.id;
       newObjectKey = newObjectKey.replace('.', '');
       game_logo = '';
@@ -264,10 +270,16 @@ function dailyScheduleToDb(gameName, body) {
       var stream = "";
 
       //select the first, 1 stream is enough on the page
-      if(match.streams[0] != null){
-        lastSlash = match.streams[0].url.lastIndexOf('/');
-        stream = match.streams[0].url.substring(lastSlash  + 1);
+      if(match.streams != null){
+        if(match.streams[0] != null){
+          preText = (match.streams[0].indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
+          lastSlash = match.streams[0].url.lastIndexOf('/');          
+          stream = preText + match.streams[0].url.substring(lastSlash  + 1);
+          questionMark = match.streams[0].url.lastIndexOf('?'); 
+          stream = stream.substring(0, questionMark-1);
+        }
       }
+      
 
       admin.database().ref('matches/' + newObjectKey).set({
         begin_at: new Date(match.scheduled).getTime(),

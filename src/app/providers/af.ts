@@ -319,6 +319,7 @@ export class AF {
         const toSend = this.af.database.object(`/newscontent/${newObjectKey}`);
         toSend.set({ text: news.text });
 
+        return this.af.database.object('news/' + newObjectKey);
     }
 
     getSingleNewsByKey(key) {

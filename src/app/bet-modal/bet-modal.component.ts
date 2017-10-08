@@ -36,7 +36,15 @@ export class BetModalComponent implements OnInit {
         console.log(match);
         this.game = match.game;
         if(match.stream!=null && match.stream!=''){
-          this.streamLink = 'http://player.twitch.tv/?channel='+match.stream+'&muted=true';
+          //todo: ez nem fog menni mert más élő közvetítétést nem ágyazhatom be :)... tehát youtube esetén csak egy link lesz kint!
+          if(match.stream.indexOf('YOUTUBE')!==-1){
+            var channelId = match.stream.replace('YOUTUBE/','');
+            this.streamLink = 'https://gaming.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig';
+          }
+          if(match.stream.indexOf('TWITCH')!==-1){
+            var channelId = match.stream.replace('TWITCH/','');
+            this.streamLink = 'http://player.twitch.tv/?channel='+channelId+'&muted=true';
+          }
         }
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
           console.log(matchBet);

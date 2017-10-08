@@ -39,7 +39,7 @@
   height: 100%;
 }
 
-.example-form {
+.example-form { 
   min-width: 150px;
   width: 100%;
 }
@@ -59,15 +59,29 @@ input {
   font-size: 16px;
   line-height: 34px;
 }
+@media (min-width: 621px){
+  .text-inside-grid-left {
+    position: absolute;
+    left: 5px;
+    bottom: 1px;
+  }
+}
+  @media (min-width: 621px){
+  .text-inside-grid-right {
+    position: absolute;
+    right: 5px;
+    bottom: 1px;
+  }
+}
+  .workingLineBreaker{
+    white-space: normal;
+    line-height: initial;
+    font-size: 16px;
+  }
 
-.text-inside-grid-left {
-  position: absolute;
-  left: 5px;
-  bottom: 1px;
+@media (max-width: 620px){
+  h4{
+    font-size: 16px;
+  }
 }
 
-.text-inside-grid-right {
-  position: absolute;
-  right: 5px;
-  bottom: 1px;
-}
