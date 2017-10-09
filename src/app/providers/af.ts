@@ -391,13 +391,13 @@ export class AF {
         return this.af.database.object('users/' + uid).set({
             displayName: name,
             email: email,
-            coin:1000
+            coins: 1000
         });
-    }
+    } 
 
     saveUserNameInAuth(name){
       return this.authState.auth.updateProfile({
-            displayName: "Name here",
+            displayName: name,
             photoURL: ''
           });
     }

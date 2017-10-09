@@ -14,3 +14,9 @@
   border: 3px dashed #f2bc93;
   margin: 20px 0;
 }
+
+.panel-default>.panel-heading {
+  background-image: none;
+  background-color: #c5cae9;
+  overflow: hidden;
+}

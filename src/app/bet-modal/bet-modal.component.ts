@@ -19,6 +19,8 @@ export class BetModalComponent implements OnInit {
   everythingLoaded = false;
   game;
   streamLink = '';
+  twitchStream = false;
+  youtubeImageUrl = "https://static-cdn.jtvnw.net/jtv_user_pictures/panel-85318730-image-c49078070c56840d-320.png";
 
   BET_REGEX = /^\d+$/;
   BET_REGEX_Not0 = /^[1-9][0-9]*$/;
@@ -39,9 +41,11 @@ export class BetModalComponent implements OnInit {
           //todo: ez nem fog menni mert más élő közvetítétést nem ágyazhatom be :)... tehát youtube esetén csak egy link lesz kint!
           if(match.stream.indexOf('YOUTUBE')!==-1){
             var channelId = match.stream.replace('YOUTUBE/','');
-            this.streamLink = 'https://gaming.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig';
+            //this.streamLink = 'https://gaming.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig';
+              this.streamLink = 'https://gaming.youtube.com/channel/' + channelId;
           }
           if(match.stream.indexOf('TWITCH')!==-1){
+            this.twitchStream = true;
             var channelId = match.stream.replace('TWITCH/','');
             this.streamLink = 'http://player.twitch.tv/?channel='+channelId+'&muted=true';
           }

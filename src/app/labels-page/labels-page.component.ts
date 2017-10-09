@@ -1,3 +1,4 @@
+import { FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FirebaseListObservable } from "angularfire2";
 import { AF } from "../providers/af";
@@ -144,6 +145,18 @@ export class LabelModifyDialog {
 export class LabelNewDialog {
 
   newLabel:any
+
+  NOT_EMPTY_REGEX = /^.*[^ ].*$/;
+  HTTP_REGEX = /^^(http|https|ftp):\/\/.*$/;
+
+  categoryNameFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.NOT_EMPTY_REGEX)]);
+
+  imageUrlFormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(this.NOT_EMPTY_REGEX),
+    Validators.pattern(this.HTTP_REGEX)]);
 
   constructor(public afService: AF,
     public dialogRef: MdDialogRef<LabelDeleteDialog>) { 

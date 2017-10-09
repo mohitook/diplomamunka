@@ -58,14 +58,12 @@ exports.fiveMinuteMatchTimeCheck = functions.https.onRequest((request, response)
   var matches = admin.database().ref('matches');
   matches.once('value', function (matchesSnapShot) {
     matchesSnapShot.forEach(function (match) {
-      if (match.val().status != 'future') {
-        return;
-      }
-      //console.log(match.val());
-      if (match.val().begin_at <= new Date().getTime()) {
-        console.log('rewrite status of:')
-        console.log(match.val());
-        match.ref.child('status').set('notFuture');
+      if (match.val().status == 'future') {
+        if (match.val().begin_at <= new Date().getTime()) {
+          console.log('rewrite status of:')
+          console.log(match.val());
+          match.ref.child('status').set('notFuture');
+          }
       }
     });
   });
@@ -272,7 +270,7 @@ function dailyScheduleToDb(gameName, body) {
       //select the first, 1 stream is enough on the page
       if(match.streams != null){
         if(match.streams[0] != null){
-          preText = (match.streams[0].indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
+          preText = (match.streams[0].url.indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
           lastSlash = match.streams[0].url.lastIndexOf('/');          
           stream = preText + match.streams[0].url.substring(lastSlash  + 1);
           questionMark = match.streams[0].url.lastIndexOf('?'); 

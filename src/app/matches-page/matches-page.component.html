@@ -32,9 +32,8 @@
           <div class="col-sm-6 col-md-6 left-column">
             <div>
               <h3 md-header style="color:rgba(255,255,255,.87);">Upcoming matches</h3>
-                <md-divider></md-divider>
-                    <md-divider></md-divider>
-                      <md-divider></md-divider>
+              <md-divider></md-divider>
+              <br/>
                       <button md-raised-button *ngFor="let match of upcomingMatches | async | match_filter: selectedLabel | paginate: config" 
                       (click)="openDialog(match.$key);" color="default" 
                       style="width:100%; padding:0%; background-color:#8c9eff;"
@@ -119,9 +118,8 @@
           <div class="col-sm-6 col-md-6 mid-column">
             <div>
               <h3 md-header style="color:rgba(255,255,255,.87);">Live matches</h3>
-                <md-divider></md-divider>
                     <md-divider></md-divider>
-                      <md-divider></md-divider>
+                    <br/>
                       <button md-raised-button *ngFor="let match of notFutureMatches | async | match_filter: selectedLabel | paginate: config2" 
                       (click)="openDialog(match.$key);" color="default" 
                       style="width:100%; padding:0%; background-color:#8c9eff;"
@@ -201,9 +199,11 @@
           <div class="col-sm-6 col-md-6 right-column">
             <div>
               <h3 md-header style="color:rgba(255,255,255,.87);">Finished matches</h3>
-                <md-divider></md-divider>
-                    <md-divider></md-divider>
+                <!-- <md-divider></md-divider> -->
+                    <!-- <md-divider></md-divider> -->
+                    <md-checkbox color="warn"><h4 md-header style="color:rgba(255,255,255,.87);">Only my bets</h4></md-checkbox>
                       <md-divider></md-divider>
+                      <br/>
                       <button md-raised-button *ngFor="let match of finishedMatches | async | match_filter: selectedLabel | paginate: config3" 
                       (click)="openDialog(match.$key);" color="default"
                        style="width:100%; padding:0%; background-color:#8c9eff;"

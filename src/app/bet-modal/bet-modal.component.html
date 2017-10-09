@@ -129,10 +129,13 @@
     </md-grid-list>
  
     <!-- https://www.smashingmagazine.com/2014/02/making-embedded-content-work-in-responsive-design/ -->
-    <div class="video-container" *ngIf="streamLink!=''">
+    <div class="video-container" *ngIf="streamLink!='' && twitchStream==true">
         <iframe [src]="streamLink | safeUrl" height="315" width="560" frameborder="0" scrolling="no"
             allowfullscreen="false">
         </iframe>
+    </div>
+    <div *ngIf="streamLink!='' && twitchStream!=true" style="text-align: center;">
+        <a href="{{streamLink}}" target="_blank"><img src="{{youtubeImageUrl}}" style="height:100px;"/></a>
     </div>
 
     <!-- <iframe src="http://player.twitch.tv/?channel=esl_csgob&muted=true" height="250" width="350" frameborder="0" scrolling="no"
@@ -222,7 +225,7 @@
         </md-form-field>
 
         <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && (selectedBetting | async)?.status != 'finished'">
-            <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #ffab00;">
+            <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #ffab00;" autofocus>
                 <b>Your tip: {{tip}}</b>
             </md-chip>
             <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #ffab00;">

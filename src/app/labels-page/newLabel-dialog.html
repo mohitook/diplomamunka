@@ -3,16 +3,29 @@
 <md-dialog-content>
     <form class="example-form">
         <md-form-field class="example-full-width" floatPlaceholder="never">
-            <input mdInput [(ngModel)]="newLabel.label" name="label" id="label" type="text" placeholder="Category Name">
+            <input mdInput [(ngModel)]="newLabel.label" name="label" id="label" type="text" placeholder="Category Name" [formControl]="categoryNameFormControl">
+            <md-error *ngIf="categoryNameFormControl.hasError('required')">
+                Please add the cover image url
+            </md-error>
+            <md-error *ngIf="categoryNameFormControl.hasError('pattern')">
+                Please not just 'whitespaces'
+            </md-error>
         </md-form-field>
         <md-form-field class="example-full-width" floatPlaceholder="never">
-            <input mdInput [(ngModel)]="newLabel.imageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Image Url">
+            <input mdInput [(ngModel)]="newLabel.imageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Image Url" [formControl]="imageUrlFormControl">
+            <md-error *ngIf="imageUrlFormControl.hasError('required')">
+                Please add the cover image url
+            </md-error>
+            <md-error *ngIf="imageUrlFormControl.hasError('pattern')">
+                Please add a valid url! (starts with http or https)
+            </md-error>
         </md-form-field>
+
     </form>
-    <div *ngIf="newLabel.label!=''" >
+    <div *ngIf="newLabel.label!=''">
         <label for="newselectedImage">Category preview:</label>
         <div style="display:flex">
-            <img class="img-responsive" [src]="newLabel.imageUrl" style="height:23px;" /> &nbsp; <b>{{newLabel.label}}</b>        
+            <img class="img-responsive" [src]="newLabel.imageUrl" style="height:23px;" /> &nbsp; <b>{{newLabel.label}}</b>
         </div>
     </div>
 
@@ -20,5 +33,9 @@
 
 <md-dialog-actions style="display: block">
     <button md-raised-button (click)="onNoClick()" class="pull-left">Cencel</button>
-    <button md-raised-button style="background-color:#00c853" (click)="addLabel();onNoClick()" class="pull-right">Add</button>
+    <button md-raised-button style="background-color:#00c853" (click)="addLabel();onNoClick()" 
+    class="pull-right"
+    [disabled]="!categoryNameFormControl.valid || !imageUrlFormControl.valid">
+        Add
+    </button>
 </md-dialog-actions>

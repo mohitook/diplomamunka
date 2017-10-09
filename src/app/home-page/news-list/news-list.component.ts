@@ -32,7 +32,12 @@ export class NewsListComponent implements OnInit, AfterViewChecked {
   loadedIn = false;
   game;
   
-  p;
+  public config: PaginationInstance = {
+    id: 'config',
+    itemsPerPage: 10,
+    currentPage: 1
+};
+p;
 
   @ViewChild(MyMasonryDirective) directive = null;
 
