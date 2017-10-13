@@ -36,11 +36,20 @@
       <md-toolbar color="primary" style="margin-left:0px;overflow:hidden;">
         <h2>Comments</h2>
       </md-toolbar>
-      <div class="panel panel-default" style="margin-top: 20px;"  *ngFor="let comment of comments | async | paginate: config">
-        <div class="panel-heading">
-          <strong>{{ comment.displayName}}</strong> <span class="text-muted">{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</span>
+
+
+      <div class="panel panel-default" style="margin: 20px 20px 20px;"  *ngFor="let comment of comments | async | paginate: config">
+        <div class="panel-heading" style="display: flex;">
+          <img *ngIf="comment.photoURL==null || comment.photoURL==''" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" 
+          style="height: 40px;margin-right: 10px;" />
+          <img *ngIf="comment.photoURL!=null || comment.photoURL!=''" [src]="comment.photoURL" 
+          style="height: 40px;margin-right: 10px;" />
+          <div>
+              <strong>{{ comment.displayName}}</strong> <br/>
+              <span class="text-muted">{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</span>
+          </div>
           <span class="fill-remaining-space"></span>
-          <button class="pull-right" md-raised-button color="warn" *ngIf="(afService.user | async).role!=null && (afService.user | async).role.admin == true">Moderate</button>
+          <button class="pull-right" md-raised-button color="warn" *ngIf="afService.user.admin">Moderate</button>
         </div>
         <div class="panel-body">
             {{comment.message}}
@@ -48,20 +57,7 @@
         <!-- /panel-body -->
       </div>
       <!-- /panel panel-default -->
-    <!-- <div class="well" *ngFor="let comment of comments | async | paginate: config">
-      <div *ngIf="(afService.user | async).role.admin == true">
-        <button md-fab color="warn">Moderate</button>
-      </div>
-      <div>
-        <p class="media-comment">
-          {{comment.message}}
-        </p>
-        <div class="text-muted pull-left"><small>{{ comment.displayName}}</small></div>
-        <div class="text-muted pull-right"><small>{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
-      </div>
 
-    </div> -->
-    <!-- (pageChange)="config.currentPage = $event" -->
     <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
       <div *ngIf="p.pages[1]">
         <div class="custom-pagination">

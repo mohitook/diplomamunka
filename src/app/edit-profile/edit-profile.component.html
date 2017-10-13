@@ -1,25 +1,39 @@
 <h2 md-dialog-title>Edit your profile</h2>
 
 <md-dialog-content style="text-align:center">
-    
-        <form class="example-form">
-          <md-form-field class="example-full-width">
-            <input #newName mdInput placeholder="New display name on page">
-          </md-form-field>
-         <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value)">Reset Name</button>        
-        </form>
 
-        <br/>
-        <div class="divider">
-                <hr class="left"/>OR<hr class="right" />
-        </div>
+    <form class="example-form">
+        <md-form-field class="example-full-width">
+            <input #newName mdInput placeholder="New display name on page">
+        </md-form-field>
+        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value)">Reset Name</button>
+    </form>
+
+
+
+    <form class="example-form">
+        <img *ngIf="newPicture.value==''" src="//placehold.it/100" class="avatar img-rounded" alt="avatar">
+        <img *ngIf="newPicture.value!=''" [src]="newPicture.value"  alt="avatar" style="height:100px; width:100px">
         
-        <button md-raised-button (click)="afService.resetPassword(); resetClicked()" style="background-color:#ffd54f; margin-bottom: 5px;">
+        <br/>
+        <md-form-field class="example-full-width">
+            <input #newPicture mdInput placeholder="New picture url" value="{{afService.user.photoURL}}">
+        </md-form-field>
+        <button md-raised-button color="primary" (click)="afService.updateProfileImage(newPicture.value)">Set new picture</button>
+    </form>
+
+    <br/>
+    <div class="divider">
+        <hr class="left" />OR
+        <hr class="right" />
+    </div>
+
+    <button md-raised-button (click)="afService.resetPassword(); resetClicked()" style="background-color:#ffd54f; margin-bottom: 5px;">
             Reset Password
         </button>
 
     <div *ngIf="pwReset" style="color:orange">
-         For password reset you will get an email with all the necessary informations!
+        For password reset you will get an email with all the necessary informations!
     </div>
     <br/>
 

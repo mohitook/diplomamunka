@@ -19,18 +19,18 @@
         <button md-button routerLink="/administrator" style="color:#ffd54f">Administrator page</button>
         <md-chip-list *ngIf="afService.isLoggedIn">
                 <md-chip style="background-color:#1a237e;color:rgba(255,255,255,.87);">
-                        <b>{{(afService.user | async)?.coins}}</b> &nbsp;
+                        <b>{{(afService.userObs | async)?.coins}}</b> &nbsp;
                         <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
                 </md-chip>
         </md-chip-list>
         <!-- <button  md-button *ngIf="afService.isLoggedIn">
-            <b>{{(afService.user | async)?.coins}}</b>
+            <b>{{(afService.userObs | async)?.coins}}</b>
             <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
         </button> -->
         <button md-button (click)="openLoginDialog()" *ngIf="!afService.isLoggedIn">Login</button>
         
 
-        <button md-button [mdMenuTriggerFor]="userMenu" *ngIf="afService.isLoggedIn">{{afService.displayName}}</button>
+        <button md-button [mdMenuTriggerFor]="userMenu" *ngIf="afService.isLoggedIn">{{afService.user.displayName}}</button>
         <md-menu #userMenu="mdMenu">
           <button md-menu-item (click)="openEditProfileDialog()">Edit Profile</button>
           <button md-menu-item  (click)="logout()">Logout</button>
@@ -47,7 +47,7 @@
       <button md-menu-item routerLink="/matches">Matches</button>
       <button md-menu-item routerLink="/administrato" style="color:#ff6f00">Administrator page</button>
       <div md-menu-item *ngIf="afService.isLoggedIn" >
-              <b>{{(afService.user | async)?.coins}}</b> &nbsp;
+              <b>{{(afService.userObs | async)?.coins}}</b> &nbsp;
               <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
       </div>
       <hr style="margin-top: 5px; margin-bottom: 5px;">

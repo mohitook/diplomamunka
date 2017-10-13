@@ -33,13 +33,13 @@ export class ChatPageComponent implements OnInit, AfterViewChecked {
     }
 
     isYou(email) {
-        if (email == this.afService.email)
+        if (email == this.afService.user.email)
             return true;
         else
             return false;
     }
     isMe(email) {
-        if (email == this.afService.email)
+        if (email == this.afService.user.email)
             return false;
         else
             return true;

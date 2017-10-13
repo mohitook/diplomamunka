@@ -1,8 +1,9 @@
+import { User } from './../user-model/user';
 // src/app/providers/af.ts
 import { Injectable, EventEmitter } from "@angular/core";
-import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef,FirebaseAuthState } from 'angularfire2';
+import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef, FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import "rxjs/add/operator/share";
 
 import * as firebase from 'firebase';
@@ -12,16 +13,16 @@ export class AF {
 
     public isLoggedIn: boolean;
 
-    public limitNumber : number = 2;
+    public limitNumber: number = 2;
 
     private clock: Observable<Date>;
 
-    public userBets : FirebaseListObservable<any>;    
-    public pendingBetsForUser : FirebaseObjectObservable<any>;
-    public upcomingMatches : FirebaseListObservable<any>;
-    public upcomingMatchesForNewsPage : FirebaseListObservable<any>;
-    public notFutureMatches : FirebaseListObservable<any>;
-    public finishedMatches : FirebaseListObservable<any>;
+    public userBets: FirebaseListObservable<any>;
+    public pendingBetsForUser: FirebaseObjectObservable<any>;
+    public upcomingMatches: FirebaseListObservable<any>;
+    public upcomingMatchesForNewsPage: FirebaseListObservable<any>;
+    public notFutureMatches: FirebaseListObservable<any>;
+    public finishedMatches: FirebaseListObservable<any>;
     public messages: FirebaseListObservable<any>;
     public news: FirebaseListObservable<any>;
     public comments: FirebaseListObservable<any>;
@@ -29,34 +30,31 @@ export class AF {
     public allNews: FirebaseListObservable<any>;
     public users: FirebaseListObservable<any>;
 
-    public user: FirebaseObjectObservable<any>;
+    public userObs: FirebaseObjectObservable<any>;
+    public user: User = new User();
 
     public specificNews: FirebaseListObservable<any>;
     public placeHolderSpecificNews: FirebaseListObservable<any>;
     public uid: string;
-    public displayName: string;
-    public email: string;
     public firstLogin: boolean = false;
 
     public userHasAlreadyPendingBet = false;
-
-
     public propertySubject: Subject<any>;
     public valueSubject: Subject<any>;
     public commentsSubject: Subject<any>;
 
     uidUpdate: EventEmitter<string> = new EventEmitter();
 
-    public authState : FirebaseAuthState;
+    public authState: FirebaseAuthState;
 
     public userBettings = {};
 
     get uid_prop(): string {
-    return this.uid;
+        return this.uid;
     }
     set uid_prop(value: string) {
-      this.uid = value;
-      this.uidUpdate.next(value);
+        this.uid = value;
+        this.uidUpdate.next(value);
     }
 
     constructor(public af: AngularFire) {
@@ -80,38 +78,38 @@ export class AF {
         //this handles the still tip'able matches. if the timestamp of the match is bigger then the current time: it is not tipable anymore
         //and not 'future'
 
-        this.upcomingMatches = this.af.database.list('matches',{
-            query:{
+        this.upcomingMatches = this.af.database.list('matches', {
+            query: {
                 orderByChild: 'status',
                 equalTo: 'future'
             }
         });
 
-        this.upcomingMatchesForNewsPage = this.af.database.list('matches',{
-            query:{
+        this.upcomingMatchesForNewsPage = this.af.database.list('matches', {
+            query: {
                 orderByChild: 'status',
                 equalTo: 'future',
                 limitToFirst: 5
             }
         });
 
-        this.notFutureMatches = this.af.database.list('matches',{
-            query:{
+        this.notFutureMatches = this.af.database.list('matches', {
+            query: {
                 orderByChild: 'status',
                 equalTo: 'notFuture'
             }
         });
 
-        this.finishedMatches = this.af.database.list('matches',{
-            query:{
+        this.finishedMatches = this.af.database.list('matches', {
+            query: {
                 orderByChild: 'status',
                 equalTo: 'finished'
             }
         });
 
         //I have to get the bets related to the current user, and store them in the service
-        this.userBets = this.af.database.list('bets',{
-            query:{
+        this.userBets = this.af.database.list('bets', {
+            query: {
                 orderByChild: this.propertySubject,
                 startAt: ''
             }
@@ -122,16 +120,16 @@ export class AF {
             this.pendingBetsForUser = this.af.database.object('pendingBets/' + uid);
             this.pendingBetsForUser.subscribe(x => {
                 //this is for the client check, to disable all bet functions till there is a pending bet related to the current user!
-                if(x.matchId!= null){
+                if (x.matchId != null) {
                     this.userHasAlreadyPendingBet = true;
                 }
-                else{
+                else {
                     this.userHasAlreadyPendingBet = false;
                 }
             });
         });
 
-        this.userBets.subscribe(bets=>{
+        this.userBets.subscribe(bets => {
             //make sure reInitialize it! (basically it is important just for test purposes)
             this.userBettings = {};
             bets.forEach(bet => {
@@ -151,35 +149,35 @@ export class AF {
         // });
 
         this.af.auth.subscribe(
-          (auth) =>{
-            this.authState=auth;
-            console.log('af auth trigger');
-            if (auth == null) {
-                console.log("Not Logged in.");
-                this.isLoggedIn = false;
-                //this.router.navigate(['login']);
-            }
-            else {
-                console.log("Successfully Logged in.");
-                // Set the Display Name and Email so we can attribute messages to them
-                if (auth.google) {
-                    this.displayName = auth.google.displayName;
-                    this.email = auth.google.email;
-                    this.uid_prop = auth.auth.uid;
-                    //this.uid = auth.auth.uid; //google.uid returns something else..
+            (auth) => {
+                this.authState = auth;
+                console.log('af auth trigger');
+                if (auth == null) {
+                    console.log("Not Logged in.");
+                    this.isLoggedIn = false;
+                    //this.router.navigate(['login']);
                 }
                 else {
-                    this.displayName = auth.auth.displayName;
-                    this.email = auth.auth.email;
-                    this.uid_prop = auth.auth.uid;
+                    console.log("Successfully Logged in.");
+                    // Set the Display Name and Email so we can attribute messages to them
+                    if (auth.google) {
+                        //keep it separated in case if there will be any new difference
+                        this.uid_prop = auth.auth.uid;
+                        //this.uid = auth.auth.uid; //google.uid returns something else..
+                    }
+                    else {
+                        this.uid_prop = auth.auth.uid;
+                    }
+                    //this.addUserInfo();
+
+                    this.isLoggedIn = true;
+                    this.userObs = this.af.database.object('/users/' + this.uid_prop);
+                    this.userObs.subscribe(userData => {
+                        console.log('userObs sub called');
+                        this.user = new User(userData);
+                    });
                 }
-                //this.addUserInfo();
-
-                this.isLoggedIn = true;
-                this.user = this.af.database.object('/users/'+this.uid_prop);
-
             }
-          }
         );
 
     }
@@ -195,86 +193,77 @@ export class AF {
     }
 
     /**
-   *
-   */
-    addUserInfo() {
-        //We saved their auth info now save the rest to the db.
-        return this.af.database.object('users/' + this.uid).update({
-            displayName: this.displayName,
-            email: this.email
-        });
-    }
-
-    /**
      * Logs out the current user
      */
     logout() {
-        this.email = null;
         this.uid_prop = null;
-        this.displayName = null;
-        this.user=null;
+        this.userObs = null;
+
+        this.user = new User();
+
         return this.af.auth.logout();
     }
     /**
      * Saves a message to the Firebase Realtime Database
      * @param text
      */
-
     sendMessage(text) {
         var message = {
             message: text,
-            displayName: this.displayName,
-            email: this.email,
+            displayName: this.user.displayName,
+            email: this.user.email,
             timestamp: Date.now()
         };
         this.messages.push(message);
     }
 
-    setCommentsFilter(key:any){
-      this.comments = this.af.database.list('comments/'+key);
-      this.comments.subscribe(x=>{
-        console.log('comments sub');
-        console.log(x);
-      });
-      return this.comments;
+    setCommentsFilter(key: any) {
+        this.comments = this.af.database.list('comments/' + key);
+        this.comments.subscribe(x => {
+            console.log('comments sub');
+            console.log(x);
+        });
+        return this.comments;
     }
 
     sendComment(text) {
         var message = {
             message: text,
-            displayName: this.displayName,
-            email: this.email,
-            timestamp: Date.now()
+            displayName: this.user.displayName,
+            email: this.user.email,
+            timestamp: Date.now(),
+            photoURL: this.user.photoURL,
+            userId: this.uid //not the best practice..
         };
         return this.comments.push(message);
     }
 
-    addNewLabel(label: any){
+    addNewLabel(label: any) {
         this.labels.$ref.ref.child(label.label).set({
             image: label.imageUrl,
             label: label.label,
             value: label.label
-          })
+        })
     }
 
-    checkAndUpdateLabels(labels: Array<string>){
-      this.labels.subscribe(originalList=>{
-        labels.forEach(l=>{
-          var isItNew = true;
-          originalList.forEach(o=>{
-            if(o.value == l){
-              isItNew = false;
-            }
-          });
-          if(isItNew){
-            this.labels.$ref.ref.child(l).set({
-              image: 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3',
-              label: l,
-              value: l
+    checkAndUpdateLabels(labels: Array<string>) {
+        this.labels.subscribe(originalList => {
+            labels.forEach(l => {
+                var isItNew = true;
+                originalList.forEach(o => {
+                    if (o.value == l) {
+                        isItNew = false;
+                    }
+                });
+                if (isItNew) {
+                    this.labels.$ref.ref.child(l).set({
+                        image: 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3',
+                        label: l,
+                        value: l
+                    })
+                }
             })
-          }
-        })
-      });
+        });
     }
 
     /**
@@ -283,7 +272,7 @@ export class AF {
      */
     sendNews(news) {
 
-      this.checkAndUpdateLabels(news.labels);
+        this.checkAndUpdateLabels(news.labels);
 
         var labelsTmp: any = {};
 
@@ -301,7 +290,7 @@ export class AF {
             labels: labelsTmp,
             creator: {
                 uid: this.uid,
-                displayname: this.displayName
+                displayname: this.user.displayName
             },
             timestamp: Date.now()
 
@@ -340,34 +329,34 @@ export class AF {
         return item;
     }
 
-    setUserLabels(selectedLabels){
-      this.af.database.object('/users/'+this.uid+"/labels").set(selectedLabels);
+    setUserLabels(selectedLabels) {
+        this.af.database.object('/users/' + this.uid + "/labels").set(selectedLabels);
     }
 
-    getUserLastSelected(){
-      var queryString = 'users/'+this.uid+'/lastSelected';
-      console.log('getUserLastSelected - '+queryString);
-      return this.af.database.object(queryString);
+    getUserLastSelected() {
+        var queryString = 'users/' + this.uid + '/lastSelected';
+        console.log('getUserLastSelected - ' + queryString);
+        return this.af.database.object(queryString);
     }
 
     selectSpecificNews(property: any) {
-      console.log('selectSpecificNews - ' + property);
+        console.log('selectSpecificNews - ' + property);
         this.specificNews = this.af.database.list('news', {
             query: {
-                orderByChild: 'labels/'+property,
+                orderByChild: 'labels/' + property,
                 equalTo: true,
                 //limitToFirst: this.limitNumber //nem nyerek vele kb semmit..csak vesztek
             }
         });
         console.log(property);
-        this.af.database.object('users/'+this.uid+'/lastSelected').set(property);
+        this.af.database.object('users/' + this.uid + '/lastSelected').set(property);
         return this.specificNews;
     }
 
     checkIfAlreadyTiped(matchKey) {
-      //console.log('checkIfAlreadyTiped');
-      //console.log(this.uid);
-      return this.af.database.object('bets/' + matchKey + '/' + this.uid);
+        //console.log('checkIfAlreadyTiped');
+        //console.log(this.uid);
+        return this.af.database.object('bets/' + matchKey + '/' + this.uid);
     }
 
     //++Email/PW Registration
@@ -399,11 +388,11 @@ export class AF {
     //     });
     // } 
 
-    saveUserNameInAuth(name){
-      return this.authState.auth.updateProfile({
+    saveUserNameInAuth(name) {
+        return this.authState.auth.updateProfile({
             displayName: name,
             photoURL: ''
-          });
+        });
     }
 
     /**
@@ -425,9 +414,9 @@ export class AF {
     //++Email/PW Registration
 
     //mindenki csak egyszer fogadhat, többszöri fogadással az elején tévútra lehetne terelni a többséget és ezzel a végén kaszálni!
-    placeTip(matchId: string, team: string, tip: number){
- 
-        this.af.database.object('bets/'+matchId+'/'+this.uid).set({
+    placeTip(matchId: string, team: string, tip: number) {
+
+        this.af.database.object('bets/' + matchId + '/' + this.uid).set({
             team: team,
             tip: tip,
             status: 'new'
@@ -435,44 +424,34 @@ export class AF {
         // && now < root.child('matches').child($match).child('begin_at')
         // "root.child('users').child(auth.uid).child('coins').val()>=data.child('tip').val()"
 
-            // //so the user won't be able to set pendingBet till he/she has one!
-            // this.af.database.object('pendingBets/' + this.uid).set({
-            //     matchId: matchId,
-            //     team: team,
-            //     tip: tip,
-            //     status: 'new'
-            // });
+        // //so the user won't be able to set pendingBet till he/she has one!
+        // this.af.database.object('pendingBets/' + this.uid).set({
+        //     matchId: matchId,
+        //     team: team,
+        //     tip: tip,
+        //     status: 'new'
+        // });
 
 
-           // ".write" : false,
+        // ".write" : false,
     }
 
-    updateProfile(newName: string){
+    updateProfileName(newName: string) {
 
-        var user = firebase.auth().currentUser;
-        console.log(user.displayName);
-        console.log(user);
-        this.authState.auth.updateProfile({
-          displayName: newName,
-          photoURL: ""
-        }).then(x=> {
-            console.log('in then');
-            //this.displayName = this.authState.auth.displayName;
-            console.log('new: ' + this.authState.auth.displayName);
-        }).catch(error=> {
-         //there will be an error... but it is nonsense..
-         console.error(error);
-        });
-
-        return this.af.database.object('users/' + this.uid + '/displayName').set(newName);
+         return  this.af.database.object('users/' + this.uid + '/displayName').set(newName);
     }
 
-    resetPassword(oldPw: string ,newPw: string){
+    updateProfileImage(newImage: string) {
+
+         return this.af.database.object('users/' + this.uid + '/photoURL').set(newImage);
+    }
+
+    resetPassword(oldPw: string, newPw: string) {
         console.log('reset Password');
-        console.log(this.email);
+        console.log(this.user.email);
         //firebase.auth().verifyPasswordResetCode(oldPw).then
         //firebase.auth().currentUser.updatePassword(newPw);
-        return firebase.auth().sendPasswordResetEmail(this.email);
+        return firebase.auth().sendPasswordResetEmail(this.user.email);
     }
 
 }

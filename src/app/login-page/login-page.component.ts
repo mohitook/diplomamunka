@@ -30,7 +30,7 @@ export class LoginPageComponent {
   loginWithEmail(event, email, password){
     //event.preventDefault();
     this.afService.loginWithEmail(email, password).then(() => {
-      console.log(this.afService.displayName);
+      console.log(this.afService.user.displayName);
       this.onNoClick();
     })
       .catch((error: any) => {
