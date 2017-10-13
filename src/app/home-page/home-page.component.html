@@ -12,7 +12,14 @@
            BIG League Of Legends
           </a>
       <a md-list-item *ngFor="let label of labels | async" (click)="mobView.onLinkClick(sidenav);onSidenavClick(label)">
-            <img class="img-responsive pull-right" [src]="label.image" style="height:23px;" /> {{label.label}}
+        
+              <div style="width:25px; padding:5px">
+                <img class="pull-right" [src]="label.image" style="height:23px;" />            
+              </div>
+              <div >
+                {{label.label}}            
+              </div>
+           
           </a>
 
     </md-nav-list>

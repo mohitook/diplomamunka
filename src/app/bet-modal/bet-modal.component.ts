@@ -57,12 +57,6 @@ export class BetModalComponent implements OnInit {
             this.alreadyTiped = true;
             this.tip = matchBet.tip;
             this.prizeWon = matchBet.won;
-            if(match.status == 'future')
-              this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
-          }
-          else if(match.status == 'future'){
-            //triggers the function to check if it is still able to bet!
-            this.afService.af.database.object('checkMatchDate/' + data.key).set(match.begin_at);
           }
           this.everythingLoaded = true; //to fix the little 'available time' till the request is processed
         });

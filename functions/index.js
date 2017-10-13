@@ -13,6 +13,74 @@ var apiKeyForCsGo = 'k772vgds4x3x875gep7cq9dh';
 var apiKeyForDota2 = '4xrzt3cygq3rs5ghv4khqft7';
 var apiKeyForLoL = '3atqmme9np7jwe9gbx5texn5';
 
+//+++++++++++++++++++++++++ new bats handler
+
+exports.handleUserBets = functions.database.ref('bets/{matchId}/{userId}').onCreate(event => {
+  console.log("Handle " + event.params.userId + " new bet on match " + event.params.matchId);
+
+  var team = event.data.child('team').val();
+  var tip = event.data.child('tip').val();
+  console.log('tip: ' + tip + ' | team: ' + team)
+
+  const pathToValue = admin.database().ref('users/' + event.params.userId + '/coins');
+  const pathToTeamBetsValue = admin.database().ref('matches/' + event.params.matchId + '/opponents/' + team + "/bets");
+  return pathToValue.transaction(function (coins) {
+    if (coins) {
+      if (coins >= tip) {
+        admin.database().ref('bets/' + event.params.matchId + '/' + event.params.userId + '/status').set('inProgress');
+        coins = coins - tip;
+      }
+      else {
+        console.warn(event.params.userId + " new bet on match " + event.params.matchId + " was not successfull! (not enough coin)");
+
+        //only people who bet more that the amount of coin they have can get this state... and since they are just
+        //trying to *cheat* I just simply delete their bets.
+        admin.database().ref('bets/' + event.params.matchId + '/' + event.params.userId).remove();
+      }
+    }
+    return coins;
+  }).then(() => {
+    console.log(event.params.userId + 'user coins updated.');
+  });
+});
+
+exports.handleUserBetsPutToMatchBets = functions.database.ref('bets/{matchId}/{userId}').onUpdate(event => {
+  //only trigger this when it was a change from new status to inProgress (so after the user's coins was decreased)
+  if(event.data.child('status').val() == 'inProgress' && event.data.previous.child('status').val() == 'new')
+  {
+    console.log("Handle " + event.params.userId + " new bet on match " + event.params.matchId);
+  
+    var team = event.data.child('team').val();
+    var tip = event.data.child('tip').val();
+    console.log('tip: ' + tip + ' | team: ' + team)
+  
+    const pathToTeamBetsValue = admin.database().ref('matches/' + event.params.matchId + '/opponents/' + team + "/bets");
+    return pathToTeamBetsValue.transaction(function (teamBets) {
+      if (teamBets) {
+        teamBets = teamBets + tip;
+      }
+      return teamBets;
+    }).then(() => {
+      console.log(event.params.matchId + 'team bets updated');
+    });
+  }
+});
+
+//------------------------- new bats handler
+
+
+//++++++++++++++++++++++++++ user handlers
+exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
+  const user = event.data;
+  const uid = user.uid;
+  const email = user.email; // The email of the user.
+  const displayName = user.displayName; // The display name of the user.
+  admin.database().ref('users/' + uid + '/coins').set(1000);
+  admin.database().ref('users/' + uid + '/email').set(email);
+  admin.database().ref('users/' + uid + '/displayName').set(displayName);
+});
+//-------------------------- user handlers
+
 //++++++++++++++++++++++++++++ 
 //check in every 12 hours. If the a match doesn't have result in 8 hours from the begin_at ->
 //-> give back every bet to the users
@@ -59,11 +127,12 @@ exports.fiveMinuteMatchTimeCheck = functions.https.onRequest((request, response)
   matches.once('value', function (matchesSnapShot) {
     matchesSnapShot.forEach(function (match) {
       if (match.val().status == 'future') {
+        //420000 = 7 minute in milliseconds -deprecated.. to complicated to handle
         if (match.val().begin_at <= new Date().getTime()) {
-          console.log('rewrite status of:')
+          console.log('rewrite status of:' + match.key);
           console.log(match.val());
-          match.ref.child('status').set('notFuture');
-          }
+          admin.database().ref('matches/' + match.key + '/status').set('notFuture');
+        }
       }
     });
   });
@@ -82,17 +151,14 @@ function resultsToDb(gameName, body) {
     matchesSnapShot.forEach(function (matchSnapShot) {
       //get the key
       var dbMatchId = matchSnapShot.key.split('-')[1];
-      console.log('dbMatchId');
-      console.log(dbMatchId);
       var dbMatchData = matchSnapShot.val();
-      console.log(dbMatchData);
       var matchFound = false;
       var tmpMatchId;
 
       body.results.forEach(function (match) {
         //for log!
         tmpMatchId = match.sport_event.id;
-        if (match.sport_event.id == dbMatchId) {
+        if (match.sport_event.id == dbMatchId && dbMatchData.status != 'finished' && dbMatchData.status != 'abandoned') {
           console.log(match.sport_event.id + 'result process.');
           matchFound = true;
           console.log(match.sport_event.id + ' result: ' + match.sport_event_status.home_score + '/' +
@@ -100,6 +166,7 @@ function resultsToDb(gameName, body) {
           );
           if (match.sport_event_status.winner_id == dbMatchData.opponents.left.id) {
             admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('left');
+            admin.database().ref('matches/' + matchSnapShot.key + '/status').set('finished');
             admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
               match.sport_event_status.home_score + '/' +
               match.sport_event_status.away_score
@@ -107,23 +174,20 @@ function resultsToDb(gameName, body) {
           }
           else if (match.sport_event_status.winner_id == dbMatchData.opponents.right.id) {
             admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('right');
+            admin.database().ref('matches/' + matchSnapShot.key + '/status').set('finished');
             admin.database().ref('matches/' + matchSnapShot.key + '/result').set(
               match.sport_event_status.home_score + '/' +
               match.sport_event_status.away_score
             );
           }
           else {
-            //todo: visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
+            //visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
             console.log(matchSnapShot.key + ' was abandoned! Bets goes back to users!');
-            admin.database().ref('matches/' + matchSnapShot.key + '/winner').set('abandoned'); //the prize.. function listen!
+            admin.database().ref('matches/' + matchSnapShot.key + '/status').set('abandoned'); //the prize.. function listen!
           }
 
         }
       }, this);
-      //this log is enough on the firebase administrator page.
-      if (!matchFound) {
-        console.log('WARN! Unexpected match id:' + tmpMatchId);
-      }
     });
   });
   //response.send(request.body.generated_at);
@@ -144,7 +208,6 @@ exports.resultsCsGo = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/csgo-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForCsGo, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       resultsToDb('CS GO', JSON.parse(body));
     }
@@ -172,7 +235,6 @@ exports.resultsLoL = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/lol-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForLoL, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       resultsToDb('LoL', JSON.parse(body));
     }
@@ -200,7 +262,6 @@ exports.resultsDota2 = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/dota2-t1/en/schedules/' + requestDate + '/results.json?api_key=' + apiKeyForDota2, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       resultsToDb('Dota 2', JSON.parse(body));
     }
@@ -217,14 +278,8 @@ exports.resultsDota2 = functions.https.onRequest((request, response) => {
 //++++++++++++++++++++++++++++ EVERY GAME dailyScheduleToDb
 
 function dailyScheduleToDb(gameName, body) {
-  console.log('in method:');
-  console.log(body);
-  console.log(body.generated_at);
-  console.log(body.sport_events);
   body.sport_events.forEach(function (match) {
-    console.log(match.scheduled);
 
-    //just to test results!
     if (new Date(match.scheduled).getTime() <= new Date().getTime() || match.status != "not_started") {
       return; //dont add matches already played/inprogress
     }
@@ -244,7 +299,7 @@ function dailyScheduleToDb(gameName, body) {
         }
       });
       //
-      if(shouldReturn){
+      if (shouldReturn) {
         return;
       }
 
@@ -268,23 +323,27 @@ function dailyScheduleToDb(gameName, body) {
       var stream = "";
 
       //select the first, 1 stream is enough on the page
-      if(match.streams != null){
-        if(match.streams[0] != null){
+      if (match.streams != null) {
+        if (match.streams[0] != null) {
           preText = (match.streams[0].url.indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
-          lastSlash = match.streams[0].url.lastIndexOf('/');          
-          stream = preText + match.streams[0].url.substring(lastSlash  + 1);
-          questionMark = match.streams[0].url.lastIndexOf('?'); 
-          stream = stream.substring(0, questionMark-1);
+          lastSlash = match.streams[0].url.lastIndexOf('/');
+          stream = preText + match.streams[0].url.substring(lastSlash + 1);
+          qMarkIndex = match.streams[0].url.lastIndexOf('?');
+          questionMark = (qMarkIndex !== -1) ? qMarkIndex : match.streams[0].url.length;
+          stream = stream.substring(0, questionMark - 1);
         }
       }
-      
+
+
+      //have to set only values with five minutes at the end. (check service... limitations)
+      var calculatedTimeStamp = Math.floor(new Date(match.scheduled).getTime() / 300000) * 300000;
 
       admin.database().ref('matches/' + newObjectKey).set({
-        begin_at: new Date(match.scheduled).getTime(),
+        begin_at: calculatedTimeStamp,
         game: gameName,
         game_logo: game_logo,
         status: 'future',
-        stream:  stream,
+        stream: stream,
         opponents: {
           left: {
             id: match.competitors[0].id,
@@ -316,6 +375,7 @@ exports.dailyScheduleCsGo = functions.https.onRequest((request, response) => {
 
   if (request.body.nextDayRequest == true) {
     currentDate.setDate(currentDate.getDate() + 1);
+    console.log('next day request:' + currentDate);
   }
 
   var year = currentDate.getUTCFullYear();
@@ -326,7 +386,6 @@ exports.dailyScheduleCsGo = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/csgo-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForCsGo, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       dailyScheduleToDb('CS GO', JSON.parse(body));
     }
@@ -344,6 +403,7 @@ exports.dailyScheduleDota2 = functions.https.onRequest((request, response) => {
 
   if (request.body.nextDayRequest == true) {
     currentDate.setDate(currentDate.getDate() + 1);
+    console.log('next day request:' + currentDate);
   }
 
   var year = currentDate.getUTCFullYear();
@@ -354,7 +414,6 @@ exports.dailyScheduleDota2 = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/dota2-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForDota2, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       dailyScheduleToDb('Dota 2', JSON.parse(body));
     }
@@ -372,6 +431,7 @@ exports.dailyScheduleLoL = functions.https.onRequest((request, response) => {
 
   if (request.body.nextDayRequest == true) {
     currentDate.setDate(currentDate.getDate() + 1);
+    console.log('next day request:' + currentDate);
   }
 
   var year = currentDate.getUTCFullYear();
@@ -382,7 +442,6 @@ exports.dailyScheduleLoL = functions.https.onRequest((request, response) => {
 
   requestHandler('http://api.sportradar.us/lol-t1/en/schedules/' + requestDate + '/schedule.json?api_key=' + apiKeyForLoL, function (error, responseInner, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       console.log(JSON.parse(body));
       dailyScheduleToDb('LoL', JSON.parse(body));
     }
@@ -400,39 +459,39 @@ exports.dailyScheduleLoL = functions.https.onRequest((request, response) => {
 //++++++++++++++++++++++++++++ Prize to users
 
 //check matches/matchId/winner! if writed -> divide the prize!
-exports.prizeToUsers = functions.database.ref('matches/{matchId}/winner')
-  .onCreate(event => {
+exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
+  .onWrite(event => {
     //it wont happen, but in case of failures it will protect the coins
     // if(event.data.val()==null){
     //   return;
     // }
 
-    var winner = event.data.val();
+    var status = event.data.val();
+
+    if (status != 'abandoned' && status != 'finished') {
+      return;
+    }
 
     event.data.ref.parent.once('value', function (matchSnap) {
       if (matchSnap.val().prizeDivided == null || matchSnap.val().prizeDivided != true) {
         //set it as soon as possible
         event.data.ref.parent.child('prizeDivided').set(true);
-        if(winner == 'abandoned'){
-          event.data.ref.parent.child('status').set('abandoned');
-        }
-        else{
-          event.data.ref.parent.child('status').set('finished');
-        }
+
+        var winner = matchSnap.val().winner;
 
         admin.database().ref('bets/' + matchSnap.key).once('value', function (betSnap) {
           //give back the bets to the users
-          if(winner == 'abandoned'){
+          if (status == 'abandoned') {
 
             admin.database().ref('users').once('value', function (userSnap) {
-                userSnap.forEach(function (user) {
-                  betSnap.forEach(function (userBet) {
-                    if (userBet.key == user.key) {
-                      admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userBet.val().tip);
-                      userBet.ref.child('status').set('abandoned');
-                    }
-                  });
+              userSnap.forEach(function (user) {
+                betSnap.forEach(function (userBet) {
+                  if (userBet.key == user.key) {
+                    admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userBet.val().tip);
+                    userBet.ref.child('status').set('abandoned');
+                  }
                 });
+              });
             });
             return;
           }
@@ -490,7 +549,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/winner')
                 if (userCoin.key == user.key) {
                   admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userCoin.value);
                   admin.database().ref('bets/' + matchSnap.key + '/' + user.key + '/won').set(userCoin.value);//not tested!
-                  console.log(user.val().coins + userCoin.value);
+                  console.log('Added *' + userCoin.value +'* to ' + user.key + ', new coins value: ' + (user.val().coins+userCoin.value));
                 }
               });
             });
@@ -501,7 +560,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/winner')
   })
 //--------------------------- Prize to users
 
-//++++++++++++++++++++++++++++ Client triggered match time check
+//++++++++++++++++++++++++++++ Client triggered match time check DEPRICATED - couse inconsistent states!
 
 //the match's begindate will be the value
 exports.clientBetTimeCheck = functions.database.ref('checkMatchDate/{matchId}')
@@ -517,7 +576,7 @@ exports.clientBetTimeCheck = functions.database.ref('checkMatchDate/{matchId}')
     }
     event.data.ref.remove();
   })
-//--------------------------- Client triggered match time check
+//--------------------------- Client triggered match time check - DEPRICATED - too slow!
 
 function pendingBetsHandler(event, userId, matchId) {
 
@@ -581,13 +640,12 @@ function pendingBetsHandler(event, userId, matchId) {
             }).then(event.data.ref.remove());
 
         });
-
       });
     }
   });
 }
 
-//++++++++++++++++++++++++++++ client Bet business layer - pendingBets handling
+//++++++++++++++++++++++++++++ client Bet business layer - pendingBets handling - DEPRICATED - too slow
 
 exports.clientBetBusinessonDelete = functions.database.ref('/pendingBets/{userID}')
   .onDelete(event => {
@@ -611,7 +669,7 @@ exports.clientBetBusinessonUpdate = functions.database.ref('/pendingBets/{userID
 
 //--------------------------- client Bet business layer - pendingBets handling
 
-//++++++++++++++++++++++++++++ HELPER FUNCTION
+//++++++++++++++++++++++++++++ HELPER FUNCTIONS
 
 function sleep(milliseconds) {
   var start = new Date().getTime();

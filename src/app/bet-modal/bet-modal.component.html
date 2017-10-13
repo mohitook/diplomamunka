@@ -1,3 +1,5 @@
+<md-icon style="float: left;" class="md-24" mdTooltip="{{(selectedBetting | async)?.$key}}">bug_report</md-icon>
+
 <h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'future'">Place your bets</h2>
 <h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'notFuture'">Match is in progress</h2>
 <h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'finished'">Match is finished</h2>
@@ -253,7 +255,4 @@
 
 
 
-<div>
-    for debug:
-    <p>{{(selectedBetting | async)?.$key}}</p>
-</div>
+

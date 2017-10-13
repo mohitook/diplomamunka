@@ -137,13 +137,13 @@ export class AF {
 
         //this.clock = Observable.interval(1000).map(tick => new Date()).share();
 
-        this.upcomingMatches.subscribe(matches => {
-            matches.forEach(match => {
-                if(match.begin_at <= new Date().getTime()){
-                    this.af.database.object('checkMatchDate/' + match.$key).set(match.begin_at);
-                }
-            });
-        });
+        // this.upcomingMatches.subscribe(matches => {
+        //     matches.forEach(match => {
+        //         if(match.begin_at <= new Date().getTime() && match.status == 'future'){
+        //             this.af.database.object('checkMatchDate/' + match.$key).set(match.begin_at);
+        //         }
+        //     });
+        // });
 
         this.af.auth.subscribe(
           (auth) =>{
@@ -196,8 +196,7 @@ export class AF {
         //We saved their auth info now save the rest to the db.
         return this.af.database.object('users/' + this.uid).update({
             displayName: this.displayName,
-            email: this.email,
-            //coins: 1000
+            email: this.email
         });
     }
 
@@ -422,14 +421,25 @@ export class AF {
 
     //mindenki csak egyszer fogadhat, többszöri fogadással az elején tévútra lehetne terelni a többséget és ezzel a végén kaszálni!
     placeTip(matchId: string, team: string, tip: number){
+ 
+        this.af.database.object('bets/'+matchId+'/'+this.uid).set({
+            team: team,
+            tip: tip,
+            status: 'new'
+        });
+        // && now < root.child('matches').child($match).child('begin_at')
+        // "root.child('users').child(auth.uid).child('coins').val()>=data.child('tip').val()"
 
-            //so the user won't be able to set pendingBet till he/she has one!
-            this.af.database.object('pendingBets/' + this.uid).set({
-                matchId: matchId,
-                team: team,
-                tip: tip,
-                status: 'new'
-            });
+            // //so the user won't be able to set pendingBet till he/she has one!
+            // this.af.database.object('pendingBets/' + this.uid).set({
+            //     matchId: matchId,
+            //     team: team,
+            //     tip: tip,
+            //     status: 'new'
+            // });
+
+
+           // ".write" : false,
     }
 
 }

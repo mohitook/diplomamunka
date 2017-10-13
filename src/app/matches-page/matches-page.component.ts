@@ -49,8 +49,13 @@ p3;
   constructor(public afService: AF ,public mobView: MobileViewService,  public dialog: MdDialog) {
     this.upcomingMatches = afService.upcomingMatches;
     this.notFutureMatches = afService.notFutureMatches;
+
     //to order them by date ascending, because the original list is descending by timestamp..
     this.finishedMatches = afService.finishedMatches.map( (arr) => { return arr.reverse(); } );
+    //this will trigger a "reorder" in case of new bet in finished state!
+    this.afService.finishedMatches.subscribe(x=>{
+      this.finishedMatches = afService.finishedMatches.map( (arr) => { return arr.reverse(); } );
+    });
 
     this.labels = [
       {name: 'All', image: 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3'},
