@@ -12,7 +12,7 @@
         <img *ngIf="newImageUrl" id="newselectedImage" [src]="newImageUrl" style="height:23px;" /> -->
 
         <form class="example-form">
-            <md-form-field class="example-full-width" floatPlaceholder="never">
+            <md-form-field class="example-full-width" >
                 <!-- <label for="newImageUrl">New Image</label> -->
                 <input mdInput [(ngModel)]="newImageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="New Image Url">
             </md-form-field>

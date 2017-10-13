@@ -215,7 +215,8 @@
         </button>
 
     <form *ngIf="afService.isLoggedIn">
-        <md-form-field *ngIf="!alreadyTiped" floatPlaceholder="never">
+            <!-- floatPlaceholder="never" -->
+        <md-form-field *ngIf="!alreadyTiped" >
             <!-- placeholder="Bet" -->
             <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet"  min="0" step="1" [formControl]="betFormControl">
             <md-error *ngIf="betFormControl.hasError('pattern')">

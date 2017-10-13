@@ -42,12 +42,13 @@ export class BetModalComponent implements OnInit {
           if(match.stream.indexOf('YOUTUBE')!==-1){
             var channelId = match.stream.replace('YOUTUBE/','');
             //this.streamLink = 'https://gaming.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_LjQHig';
-              this.streamLink = 'https://gaming.youtube.com/channel/' + channelId;
+            //  this.streamLink = 'https://gaming.youtube.com/channel/' + channelId;
+            this.streamLink = channelId;
           }
           if(match.stream.indexOf('TWITCH')!==-1){
             this.twitchStream = true;
             var channelId = match.stream.replace('TWITCH/','');
-            this.streamLink = 'http://player.twitch.tv/?channel='+channelId+'&muted=true';
+            this.streamLink = 'https://player.twitch.tv/?channel='+channelId+'&muted=true';
           }
         }
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{

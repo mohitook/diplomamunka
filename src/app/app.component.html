@@ -27,8 +27,15 @@
             <b>{{(afService.user | async)?.coins}}</b>
             <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />
         </button> -->
-        <button md-button routerLink="/login" *ngIf="!afService.isLoggedIn">Login</button>
-        <button md-button *ngIf="afService.isLoggedIn" (click)="logout()">Logout</button>
+        <button md-button (click)="openLoginDialog()" *ngIf="!afService.isLoggedIn">Login</button>
+        
+
+        <button md-button [mdMenuTriggerFor]="userMenu" *ngIf="afService.isLoggedIn">{{afService.displayName}}</button>
+        <md-menu #userMenu="mdMenu">
+          <button md-menu-item (click)="openEditProfileDialog()">Edit Profile</button>
+          <button md-menu-item  (click)="logout()">Logout</button>
+        </md-menu>
+
       </div>
       <button md-button [md-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>
        <md-icon>menu</md-icon>
@@ -38,7 +45,7 @@
   <md-menu x-position="before" #menu="mdMenu">
       <button md-menu-item routerLink="/">News</button>
       <button md-menu-item routerLink="/matches">Matches</button>
-      <button md-menu-item routerLink="/addnew" style="color:#ff6f00">Administrator page</button>
+      <button md-menu-item routerLink="/administrato" style="color:#ff6f00">Administrator page</button>
       <div md-menu-item *ngIf="afService.isLoggedIn" >
               <b>{{(afService.user | async)?.coins}}</b> &nbsp;
               <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />

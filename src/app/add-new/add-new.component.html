@@ -8,8 +8,8 @@
         </tag-input-dropdown>
       </tag-input>
     </div>
-
-    <md-form-field class="example-full-width" floatPlaceholder="never">
+    <!-- floatPlaceholder="never" -->
+    <md-form-field class="example-full-width" >
       <!-- <input mdInput placeholder="Company (disabled)" disabled value="Google"> -->
       <input mdInput #title maxlength="50" placeholder="Title" [(ngModel)]="newsModel.title" name="title" [formControl]="titleFormControl">
       <md-hint align="end">{{title.value.length}} / 50</md-hint>
@@ -20,7 +20,7 @@
           Not just whitespaces!
       </md-error>
     </md-form-field>
-    <md-form-field class="example-full-width" floatPlaceholder="never">
+    <md-form-field class="example-full-width" >
       <input mdInput type="url" placeholder="Cover image Url" [(ngModel)]="newsModel.coverImageUrl" name="coverImage" [formControl]="imageUrlFormControl">
       <md-error *ngIf="imageUrlFormControl.hasError('required')">
           Please add the cover image url
@@ -30,7 +30,7 @@
       </md-error>
     </md-form-field>
 
-    <md-form-field class="example-full-width" floatPlaceholder="never">
+    <md-form-field class="example-full-width" >
       <textarea mdInput #summary maxlength="300" placeholder="Summary" [(ngModel)]="newsModel.summary" name="summary" [formControl]="summaryFormControl"></textarea>
       <md-hint align="end">{{summary.value.length}} / 300</md-hint>
       <md-error *ngIf="summaryFormControl.hasError('required')">

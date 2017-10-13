@@ -75,9 +75,11 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
   const uid = user.uid;
   const email = user.email; // The email of the user.
   const displayName = user.displayName; // The display name of the user.
+  const photoURL = user.photoURL;
   admin.database().ref('users/' + uid + '/coins').set(1000);
   admin.database().ref('users/' + uid + '/email').set(email);
   admin.database().ref('users/' + uid + '/displayName').set(displayName);
+  admin.database().ref('users/' + uid + '/photoURL').set(photoURL);
 });
 //-------------------------- user handlers
 
@@ -296,6 +298,8 @@ function dailyScheduleToDb(gameName, body) {
           shouldReturn = true; //there is already a created match in the db -> mivan ha van TBD, vagy hasonló/esetleg változás? összehasonlítás írása! 
           //Csak a bets-maradjon + az eredetileg lekreált key! mert a ../bets ehhez van igazítva!
           //logikusabb így hagyni a már megtett fogadások miatt, ráadásul TBD példát sem találni..
+
+          //új schedule megeshet.. de a ritka lekérés miatt 99%, hogy lemarad róla a rendszer..
         }
       });
       //
@@ -326,11 +330,18 @@ function dailyScheduleToDb(gameName, body) {
       if (match.streams != null) {
         if (match.streams[0] != null) {
           preText = (match.streams[0].url.indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
-          lastSlash = match.streams[0].url.lastIndexOf('/');
-          stream = preText + match.streams[0].url.substring(lastSlash + 1);
-          qMarkIndex = match.streams[0].url.lastIndexOf('?');
-          questionMark = (qMarkIndex !== -1) ? qMarkIndex : match.streams[0].url.length;
-          stream = stream.substring(0, questionMark - 1);
+
+          if(preText == 'YOUTUBE/'){
+            stream = preText + match.streams[0].url;
+          }
+          else{
+            astSlash = match.streams[0].url.lastIndexOf('/');
+            stream = preText + match.streams[0].url.substring(lastSlash + 1);
+            qMarkIndex = match.streams[0].url.lastIndexOf('?');
+            questionMark = (qMarkIndex !== -1) ? qMarkIndex : match.streams[0].url.length;
+            stream = stream.substring(0, questionMark - 1);
+          }
+          l
         }
       }
 

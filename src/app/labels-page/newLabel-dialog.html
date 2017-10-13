@@ -2,7 +2,7 @@
 
 <md-dialog-content>
     <form class="example-form">
-        <md-form-field class="example-full-width" floatPlaceholder="never">
+        <md-form-field class="example-full-width" >
             <input mdInput [(ngModel)]="newLabel.label" name="label" id="label" type="text" placeholder="Category Name" [formControl]="categoryNameFormControl">
             <md-error *ngIf="categoryNameFormControl.hasError('required')">
                 Please add the cover image url
@@ -11,7 +11,7 @@
                 Please not just 'whitespaces'
             </md-error>
         </md-form-field>
-        <md-form-field class="example-full-width" floatPlaceholder="never">
+        <md-form-field class="example-full-width" >
             <input mdInput [(ngModel)]="newLabel.imageUrl" name="newImageUrl" id="newImageUrl" type="url" placeholder="Image Url" [formControl]="imageUrlFormControl">
             <md-error *ngIf="imageUrlFormControl.hasError('required')">
                 Please add the cover image url

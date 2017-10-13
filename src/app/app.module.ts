@@ -87,6 +87,7 @@ import { BetModalComponent } from './bet-modal/bet-modal.component';
 import { MyMasonryDirective } from './myMasonry.directive';
 import { MatchesPageComponent } from './matches-page/matches-page.component';
 import { AdministratorPageComponent } from './administratorPage/administratorPage.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 // Must export the config
 export const firebaseConfig = {
@@ -164,9 +165,10 @@ const routes: Routes = [
     MatchFilterPipe,
     SafeUrlPipe,
     AdministratorPageComponent,
-    DeleteDialog
+    DeleteDialog,
+    EditProfileComponent
 ],
-  entryComponents:[BetModalComponent, DeleteDialog, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog],
+  entryComponents:[LoginPageComponent, BetModalComponent, DeleteDialog, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog, EditProfileComponent],
   imports: [
     BrowserModule,
     FormsModule,

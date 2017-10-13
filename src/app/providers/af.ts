@@ -4,6 +4,9 @@ import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, Fireba
 import { Subject } from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import "rxjs/add/operator/share";
+
+import * as firebase from 'firebase';
+
 @Injectable()
 export class AF {
 
@@ -25,7 +28,9 @@ export class AF {
     public labels: FirebaseListObservable<any>;
     public allNews: FirebaseListObservable<any>;
     public users: FirebaseListObservable<any>;
+
     public user: FirebaseObjectObservable<any>;
+
     public specificNews: FirebaseListObservable<any>;
     public placeHolderSpecificNews: FirebaseListObservable<any>;
     public uid: string;
@@ -168,7 +173,7 @@ export class AF {
                     this.email = auth.auth.email;
                     this.uid_prop = auth.auth.uid;
                 }
-                this.addUserInfo();
+                //this.addUserInfo();
 
                 this.isLoggedIn = true;
                 this.user = this.af.database.object('/users/'+this.uid_prop);
@@ -380,19 +385,19 @@ export class AF {
         });
     }
 
-    /**
-     * Saves information to display to screen when user is logged in
-     * @param uid
-     * @param model
-     * @returns {firebase.Promise<void>}
-     */
-    saveUserInfoFromForm(uid, name, email) {
-        return this.af.database.object('users/' + uid).set({
-            displayName: name,
-            email: email,
-            coins: 1000
-        });
-    } 
+    // /**
+    //  * Saves information to display to screen when user is logged in
+    //  * @param uid
+    //  * @param model
+    //  * @returns {firebase.Promise<void>}
+    //  */
+    // saveUserInfoFromForm(uid, name, email) {
+    //     return this.af.database.object('users/' + uid).set({
+    //         displayName: name,
+    //         email: email,
+    //         coins: 1000
+    //     });
+    // } 
 
     saveUserNameInAuth(name){
       return this.authState.auth.updateProfile({
@@ -440,6 +445,34 @@ export class AF {
 
 
            // ".write" : false,
+    }
+
+    updateProfile(newName: string){
+
+        var user = firebase.auth().currentUser;
+        console.log(user.displayName);
+        console.log(user);
+        this.authState.auth.updateProfile({
+          displayName: newName,
+          photoURL: ""
+        }).then(x=> {
+            console.log('in then');
+            //this.displayName = this.authState.auth.displayName;
+            console.log('new: ' + this.authState.auth.displayName);
+        }).catch(error=> {
+         //there will be an error... but it is nonsense..
+         console.error(error);
+        });
+
+        return this.af.database.object('users/' + this.uid + '/displayName').set(newName);
+    }
+
+    resetPassword(oldPw: string ,newPw: string){
+        console.log('reset Password');
+        console.log(this.email);
+        //firebase.auth().verifyPasswordResetCode(oldPw).then
+        //firebase.auth().currentUser.updatePassword(newPw);
+        return firebase.auth().sendPasswordResetEmail(this.email);
     }
 
 }
