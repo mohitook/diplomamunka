@@ -1,5 +1,5 @@
 import { BetModalComponent } from './../bet-modal/bet-modal.component';
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Pipe, PipeTransform, Sanitizer, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Pipe, PipeTransform, Sanitizer, Inject, Renderer } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../providers/af";
 import { MobileViewService } from "../providers/mobileView.service";
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { NgxPaginationModule, PaginationInstance } from 'ngx-pagination';
 
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 
 import { MediaChange, ObservableMedia } from "@angular/flex-layout";
 
@@ -30,7 +30,7 @@ export class HomePageComponent implements OnInit {
   upcomingMatches: FirebaseListObservable<any>;
   labelsAreAvailable = false;
 
-  constructor(public afService: AF, public route: ActivatedRoute, public router: Router,
+  constructor(private renderer: Renderer, public afService: AF, public route: ActivatedRoute, public router: Router,
     private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog, public mobView: MobileViewService) {
 
     this.labels = this.afService.labels;
@@ -44,14 +44,33 @@ export class HomePageComponent implements OnInit {
     });
     console.log('home-page constructor end');
   }
-
+  
   ngOnInit() {
+    
     console.log('ngOnInit');
+    // this.router.events.subscribe((event: NavigationEnd) => {
+    //   if(event instanceof NavigationEnd) {
+    //     window.scrollTo(0, 0);
+    //     console.log('home route catched');
+        
+    //     //$("body").animate({ scrollTop: 0 }, 1000);
+    //   }
+    // });
+
+    this.router
+    .events
+    .filter(event => event instanceof NavigationEnd)
+    .subscribe(() => {
+        const contentContainer = document.querySelector('.mat-drawer-content');
+        contentContainer.scrollTo(0, 0);
+    });
   }
 
   onSidenavClick(label: any) {
     this.selectedLabel = label.label;
-    this.router.navigate(['./gamenews', label.label]);
+    this.router.navigate(['./gamenews', label.label]).then(() => {
+      window.scroll(0, 0); // should be here, in promise
+    });
   }
 
   openDialog(key: string): void {

@@ -199,6 +199,7 @@ export class AF {
         this.uid_prop = null;
         this.userObs = null;
 
+        this.isLoggedIn = false;
         this.user = new User();
 
         return this.af.auth.logout();
@@ -436,14 +437,18 @@ export class AF {
         // ".write" : false,
     }
 
-    updateProfileName(newName: string) {
+    updateProfile(newName: string, newImage: string) {
 
-         return  this.af.database.object('users/' + this.uid + '/displayName').set(newName);
-    }
-
-    updateProfileImage(newImage: string) {
-
-         return this.af.database.object('users/' + this.uid + '/photoURL').set(newImage);
+        if(newName !== this.user.displayName){
+            this.af.database.object('users/' + this.uid + '/displayName').set(newName).then(x=>{
+                this.user.displayName = newName;
+            });
+        }
+        if(newImage !== this.user.photoURL){
+            this.af.database.object('users/' + this.uid + '/photoURL').set(newImage).then(x=>{
+                this.user.photoURL = newImage;
+            });
+        }
     }
 
     resetPassword(oldPw: string, newPw: string) {

@@ -4,22 +4,21 @@
 
     <form class="example-form">
         <md-form-field class="example-full-width">
-            <input #newName mdInput placeholder="New display name on page">
+            <input #newName mdInput placeholder="Display name" value="{{afService.user.displayName}}">
         </md-form-field>
-        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value)">Reset Name</button>
-    </form>
+        <!-- <button class="pull-right" md-raised-button color="primary" (click)="afService.updateProfileName(newName.value)">Reset Name</button> -->
+    
+        <br/>
 
-
-
-    <form class="example-form">
         <img *ngIf="newPicture.value==''" src="//placehold.it/100" class="avatar img-rounded" alt="avatar">
-        <img *ngIf="newPicture.value!=''" [src]="newPicture.value"  alt="avatar" style="height:100px; width:100px">
+        <img *ngIf="newPicture.value!=''" [src]="newPicture.value"  alt="avatar" style="height:100px; width:100px; margin: 5px;">
         
         <br/>
         <md-form-field class="example-full-width">
-            <input #newPicture mdInput placeholder="New picture url" value="{{afService.user.photoURL}}">
+            <input #newPicture mdInput placeholder="Profile picture Url" value="{{afService.user.photoURL}}">
         </md-form-field>
-        <button md-raised-button color="primary" (click)="afService.updateProfileImage(newPicture.value)">Set new picture</button>
+        <br/>
+        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value, newPicture.value)">Save</button>
     </form>
 
     <br/>

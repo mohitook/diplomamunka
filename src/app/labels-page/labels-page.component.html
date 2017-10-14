@@ -12,37 +12,10 @@
           <input [(ngModel)]="searchText" name="searchText" type="text" (keydown)="keyDownFunction($event)" class="form-control" placeholder="Search">
           <div class="input-group-btn">
             <button class="btn btn-primary" (click)="search()"><i class="glyphicon glyphicon-search"></i></button>
-            <button type="button" class="btn btn-primary" data-toggle="dropdown">
-                                  <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
-                              </button>
-            <ul class="dropdown-menu slidedown">
-              <li><a href=""><span class="glyphicon glyphicon-pencil"></span>Default Picture</a></li>
-            </ul>
           </div>
         </div>
 
-        <!-- <div class="input-group">
-      
-                <input [(ngModel)]="searchText" name="searchText" type="text" (keydown)="keyDownFunction($event)" class="form-control mat-elevation-z2"
-                  placeholder="Search">
-      
 
-      
-                <div class="input-group-btn">
- 
-                  <button md-raised-button color="primary" (click)="search()" class="btn">
-                                <md-icon class="md-24" >search</md-icon>
-                            </button>
-                  <button md-raised-button color="primary" class="btn" data-toggle="dropdown">
-                                <md-icon class="md-24" >settings</md-icon>
-                            </button>
-
-                  <ul class="dropdown-menu slidedown">
-                    <li><a (click)="setSelectedLabel(null,true)" style="cursor: pointer;"><span class="glyphicon glyphicon-pencil"></span>Any</a></li>
-                    <li *ngFor="let label of existingLabels | async" style="cursor: pointer;"><a (click)="setSelectedLabel(label.value)"><img src="{{label.image}}" style="height:23px;" /> {{label.value}}</a></li>
-                  </ul>
-                </div>
-              </div> -->
       </md-card>
 
     </div>

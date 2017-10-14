@@ -14,7 +14,8 @@ export class AdministratorPageComponent implements OnInit {
   sidenavLabels = [
     {name: 'Add news', icon: 'add', route: 'addNews'},
     {name: 'Delete news', icon: 'delete', route: 'deleteNews'},
-    {name: 'Modify categories', icon: 'class', route: 'labelsPage'}
+    {name: 'Modify categories', icon: 'class', route: 'labelsPage'},
+    {name: 'Manage Users', icon: 'supervisor_account', route: 'manageUsers'}
   ];
   selectedSidenav;
   

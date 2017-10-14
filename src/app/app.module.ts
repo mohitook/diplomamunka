@@ -1,3 +1,4 @@
+import { ManageUsersComponent, UserModifyDialog, UserDeleteDialog } from './administratorPage/manage-users/manage-users.component';
 import { SafeUrlPipe } from './pipes/safeUrl.pipe';
 import { MatchFilterPipe } from './pipes/match-filter.pipe';
 import { MobileViewService } from './providers/mobileView.service';
@@ -109,8 +110,6 @@ const routes: Routes = [
     { path: 'news/:key', component: NewsModalComponent },
     { path: 'gamenews/:game', component: NewsListComponent }
       ] },
-  { path: 'login', component: LoginPageComponent},
-  { path: 'chat', component: ChatPageComponent },
   { path: 'administrator', component: AdministratorPageComponent,
   children: [
     {
@@ -120,12 +119,9 @@ const routes: Routes = [
     },
         { path: 'addNews', component: AddNewComponent},
         { path: 'deleteNews', component: DeleteNewsComponent},
-        { path: 'labelsPage', component: LabelsPageComponent}
+        { path: 'labelsPage', component: LabelsPageComponent},
+        { path: 'manageUsers', component: ManageUsersComponent}
       ]  },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'profile-modal', component: ProfileModalComponent },
-  { path: 'register', component: RegistrationPageComponent},
-  
   { path: 'matches', component: MatchesPageComponent}
 ];
 
@@ -166,9 +162,22 @@ const routes: Routes = [
     SafeUrlPipe,
     AdministratorPageComponent,
     DeleteDialog,
-    EditProfileComponent
+    EditProfileComponent,
+    ManageUsersComponent,
+    UserModifyDialog,
+    UserDeleteDialog
 ],
-  entryComponents:[LoginPageComponent, BetModalComponent, DeleteDialog, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog, EditProfileComponent],
+  entryComponents:[
+    LoginPageComponent,
+    BetModalComponent,
+     DeleteDialog,
+     LabelDeleteDialog,
+     LabelModifyDialog,
+     LabelNewDialog,
+     EditProfileComponent,
+     UserModifyDialog,
+     UserDeleteDialog
+    ],
   imports: [
     BrowserModule,
     FormsModule,

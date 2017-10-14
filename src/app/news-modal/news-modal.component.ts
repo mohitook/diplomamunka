@@ -1,3 +1,5 @@
+import { MdDialog } from '@angular/material';
+import { LoginPageComponent } from './../login-page/login-page.component';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AF } from "../providers/af";
@@ -35,14 +37,12 @@ export class NewsModalComponent implements OnInit {
     };
     p;
 
-  constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer) {
+  constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer, public dialog: MdDialog) {
     //predefine to avoid errors
     this.selectedNews = {coverImageUrl:"",creator:{displayname:"",uid:""},labels:{},summary:"",timestamp:"",title:""}
   }
 
   ngOnInit() {
-
-
 
     this.sub = this.route.params.subscribe(params => {
        this.key = params['key'];
@@ -75,6 +75,15 @@ export class NewsModalComponent implements OnInit {
      });
   }
 
+  openLoginDialog(): void {
+    const dialogRef = this.dialog.open(LoginPageComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
   onComments(){
     this.commentsOpened=true;
     console.log(this.key);
@@ -83,7 +92,7 @@ export class NewsModalComponent implements OnInit {
       //to paginate to the last page when a new comment comes
       this.commentsLength = x.length;
       console.log("current length: " + x.length);
-    })
+    });
   }
 
   addComment(){
@@ -94,7 +103,6 @@ export class NewsModalComponent implements OnInit {
       this.config.currentPage = Math.ceil(this.commentsLength / this.config.itemsPerPage);
     });
     this.newCommentText=null;
-
   }
 
 }

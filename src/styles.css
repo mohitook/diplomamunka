@@ -65,3 +65,7 @@
   height: 48px !important;
   width: 48px !important;
   }
+
+  .mat-menu-content {
+    overflow-y: hidden;
+  }

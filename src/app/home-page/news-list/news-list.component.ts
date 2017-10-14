@@ -63,6 +63,7 @@ p;
  }
 
   ngOnInit() {
+    window.scrollTo(0, 0);
   }
 
   //being called in every sec, doesn't affect that much on cpu and memory..

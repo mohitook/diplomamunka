@@ -1,8 +1,8 @@
 import { LoginPageComponent } from './login-page/login-page.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
-import { Component } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AF } from "./providers/af";
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 
@@ -13,8 +13,9 @@ import { MdSidenav, MdDialog } from '@angular/material';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-    public isLoggedIn: boolean;
+export class AppComponent implements OnInit {
+  
+  public isLoggedIn: boolean;
 
     throttle = 300;
     scrollDistance = 1;
@@ -25,7 +26,7 @@ export class AppComponent {
     labelsAreAvailable = false;
     selectedLabel; 
 
-    constructor(public afService: AF, private router: Router, private media: ObservableMedia,  public dialog: MdDialog) {
+    constructor(private renderer: Renderer2, public afService: AF, private router: Router, private media: ObservableMedia,  public dialog: MdDialog) {
         // https://github.com/angular/material2/issues/1130
         this.isMobileView = (this.media.isActive('xs') || this.media.isActive('sm'));
         this.media.subscribe((change: MediaChange) => {
@@ -38,8 +39,16 @@ export class AppComponent {
               this.labelsAreAvailable = true;
             }
           });
+
+          
     }
     
+    ngOnInit(): void {
+      this.router.events.filter(event => event instanceof NavigationEnd).subscribe(() => {
+        this.renderer.setProperty(document.body, 'scrollTop', 0);
+      });
+    }
+
     onLinkClick(menuSidenav : MdSidenav):void {
         if (this.isMobileView) {
           menuSidenav.close();

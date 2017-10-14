@@ -43,7 +43,7 @@
           <img *ngIf="comment.photoURL==null || comment.photoURL==''" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" 
           style="height: 40px;margin-right: 10px;" />
           <img *ngIf="comment.photoURL!=null || comment.photoURL!=''" [src]="comment.photoURL" 
-          style="height: 40px;margin-right: 10px;" />
+          style="height: 40px;width:40px;margin-right: 10px;" />
           <div>
               <strong>{{ comment.displayName}}</strong> <br/>
               <span class="text-muted">{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</span>
@@ -82,9 +82,16 @@
       </div>
     </pagination-template>
     <hr />
-    <textarea [(ngModel)]="newCommentText" class="form-control" name="addComment" rows="5"></textarea>
-    <br />
-    <button [disabled]="!newCommentText" (click)="addComment()" class="btn btn-success">Send</button>
+    <div class="boxsizingBorder" *ngIf="afService.isLoggedIn">
+        <textarea [(ngModel)]="newCommentText" name="addComment" rows="5"
+        style="resize: none;"
+        ></textarea>
+        <br />
+        <button [disabled]="!newCommentText" (click)="addComment()" class="btn btn-success">Send</button>    
+    </div>
+    <div class="boxsizingBorder" *ngIf="!afService.isLoggedIn">
+        <button (click)="openLoginDialog()" class="btn btn-success">Login to comment</button>    
+    </div>
 
   </div>
   <!-- content end -->

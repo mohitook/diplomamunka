@@ -29,7 +29,7 @@ export class LabelsPageComponent implements OnInit {
   }
 
   search(){
-    this.labelFilter = {value:this.searchText};
+    this.labelFilter = {value: this.searchText};
   }
 
   keyDownFunction(event) {
@@ -119,7 +119,7 @@ export class LabelModifyDialog {
   newImageUrl:string;
 
   constructor(public afService: AF,
-    public dialogRef: MdDialogRef<LabelDeleteDialog>,
+    public dialogRef: MdDialogRef<LabelModifyDialog>,
     @Inject(MD_DIALOG_DATA) public data: any) { 
       this.selectedLabel = data.label;
     }

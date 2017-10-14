@@ -81,7 +81,45 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
   admin.database().ref('users/' + uid + '/displayName').set(displayName);
   admin.database().ref('users/' + uid + '/photoURL').set(photoURL);
 });
+
+exports.deleteUserHandler = functions.database.ref('users/{userId}')
+.onDelete(event => {
+  console.log('user deleted:' +event.params.userId);
+  return admin.auth().deleteUser(event.params.userId);
+})
+
 //-------------------------- user handlers
+
+//++++++++++++++++++++++++++++ Comments photoUrl/displayName handler
+
+exports.modifyUserPhotoInComments = functions.database.ref('users/{userId}/photoURL')
+.onUpdate(event => {
+  admin.database().ref('comments').once('value',function(commentsSnap){
+    commentsSnap.forEach(function(commentTopic){
+      commentTopic.forEach(function(comment){
+        if(comment.val().userId != null && comment.val().userId == event.params.userId){
+          admin.database().ref('comments/' + commentTopic.key + '/' + comment.key + '/photoURL').set(event.data.val());
+        }
+      })
+    })
+  });
+})
+
+exports.modifydisplayNameInComments = functions.database.ref('users/{userId}/displayName')
+.onUpdate(event => {
+  admin.database().ref('comments').once('value',function(commentsSnap){
+    commentsSnap.forEach(function(commentTopic){
+      commentTopic.forEach(function(comment){
+        if(comment.val().userId != null && comment.val().userId == event.params.userId){
+          admin.database().ref('comments/' + commentTopic.key + '/' + comment.key + '/displayName').set(event.data.val());
+        }
+      })
+    })
+  });
+})
+
+//----------------------------Comments photoUrl/displayName handler
+
 
 //++++++++++++++++++++++++++++ 
 //check in every 12 hours. If the a match doesn't have result in 8 hours from the begin_at ->
@@ -520,7 +558,8 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
 
               userPlusCoinDict.push({
                 key: userBet.key,
-                value: userPrize
+                value: userPrize,
+                originalTip: userBet.val().tip
               });
               userBet.ref.child('result').set('win');
             }
@@ -559,7 +598,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
               userSnap.forEach(function (user) {
                 if (userCoin.key == user.key) {
                   admin.database().ref('users/' + user.key + '/coins').set(user.val().coins + userCoin.value);
-                  admin.database().ref('bets/' + matchSnap.key + '/' + user.key + '/won').set(userCoin.value);//not tested!
+                  admin.database().ref('bets/' + matchSnap.key + '/' + user.key + '/won').set(userCoin.value - userCoin.originalTip);//not tested!
                   console.log('Added *' + userCoin.value +'* to ' + user.key + ', new coins value: ' + (user.val().coins+userCoin.value));
                 }
               });
@@ -574,19 +613,19 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
 //++++++++++++++++++++++++++++ Client triggered match time check DEPRICATED - couse inconsistent states!
 
 //the match's begindate will be the value
-exports.clientBetTimeCheck = functions.database.ref('checkMatchDate/{matchId}')
-  .onCreate(event => {
-    //NO SNAPSOT OR ONCE... NO PROMISE! THIS FUNCTION HAS TO BE QUICK
-    //it will be triggered even in case of the deletion from this function!
-    if (event.data.val() == null) {
-      return;
-    }
-    if (event.data.val() <= new Date().getTime()) {
-      console.log('clientBetTimeCheck: ' + event.params.matchId);
-      admin.database().ref('matches/' + event.params.matchId + '/status').set('notFuture');
-    }
-    event.data.ref.remove();
-  })
+// exports.clientBetTimeCheck = functions.database.ref('checkMatchDate/{matchId}')
+//   .onCreate(event => {
+//     //NO SNAPSOT OR ONCE... NO PROMISE! THIS FUNCTION HAS TO BE QUICK
+//     //it will be triggered even in case of the deletion from this function!
+//     if (event.data.val() == null) {
+//       return;
+//     }
+//     if (event.data.val() <= new Date().getTime()) {
+//       console.log('clientBetTimeCheck: ' + event.params.matchId);
+//       admin.database().ref('matches/' + event.params.matchId + '/status').set('notFuture');
+//     }
+//     event.data.ref.remove();
+//   })
 //--------------------------- Client triggered match time check - DEPRICATED - too slow!
 
 function pendingBetsHandler(event, userId, matchId) {

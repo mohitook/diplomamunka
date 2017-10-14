@@ -20,3 +20,15 @@
   background-color: #c5cae9;
   overflow: hidden;
 }
+
+.boxsizingBorder {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 20px;
+}
+
+.boxsizingBorder textarea{
+  width: 100%;
+  padding: 5px;
+}
