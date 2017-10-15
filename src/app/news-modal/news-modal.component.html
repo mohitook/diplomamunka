@@ -15,7 +15,7 @@
     <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
         </div> -->
     <div *ngIf="htmlText">
-      <div [innerHTML]="htmlText">
+      <div [innerHTML]="htmlText" style="padding-left:10px; padding-right:10px;">
       </div>
     </div>
     <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
@@ -49,7 +49,7 @@
               <span class="text-muted">{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</span>
           </div>
           <span class="fill-remaining-space"></span>
-          <button class="pull-right" md-raised-button color="warn" *ngIf="afService.user.admin">Moderate</button>
+          <button class="pull-right" md-raised-button color="warn" *ngIf="afService.user.roles.author || afService.user.roles.admin">Moderate</button>
         </div>
         <div class="panel-body">
             {{comment.message}}

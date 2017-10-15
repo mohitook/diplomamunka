@@ -52,6 +52,7 @@
       </div>
       <hr style="margin-top: 5px; margin-bottom: 5px;">
       <button *ngIf="!afService.isLoggedIn" md-menu-item routerLink="/login">Login</button>
+      <button md-menu-item (click)="openEditProfileDialog()">Edit Profile</button>
       <button  *ngIf="afService.isLoggedIn" md-menu-item (click)="logout()">Logout</button>
       <!--<button md-menu-item>Help</button>-->
   </md-menu>

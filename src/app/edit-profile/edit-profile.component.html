@@ -18,7 +18,7 @@
             <input #newPicture mdInput placeholder="Profile picture Url" value="{{afService.user.photoURL}}">
         </md-form-field>
         <br/>
-        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value, newPicture.value)">Save</button>
+        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value, newPicture.value); onNoClick()">Save</button>
     </form>
 
     <br/>

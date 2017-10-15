@@ -3,13 +3,17 @@
         <div *ngFor="let new of specificNews | async |  paginate: config" class="box">
                 
                    <md-card class="example-card">
-                       <img (load)="onImgLoad($event.target)" md-card-image src="{{new.coverImageUrl}}">
+                     <a [routerLink]="['../../news', new.$key]">
+                        <img style="padding: 20px 20px 0px 20px;" (load)="onImgLoad($event.target)" md-card-image src="{{new.coverImageUrl}}">
+                     </a>
                        <md-card-header>
                          <md-card-title>
-                             <h4>
-                                 {{new.title}}
-                                 
-                             </h4>
+                           <a [routerLink]="['../../news', new.$key]">
+                              <h4>
+                                  {{new.title}}
+                              </h4>
+                           </a>
+                             
                          </md-card-title>
                        </md-card-header>
                        <md-card-content>
@@ -20,9 +24,9 @@
                              <div class="text-muted"><small>{{new.creator.displayname}} | {{ new.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
                          </md-card-subtitle>
                        </md-card-content>
-                       <md-card-actions>
+                       <!-- <md-card-actions>
                          <button md-button [routerLink]="['../../news', new.$key]">More</button>
-                       </md-card-actions>
+                       </md-card-actions> -->
                      </md-card>
         </div> 
 </div>

@@ -1,3 +1,4 @@
+import { RoleGuardService } from './providers/role-guard.service';
 import { ManageUsersComponent, UserModifyDialog, UserDeleteDialog } from './administratorPage/manage-users/manage-users.component';
 import { SafeUrlPipe } from './pipes/safeUrl.pipe';
 import { MatchFilterPipe } from './pipes/match-filter.pipe';
@@ -111,6 +112,8 @@ const routes: Routes = [
     { path: 'gamenews/:game', component: NewsListComponent }
       ] },
   { path: 'administrator', component: AdministratorPageComponent,
+  canActivate: [RoleGuardService],
+  data: { roles: ['author', 'admin'] },
   children: [
     {
       path: '',
@@ -120,7 +123,8 @@ const routes: Routes = [
         { path: 'addNews', component: AddNewComponent},
         { path: 'deleteNews', component: DeleteNewsComponent},
         { path: 'labelsPage', component: LabelsPageComponent},
-        { path: 'manageUsers', component: ManageUsersComponent}
+        { path: 'manageUsers', component: ManageUsersComponent, 
+          canActivate: [RoleGuardService], data: { roles: ['admin'] }}
       ]  },
   { path: 'matches', component: MatchesPageComponent}
 ];
@@ -227,7 +231,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
   ],
-  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, RoleGuardService, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

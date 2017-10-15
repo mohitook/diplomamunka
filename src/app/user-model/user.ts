@@ -1,7 +1,7 @@
 export class User {
     email:    string;
     photoURL: string;
-    admin:    boolean;
+    roles:    Roles;
     displayName: string;
 
     constructor(userData?) {
@@ -9,13 +9,25 @@ export class User {
             this.email    = userData.email;
             this.photoURL = userData.photoURL;
             this.displayName = userData.displayName;
-            this.admin    = (userData.roles.admin == true) ? true : false;
+            this.roles    = new Roles(userData.roles)
         }
         else{
             this.email = '';
             this.photoURL = '';
             this.displayName = '';
-            this.admin = false;
+            this.roles = new Roles();
+        }
+    }
+  }
+
+  class Roles{
+    admin: boolean;
+    author: boolean;
+
+    constructor(roles?){
+        if(roles){
+            this.admin = (roles.admin == true) ? true : false;
+            this.author = (roles.author == true) ? true : false;
         }
     }
   }

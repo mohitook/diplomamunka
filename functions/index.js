@@ -118,6 +118,17 @@ exports.modifydisplayNameInComments = functions.database.ref('users/{userId}/dis
   });
 })
 
+exports.modifydisplayNameInArticles = functions.database.ref('users/{userId}/displayName')
+.onUpdate(event => {
+  admin.database().ref('news').once('value',function(newsSnap){
+    newsSnap.forEach(function(news){
+        if(news.val().creator.uid != null && news.val().creator.uid== event.params.userId){
+          admin.database().ref('news/' + news.key + '/displayname').set(event.data.val());
+        }
+      })
+  });
+})
+
 //----------------------------Comments photoUrl/displayName handler
 
 
