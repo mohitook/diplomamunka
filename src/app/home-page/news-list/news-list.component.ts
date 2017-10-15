@@ -19,6 +19,9 @@ import {MdSidenav, MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/materia
 
 import 'imagesLoaded';
 
+
+import 'rxjs/add/operator/take'
+
 declare var $ :any; //for custom buttons in text editor
 
 @Component({
@@ -46,6 +49,19 @@ p;
 
    this.route.params.subscribe(params => {
      this.game = params['game'] ? params['game'] : 'All' ;
+
+    if(this.game != 'All'){
+      this.afService.af.database.object('statistics/newsCategory/'+this.game).take(1).subscribe(stat=>{
+        var oldStats = 1;
+        console.log('stat');
+        console.log(stat);
+        if(stat.$value != null){
+          oldStats = oldStats + stat.$value;
+        }
+        this.afService.af.database.object('statistics/newsCategory/'+this.game).set(oldStats);
+       });
+    }
+     
      this.specificNews = this.afService.selectSpecificNews(this.game);
      this.specificNews.subscribe(x=>{
        this.loadedIn = true;

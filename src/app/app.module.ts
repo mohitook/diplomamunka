@@ -1,3 +1,4 @@
+import { AdminDashboardComponent } from './administratorPage/admin-dashboard/admin-dashboard.component';
 import { RoleGuardService } from './providers/role-guard.service';
 import { ManageUsersComponent, UserModifyDialog, UserDeleteDialog } from './administratorPage/manage-users/manage-users.component';
 import { SafeUrlPipe } from './pipes/safeUrl.pipe';
@@ -49,6 +50,7 @@ import { TagInputModule } from 'ng2-tag-input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // this is needed!
 
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {NgxChartsModule} from '@swimlane/ngx-charts';  
 
 import {
   MdAutocompleteModule,
@@ -90,6 +92,7 @@ import { MyMasonryDirective } from './myMasonry.directive';
 import { MatchesPageComponent } from './matches-page/matches-page.component';
 import { AdministratorPageComponent } from './administratorPage/administratorPage.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { ChartModule } from 'angular2-chartjs';
 
 // Must export the config
 export const firebaseConfig = {
@@ -118,8 +121,9 @@ const routes: Routes = [
     {
       path: '',
       pathMatch: 'full',
-      redirectTo: 'addNews'
+      redirectTo: 'dashBoard'
     },
+      { path: 'dashBoard', component: AdminDashboardComponent},
         { path: 'addNews', component: AddNewComponent},
         { path: 'deleteNews', component: DeleteNewsComponent},
         { path: 'labelsPage', component: LabelsPageComponent},
@@ -169,7 +173,8 @@ const routes: Routes = [
     EditProfileComponent,
     ManageUsersComponent,
     UserModifyDialog,
-    UserDeleteDialog
+    UserDeleteDialog,
+    AdminDashboardComponent
 ],
   entryComponents:[
     LoginPageComponent,
@@ -229,6 +234,8 @@ const routes: Routes = [
     MdTooltipModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    NgxChartsModule,
+    ChartModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, RoleGuardService, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],

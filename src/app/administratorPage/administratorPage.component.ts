@@ -29,10 +29,10 @@ export class AdministratorPageComponent implements OnInit {
 
     var roles = [];
     
-    // if(this.afService.user.roles.admin)
-    //   roles.push('admin');
-    // if(this.afService.user.roles.author)
-    //   roles.push('author');
+    if(this.afService.user.roles.admin)
+      roles.push('admin');
+    if(this.afService.user.roles.author)
+      roles.push('author');
 
     if(roles.length != 0)
       this.filter = {role: {$or:roles}}
