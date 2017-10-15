@@ -34,7 +34,7 @@ import {SelectModule} from 'ng-select';
 import { NewsModalComponent } from './news-modal/news-modal.component';
 import {ModalModule} from "ngx-modal";
 import { SafePipe } from './safe.pipe';
-import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
+import { FilterPipeModule } from 'ngx-filter-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 
 //import { TinymceModule } from 'angular2-tinymce'; //issue: https://github.com/Ledzz/angular2-tinymce/issues/11
@@ -192,7 +192,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     InfiniteScrollModule,
     SelectModule,
-    Ng2FilterPipeModule,
+    FilterPipeModule,
     NgxPaginationModule,
     TagInputModule, BrowserAnimationsModule,
     ShareButtonsModule.forRoot(),

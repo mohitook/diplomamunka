@@ -80,6 +80,10 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
   admin.database().ref('users/' + uid + '/email').set(email);
   admin.database().ref('users/' + uid + '/displayName').set(displayName);
   admin.database().ref('users/' + uid + '/photoURL').set(photoURL);
+  admin.database().ref('users/' + uid + '/roles').set({
+    admin: false,
+    author: false
+  });
 });
 
 exports.deleteUserHandler = functions.database.ref('users/{userId}')
