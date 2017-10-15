@@ -55,7 +55,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     maintainAspectRatio: false
   };
 
-
+  categoryCount = 0;
 
   constructor(public afService: AF, private elementRef: ElementRef ) {
        
@@ -73,7 +73,11 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
          this.data.labels.push(x.$key);
          this.data.datasets[0].data.push(x.$value);
        });
-       this.data.datasets[0].backgroundColor = this.poolColors(categoryList.length);
+       if(this.categoryCount != categoryList.length){
+         this.categoryCount = categoryList.length;
+        this.data.datasets[0].backgroundColor = this.poolColors(categoryList.length);
+       }
+       
        this.chart.chart.update();
       }
     );

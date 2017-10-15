@@ -236,6 +236,8 @@ function resultsToDb(gameName, body) {
             );
           }
           else {
+            console.error('abnormal match result: ' + match.sport_event.id);
+            console.error(match.sport_event_status);
             //visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
             console.log(matchSnapShot.key + ' was abandoned! Bets goes back to users!');
             admin.database().ref('matches/' + matchSnapShot.key + '/status').set('abandoned'); //the prize.. function listen!
@@ -388,13 +390,12 @@ function dailyScheduleToDb(gameName, body) {
             stream = preText + match.streams[0].url;
           }
           else{
-            astSlash = match.streams[0].url.lastIndexOf('/');
+            lastSlash = match.streams[0].url.lastIndexOf('/');
             stream = preText + match.streams[0].url.substring(lastSlash + 1);
             qMarkIndex = match.streams[0].url.lastIndexOf('?');
             questionMark = (qMarkIndex !== -1) ? qMarkIndex : match.streams[0].url.length;
             stream = stream.substring(0, questionMark - 1);
           }
-          l
         }
       }
 
@@ -524,15 +525,15 @@ exports.dailyScheduleLoL = functions.https.onRequest((request, response) => {
 
 //check matches/matchId/winner! if writed -> divide the prize!
 exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
-  .onWrite(event => {
+  .onUpdate(event => {
     //it wont happen, but in case of failures it will protect the coins
     // if(event.data.val()==null){
     //   return;
     // }
 
     var status = event.data.val();
-
-    if (status != 'abandoned' && status != 'finished') {
+    //todo: 'draw' kivitelezése visszaosztással
+    if (status != 'abandoned' && status != 'finished' && status != 'draw') {
       return;
     }
 

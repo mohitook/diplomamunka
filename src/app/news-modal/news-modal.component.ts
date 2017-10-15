@@ -7,6 +7,7 @@ import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 import { ShareButton, ShareProvider } from 'ngx-sharebuttons';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-news-modal',
@@ -103,6 +104,20 @@ export class NewsModalComponent implements OnInit {
       this.config.currentPage = Math.ceil(this.commentsLength / this.config.itemsPerPage);
     });
     this.newCommentText=null;
+  }
+
+  openedShareButton(event){
+    //add sharecount!
+    this.afService.af.database.object('statistics/newsShared/' + this.key).take(1).subscribe(x=>{
+      var newCount;
+      if(x.$value == null){
+        newCount = 0;
+      }
+      else{
+        newCount = x.$value;
+      }
+      this.afService.af.database.object('statistics/newsShared/' + this.key).set(newCount + 1);
+    });
   }
 
 }

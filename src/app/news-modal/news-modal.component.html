@@ -22,7 +22,7 @@
     <div>
       <!-- https://github.com/MurhafSousli/ngx-sharebuttons/issues/145 it wont work anymore! :(  [url]="myUrl") -->
       <share-buttons [description]="selectedNews.summary" [title]="selectedNews.title" [image]="selectedNews.coverImageUrl" [linkedIn]="false"
-        [tumblr]="false" [pinterest]="false" [stumbleUpOn]="false" [whatsApp]="false"></share-buttons>
+        [tumblr]="false" [pinterest]="false" [stumbleUpOn]="false" [whatsApp]="false" (click)="openedShareButton($event)"></share-buttons>
     </div>
 
 

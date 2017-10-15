@@ -20,7 +20,7 @@ import {MdSidenav, MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/materia
 import 'imagesLoaded';
 
 
-import 'rxjs/add/operator/take'
+import 'rxjs/add/operator/take';
 
 declare var $ :any; //for custom buttons in text editor
 
