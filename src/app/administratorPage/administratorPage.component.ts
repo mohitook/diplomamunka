@@ -13,6 +13,7 @@ export class AdministratorPageComponent implements OnInit {
   labels = ['All'];
 
   sidenavLabels = [
+    {name: 'Dashboard', icon: 'pie_chart', route: 'dashBoard', role:'all'},
     {name: 'Add news', icon: 'add', route: 'addNews', role:'author'},
     {name: 'Delete news', icon: 'delete', route: 'deleteNews',role:'author'},
     {name: 'Modify categories', icon: 'class', route: 'labelsPage', role:'author'},
@@ -20,14 +21,14 @@ export class AdministratorPageComponent implements OnInit {
   ];
   selectedSidenav;
   
-  filter = {role: {$or:['user']}};
+  filter = {role: {$or:['all']}};
  
   constructor(public afService: AF, public mobView: MobileViewService,public router: Router,  private r:ActivatedRoute) { }
 
   ngOnInit() {
     this.selectedSidenav = this.sidenavLabels[0];
 
-    var roles = [];
+    var roles = ['all'];
     
     if(this.afService.user.roles.admin)
       roles.push('admin');

@@ -1,5 +1,5 @@
 import { MdDialog } from '@angular/material';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AF } from "../providers/af";
 import { FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
 import { BetModalComponent } from './../bet-modal/bet-modal.component';
@@ -19,7 +19,10 @@ export class MatchesPageComponent implements OnInit {
   finishedMatches: Observable<any>;
   labels: Array<any>; 
   selectedLabel;
+  filterArray;
+  dummy = 0;
   labelsAreAvailable = false;
+  onlyMyBetsChecked = false;
 
   finishedMatchesPerUser = {};
   notFutureMatchesPerUser = {};
@@ -46,7 +49,7 @@ p;
 p2;
 p3;
 
-  constructor(public afService: AF ,public mobView: MobileViewService,  public dialog: MdDialog) {
+  constructor(public afService: AF ,public mobView: MobileViewService,  public dialog: MdDialog, private cd: ChangeDetectorRef) {
     this.upcomingMatches = afService.upcomingMatches;
     this.notFutureMatches = afService.notFutureMatches;
 
@@ -93,6 +96,21 @@ p3;
    }
 
   ngOnInit() { 
+  }
+
+  checkboxChanged(event){
+    console.log(event); 
+  }
+
+  filterOnlyMyBets(event){
+    if(event.checked){
+      console.log('checked');
+      this.dummy++;
+      this.filterArray = this.finishedMatchesPerUser;
+    }
+    else{
+      this.filterArray = null;
+    }
   }
 
   onSidenavClick(label: any){
@@ -175,7 +193,7 @@ p3;
     }
   }
 
-  setBackgroundOnBet(matchKey){
+  setBackgroundOnBet(matchKey, result?){
 
     if(this.afService.userBettings[matchKey] != null){
 
@@ -191,6 +209,14 @@ p3;
         }
       }
     
+    }
+
+    if(result == 'abandoned'){
+      return '#9e9e9e';
+    }
+
+    if(result == 'draw'){
+      return '#ce93d8';
     }
 
     return '#8c9eff';

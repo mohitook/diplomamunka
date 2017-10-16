@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MatchFilterPipe implements PipeTransform {
  //todo: filter írása meccsekhez + beégetni a sidenav-ot a 3 játékra!
-  transform(value: any, label: string): any {
+  transform(value: any, label: string, filterArray:any, dummy:number): any {
 
     if(value==null){
       return;
@@ -24,16 +24,32 @@ export class MatchFilterPipe implements PipeTransform {
         filter = 'CS GO';
         break;
       default:
-        return value;
+        break;
     }
 
     var returnList = new Array<any>();
 
-    value.forEach(match => {
-      if(match.game == filter){
-        returnList.push(match);
-      }
-    });
+    if(filter != ''){
+      value.forEach(match => {
+        if(match.game == filter){
+          returnList.push(match);
+        }
+      });
+    }
+    else{
+      returnList = value;
+    }
+
+    var filteredReturnList = [];
+
+    if(filterArray!=null){
+      returnList.forEach(match => {
+        if(filterArray[match.$key]!=null){
+          filteredReturnList.push(match);
+        }
+      });
+      return filteredReturnList;
+    }
 
     return returnList;
   }

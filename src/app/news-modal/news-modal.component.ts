@@ -1,3 +1,4 @@
+import { StatisticsService } from './../providers/statistics.service';
 import { MdDialog } from '@angular/material';
 import { LoginPageComponent } from './../login-page/login-page.component';
 import { Component, OnInit } from '@angular/core';
@@ -38,7 +39,7 @@ export class NewsModalComponent implements OnInit {
     };
     p;
 
-  constructor(private router: Router,public afService: AF ,private route: ActivatedRoute,private sanitizer:DomSanitizer, public dialog: MdDialog) {
+  constructor(private router: Router,public afService: AF ,public statService: StatisticsService, private route: ActivatedRoute,private sanitizer:DomSanitizer, public dialog: MdDialog) {
     //predefine to avoid errors
     this.selectedNews = {coverImageUrl:"",creator:{displayname:"",uid:""},labels:{},summary:"",timestamp:"",title:""}
   }
@@ -108,16 +109,23 @@ export class NewsModalComponent implements OnInit {
 
   openedShareButton(event){
     //add sharecount!
-    this.afService.af.database.object('statistics/newsShared/' + this.key).take(1).subscribe(x=>{
-      var newCount;
-      if(x.$value == null){
-        newCount = 0;
-      }
-      else{
-        newCount = x.$value;
-      }
-      this.afService.af.database.object('statistics/newsShared/' + this.key).set(newCount + 1);
-    });
+
+    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    console.log(utc);
+
+
+    this.statService.addStatistics('newsShared/' + utc, this.selectedNews.creator.displayname);
+  }
+
+  moderateComment(commentKey: string){
+    this.afService.af.database.object('comments/' + this.key + '/' + commentKey + '/moderated').set(true);
+  }
+
+  checkModerated(moderated){
+    if(moderated){
+      return 'red';
+    }
+    return 'blue';
   }
 
 }

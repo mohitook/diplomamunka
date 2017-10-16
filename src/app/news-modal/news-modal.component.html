@@ -39,7 +39,7 @@
 
 
       <div class="panel panel-default" style="margin: 20px 20px 20px;"  *ngFor="let comment of comments | async | paginate: config">
-        <div class="panel-heading" style="display: flex;">
+        <div class="panel-heading" style="display: flex;" [ngStyle]="{'background-color': (comment.moderated)?'#ff5252':'#c5cae9'}">
           <img *ngIf="comment.photoURL==null || comment.photoURL==''" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" 
           style="height: 40px;margin-right: 10px;" />
           <img *ngIf="comment.photoURL!=null || comment.photoURL!=''" [src]="comment.photoURL" 
@@ -49,10 +49,13 @@
               <span class="text-muted">{{ comment.timestamp | date:"MM/dd/yy hh:mm a" }}</span>
           </div>
           <span class="fill-remaining-space"></span>
-          <button class="pull-right" md-raised-button color="warn" *ngIf="afService.user.roles.author || afService.user.roles.admin">Moderate</button>
+          <button class="pull-right" (click)="moderateComment(comment.$key)" md-raised-button color="warn" *ngIf="afService.user.roles.author || afService.user.roles.admin">Moderate</button>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" *ngIf="!comment.moderated">
             {{comment.message}}
+        </div>
+        <div class="panel-body" *ngIf="comment.moderated" style="color: #b71c1c;font-weight: bold;">
+            This comment was moderated!
         </div>
         <!-- /panel-body -->
       </div>

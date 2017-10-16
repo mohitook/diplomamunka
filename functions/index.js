@@ -240,7 +240,8 @@ function resultsToDb(gameName, body) {
             console.error(match.sport_event_status);
             //visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
             console.log(matchSnapShot.key + ' was abandoned! Bets goes back to users!');
-            admin.database().ref('matches/' + matchSnapShot.key + '/status').set('abandoned'); //the prize.. function listen!
+            admin.database().ref('matches/' + matchSnapShot.key + '/status').set('finished'); //the prize.. function listen!
+            admin.database().ref('matches/' + matchSnapShot.key + '/result').set('abandoned');
           }
 
         }
@@ -538,6 +539,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
     }
 
     event.data.ref.parent.once('value', function (matchSnap) {
+      
       if (matchSnap.val().prizeDivided == null || matchSnap.val().prizeDivided != true) {
         //set it as soon as possible
         event.data.ref.parent.child('prizeDivided').set(true);
@@ -546,7 +548,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
 
         admin.database().ref('bets/' + matchSnap.key).once('value', function (betSnap) {
           //give back the bets to the users
-          if (status == 'abandoned') {
+          if (matchSnap.val().result == 'abandoned') {
 
             admin.database().ref('users').once('value', function (userSnap) {
               userSnap.forEach(function (user) {

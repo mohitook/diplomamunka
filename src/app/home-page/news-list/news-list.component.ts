@@ -1,3 +1,4 @@
+import { StatisticsService } from './../../providers/statistics.service';
 import { MyMasonryDirective } from './../../myMasonry.directive';
 import { BetModalComponent } from '../../bet-modal/bet-modal.component';
 import { Component, HostListener, OnInit, AfterViewChecked, AfterViewInit ,ElementRef, ViewChild,Pipe,PipeTransform,Sanitizer, Inject } from '@angular/core';
@@ -44,22 +45,14 @@ p;
 
   @ViewChild(MyMasonryDirective) directive = null;
 
-  constructor(public afService: AF, public route: ActivatedRoute, public router: Router,
+  constructor(public afService: AF, public statService: StatisticsService, public route: ActivatedRoute, public router: Router,
     private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog) {
 
    this.route.params.subscribe(params => {
      this.game = params['game'] ? params['game'] : 'All' ;
 
     if(this.game != 'All'){
-      this.afService.af.database.object('statistics/newsCategory/'+this.game).take(1).subscribe(stat=>{
-        var oldStats = 1;
-        console.log('stat');
-        console.log(stat);
-        if(stat.$value != null){
-          oldStats = oldStats + stat.$value;
-        }
-        this.afService.af.database.object('statistics/newsCategory/'+this.game).set(oldStats);
-       });
+      this.statService.addStatistics('newsCategory', this.game);
     }
      
      this.specificNews = this.afService.selectSpecificNews(this.game);

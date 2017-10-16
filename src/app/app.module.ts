@@ -1,3 +1,4 @@
+import { StatisticsService } from './providers/statistics.service';
 import { AdminDashboardComponent } from './administratorPage/admin-dashboard/admin-dashboard.component';
 import { RoleGuardService } from './providers/role-guard.service';
 import { ManageUsersComponent, UserModifyDialog, UserDeleteDialog } from './administratorPage/manage-users/manage-users.component';
@@ -238,7 +239,7 @@ const routes: Routes = [
     ChartModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
   ],
-  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, RoleGuardService, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, StatisticsService, RoleGuardService, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
