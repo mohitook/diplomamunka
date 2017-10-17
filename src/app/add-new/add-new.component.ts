@@ -5,7 +5,7 @@ import {
   AfterViewInit,
   EventEmitter,
   Input,
-  Output, OnInit
+  Output, OnInit, Inject
 } from '@angular/core';
 import { EditorDirective } from '../editor.directive';
 import { FirebaseListObservable } from "angularfire2";
@@ -105,4 +105,46 @@ export class AddNewComponent implements OnInit {
     this.selectedSidenav = sidenavItem;
     //this.router.navigate(['./gamenews', sidenavItem.label]);
   }
+
+  openPreviewDialog(): void {
+    let dialogRef = this.dialog.open(PreviewDialog, {
+      width: '60%',
+      data: {
+        newsModel: this.newsModel
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+    });
+  } 
+
+}
+
+@Component({
+  selector: 'preview-dialog',
+  templateUrl: 'preview-dialog.html',
+  styleUrls: ['./add-new.component.css']
+})
+export class PreviewDialog {
+
+  newsModel;
+
+  tileView = false;
+
+  constructor(public afService: AF,
+    public dialogRef: MdDialogRef<PreviewDialog>,
+    @Inject(MD_DIALOG_DATA) public data: any) { 
+      this.newsModel = data.newsModel;
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onButton(){
+    this.tileView = !this.tileView;
+  }
+
 }

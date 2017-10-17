@@ -129,19 +129,3 @@
       <button class="btn btn-primary" (click)="modifyLabelModal.close();saveModifications();clearSelected()">Save</button>
     </modal-footer>
   </modal> -->
-
-<modal #areyousure modalClass="modal-sm">
-  <modal-header>
-    <h1>Delete {{selectedNews.Title}}</h1>
-  </modal-header>
-  <modal-content>
-    <div style="text-align:center">
-      <img id="selectedImage" src="http://www.freeiconspng.com/uploads/warning-icon-24.png" style="height:50px;" />
-      <h2>Are you sure?</h2>
-    </div>
-  </modal-content>
-  <modal-footer>
-    <button class="btn btn-default pull-left" (click)="areyousure.close();clearSelected()">Keep it</button>
-    <button class="btn btn-success" (click)="areyousure.close();deleteSelected();clearSelected()">Delete</button>
-  </modal-footer>
-</modal>

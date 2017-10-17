@@ -236,12 +236,19 @@ function resultsToDb(gameName, body) {
             );
           }
           else {
+            //just to monitor 'abnormal' results like abandon/draw
             console.error('abnormal match result: ' + match.sport_event.id);
             console.error(match.sport_event_status);
-            //visszaosztani a feltett fogadásokat! ez status: abandoned esetet jelent!
+            
             console.log(matchSnapShot.key + ' was abandoned! Bets goes back to users!');
             admin.database().ref('matches/' + matchSnapShot.key + '/status').set('finished'); //the prize.. function listen!
-            admin.database().ref('matches/' + matchSnapShot.key + '/result').set('abandoned');
+
+            if(match.sport_event_status.home_score == match.sport_event_status.away_score){
+              admin.database().ref('matches/' + matchSnapShot.key + '/result').set('draw');
+            }
+            else{
+              admin.database().ref('matches/' + matchSnapShot.key + '/result').set('abandoned');
+            }
           }
 
         }
@@ -385,12 +392,12 @@ function dailyScheduleToDb(gameName, body) {
       //select the first, 1 stream is enough on the page
       if (match.streams != null) {
         if (match.streams[0] != null) {
-          preText = (match.streams[0].url.indexOf('youtube') !== -1) ? 'YOUTUBE/' : 'TWITCH/';
+          preText = (match.streams[0].url.indexOf('youtube') !== -1) ? 'YOUTUBE/' : (match.streams[0].url.indexOf('twitch') !== -1) ? 'TWITCH/' : '';
 
           if(preText == 'YOUTUBE/'){
             stream = preText + match.streams[0].url;
           }
-          else{
+          else if(preText == 'TWITCH/'){
             lastSlash = match.streams[0].url.lastIndexOf('/');
             stream = preText + match.streams[0].url.substring(lastSlash + 1);
             qMarkIndex = match.streams[0].url.lastIndexOf('?');
@@ -413,7 +420,7 @@ function dailyScheduleToDb(gameName, body) {
         opponents: {
           left: {
             id: match.competitors[0].id,
-            logo: 'http:\/\/ls.sportradar.com\/ls\/crest\/big\/'
+            logo: 'https:\/\/ls.sportradar.com\/ls\/crest\/big\/'
             + match.competitors[0].id.split(':')[2] + '.png',
             name: match.competitors[0].name,
             short_name: match.competitors[0].abbreviation,
@@ -422,7 +429,7 @@ function dailyScheduleToDb(gameName, body) {
           //todo: check if there is only one team:-> fill with 'TBD' data -> first find some an example..
           right: {
             id: match.competitors[1].id,
-            logo: 'http:\/\/ls.sportradar.com\/ls\/crest\/big\/'
+            logo: 'https:\/\/ls.sportradar.com\/ls\/crest\/big\/'
             + match.competitors[1].id.split(':')[2] + '.png',
             name: match.competitors[1].name,
             short_name: match.competitors[1].abbreviation,
@@ -548,7 +555,7 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
 
         admin.database().ref('bets/' + matchSnap.key).once('value', function (betSnap) {
           //give back the bets to the users
-          if (matchSnap.val().result == 'abandoned') {
+          if (matchSnap.val().result == 'abandoned' || matchSnap.val().result == 'draw') {
 
             admin.database().ref('users').once('value', function (userSnap) {
               userSnap.forEach(function (user) {

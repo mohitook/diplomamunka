@@ -48,21 +48,14 @@ export class HomePageComponent implements OnInit {
   ngOnInit() {
     
     console.log('ngOnInit');
-    // this.router.events.subscribe((event: NavigationEnd) => {
-    //   if(event instanceof NavigationEnd) {
-    //     window.scrollTo(0, 0);
-    //     console.log('home route catched');
-        
-    //     //$("body").animate({ scrollTop: 0 }, 1000);
-    //   }
-    // });
-
     this.router
     .events
     .filter(event => event instanceof NavigationEnd)
     .subscribe(() => {
         const contentContainer = document.querySelector('.mat-drawer-content');
-        contentContainer.scrollTo(0, 0);
+        //it can be buggy in some browser versions!
+        if(contentContainer != null)
+          contentContainer.scrollTo(0, 0);
     });
   }
 

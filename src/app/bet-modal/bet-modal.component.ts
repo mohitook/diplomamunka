@@ -27,7 +27,7 @@ export class BetModalComponent implements OnInit {
 
   betFormControl = new FormControl('', [
     Validators.required,
-    Validators.pattern(this.BET_REGEX_Not0),
+    Validators.pattern(this.BET_REGEX_Not0), 
     Validators.pattern(this.BET_REGEX)]);
 
   constructor(public afService: AF,
@@ -101,10 +101,10 @@ export class BetModalComponent implements OnInit {
           event.target.src = 'https://dota2.gamepedia.com/media/dota2.gamepedia.com/thumb/e/ea/Animal_Courier_Dire_model.png/250px-Animal_Courier_Dire_model.png?version=f0215138b198d530a16d2f5e2f08dcc2';
           break;
         case 'CS GO':
-          event.target.src = 'http://www.freeiconspng.com/uploads/cs-go-csgo-inventory-icon-27.png';
+          event.target.src = 'https://steamuserimages-a.akamaihd.net/ugc/3336341088177464117/8D53A0CBBA686F16DC97FD2722D4F6174D6897EB/';
           break;
         case 'LoL':
-          event.target.src = 'http://news.cdn.leagueoflegends.com/public/images/pages/2015/sno/img/icon2.png';
+          event.target.src = 'https://orig00.deviantart.net/cb31/f/2015/034/b/2/customize_icon_league_of_legends_katarina_by_matrider90-d8f43k6.png';
           break;
         default:
           event.target.src = 'https://firebasestorage.googleapis.com/v0/b/dipterv-f7bce.appspot.com/o/shortRed.png?alt=media&token=d9a9551a-b155-4813-8fa8-b25436b154e3';        

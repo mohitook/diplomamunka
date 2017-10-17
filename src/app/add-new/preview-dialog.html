@@ -1,0 +1,42 @@
+<h2 md-dialog-title>News Preview</h2>
+
+<md-dialog-content *ngIf="!tileView">
+        <div class="center10padding">
+                <img class="img-responsive" src="{{newsModel.coverImageUrl}}" align="middle">
+        </div>
+        <div *ngIf="newsModel.text != null" [froalaView]="newsModel.text" style="padding-left:10px; padding-right:10px;"></div>
+</md-dialog-content>
+
+<md-dialog-content *ngIf="tileView" style="display: inherit;">
+        <md-card class="example-card">
+                <a >
+                                   <img style="padding: 20px 20px 0px 20px;" md-card-image src="{{newsModel.coverImageUrl}}">
+                                </a>
+                <md-card-header>
+                        <md-card-title>
+                                <a >
+                                        <h4>
+                                                {{newsModel.title}}
+                                        </h4>
+                                </a>
+
+                        </md-card-title>
+                </md-card-header>
+                <md-card-content>
+                        <p>
+                                {{newsModel.summary}}
+                        </p>
+                        <md-card-subtitle>
+                                <div class="text-muted"><small>John Doe | 12/24/1993 12:54 </small></div>
+                        </md-card-subtitle>
+                </md-card-content>
+                <!-- <md-card-actions>
+                                    <button md-button [routerLink]="['../../news', new.$key]">More</button>
+                                  </md-card-actions> -->
+        </md-card>
+</md-dialog-content>
+
+<md-dialog-actions style="display: block">
+        <button *ngIf="!tileView" md-raised-button (click)="onButton()" class="pull-left">Tile view</button>
+        <button *ngIf="tileView" md-raised-button (click)="onButton()" class="pull-left">News page view</button>
+</md-dialog-actions>

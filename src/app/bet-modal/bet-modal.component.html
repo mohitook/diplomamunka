@@ -140,9 +140,6 @@
         <a href="{{streamLink}}" target="_blank"><img src="{{youtubeImageUrl}}" style="height:100px;"/></a>
     </div>
 
-    <!-- <iframe src="http://player.twitch.tv/?channel=esl_csgob&muted=true" height="250" width="350" frameborder="0" scrolling="no"
-    allowfullscreen="false"> 
-</iframe>-->
 </md-dialog-content>
 
 <md-dialog-content *ngIf="everythingLoaded && (selectedBetting | async)?.status == 'finished'">
@@ -237,11 +234,14 @@
         </md-chip-list>
 
         <md-chip-list class="mat-chip-list-stacked" *ngIf="alreadyTiped && (selectedBetting | async)?.status == 'finished'">
-            <md-chip *ngIf="prizeWon==null" color="primary" style="display: inline-block;background-color: #f44336;">
+            <md-chip *ngIf="prizeWon==null  && !((selectedBetting | async)?.result == 'draw' || (selectedBetting | async)?.result == 'abandoned')" color="primary" style="display: inline-block;background-color: #f44336;">
                 <b>You lost: {{tip}}</b>
             </md-chip>
             <md-chip *ngIf="prizeWon!=null" color="primary" style="display: inline-block;background-color: #64dd17;">
                 <b>You won: {{prizeWon}}</b>
+            </md-chip>
+            <md-chip *ngIf="prizeWon==null && ((selectedBetting | async)?.result == 'draw' || (selectedBetting | async)?.result == 'abandoned')" color="primary" style="display: inline-block;background-color: rgb(206, 147, 216);">
+                <b>Your tip was: {{tip}}, what you got back!</b>
             </md-chip>
         </md-chip-list>
 

@@ -26,7 +26,7 @@ import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
-import { AddNewComponent } from './add-new/add-new.component';
+import { AddNewComponent, PreviewDialog } from './add-new/add-new.component';
 import { DeleteNewsComponent, DeleteDialog } from './delete-news/delete-news.component';
 import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
@@ -42,7 +42,6 @@ import {NgxPaginationModule} from 'ngx-pagination';
 //import { TinymceModule } from 'angular2-tinymce'; //issue: https://github.com/Ledzz/angular2-tinymce/issues/11
 import { FroalaEditorModule, FroalaViewModule} from 'angular-froala-wysiwyg';
 import { SettingsComponent } from './settings/settings.component';
-import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 import { RegistrationPageComponent } from './registration-page/registration-page.component';
 import { LabelFilterPipe } from './label-filter.pipe';
 import { PaginationPipePipe } from './pagination-pipe.pipe';
@@ -148,11 +147,11 @@ const routes: Routes = [
     HomePageComponent,
     ChatPageComponent,
     AddNewComponent,
+    PreviewDialog,
     EditorDirective,
     NewsModalComponent,
     SafePipe,
     SettingsComponent,
-    ProfileModalComponent,
     RegistrationPageComponent,
     LabelFilterPipe,
     PaginationPipePipe,
@@ -186,7 +185,8 @@ const routes: Routes = [
      LabelNewDialog,
      EditProfileComponent,
      UserModifyDialog,
-     UserDeleteDialog
+     UserDeleteDialog,
+     PreviewDialog
     ],
   imports: [
     BrowserModule,

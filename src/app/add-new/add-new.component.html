@@ -43,14 +43,17 @@
 
     <div class="form-group">
       <label for="text">Text:</label>
-      <div style="margin:20px" [froalaEditor]="options" [(froalaModel)]="editorContent" [(ngModel)]="newsModel.text" name="text"></div>
-      <!-- <div [froalaView]="editorContent"></div> -->
+      <div style="margin:25px" [froalaEditor]="options" [(froalaModel)]="editorContent" [(ngModel)]="newsModel.text" name="text"></div>
+      
     </div>
 
-
-
     <div class="form-group">
-      <button (click)="onSubmit()" type="submit" class="btn btn-primary" 
+      <button (click)="openPreviewDialog()" class="btn btn-success" 
+        [disabled]="!summaryFormControl.valid || !imageUrlFormControl.valid || !titleFormControl.valid" >
+        Preview
+      </button>
+
+      <button (click)="onSubmit()" type="submit" class="btn btn-primary  pull-right" 
         [disabled]="!summaryFormControl.valid || !imageUrlFormControl.valid || !titleFormControl.valid" >
         Submit
       </button>

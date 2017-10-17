@@ -1,3 +1,4 @@
+import { FormControl, Validators } from '@angular/forms';
 import { MdDialogRef } from '@angular/material';
 // src/app/login-page/login-page.component.ts
 import { Component } from '@angular/core';
@@ -32,7 +33,7 @@ export class LoginPageComponent {
     this.afService.loginWithEmail(email, password).then(() => {
       console.log(this.afService.user.displayName);
       this.onNoClick();
-    })
+    }) 
       .catch((error: any) => {
         if (error) {
           this.error = error;

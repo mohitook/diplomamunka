@@ -47,3 +47,21 @@
         padding: 0 16px;
         position: relative;
       }
+
+      .center10padding{
+        text-align: -webkit-center;
+        padding: 10px;
+      }
+
+      .example-card {
+        /* display: inline-block; */
+        padding: 15px;
+        position: relative;
+        width: 60%;
+        margin-left:20%;
+      }
+      
+      md-card > img{
+        width: 100%;
+        margin: 0;
+      }
