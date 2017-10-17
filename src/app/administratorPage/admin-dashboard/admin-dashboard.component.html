@@ -1,17 +1,33 @@
 <div>
 <div class="panel panel-default" style="margin:20px; width:80%">
-  <div class="panel-heading"><h3 style="margin-top: 10px;">News category usage</h3></div>
+  <div class="panel-heading"><h3 style="margin-top: 10px;">{{chart2Titles[currentChart1Index]}} month's news category usage</h3></div>
     <div class="panel-body">
         <chart #chart1 [type]="chart1type" [data]="chart1data" [options]="chart1options"
-        style="width:300px; height:300px; margin-left:15%;  margin-right:15%"></chart>
+        style="width:100%; height:300px;"></chart>
+    </div>
+    <div class="panel-footer">
+        <button [disabled]="currentChart1Index<=0" md-raised-button color="primary" (click)="onChart1Move()">
+            Previous
+        </button>
+        <button [disabled]="currentChart1Index>=chart1Datas.length-1" md-raised-button color="primary" (click)="onChart1Move(true)" class="pull-right">
+            Next
+        </button>
     </div>
   </div>
 
   <div class="panel panel-default" style="margin:20px; width:80%">
-      <div class="panel-heading"><h3 style="margin-top: 10px;">News shared/author</h3></div>
+      <div class="panel-heading"><h3 style="margin-top: 10px;">{{chart2Titles[currentChart2Index]}} month's news shared/author</h3></div>
         <div class="panel-body">
             <chart #chart2 [type]="chart2type" [data]="chart2data" [options]="chart2options"
-            style="width:500px; height:500px;"></chart>
+            style="width:100%; height:300px;"></chart>
+        </div>
+        <div class="panel-footer">
+          <button [disabled]="currentChart2Index<=0" md-raised-button color="primary" (click)="onChart2Move()">
+              Previous
+          </button>
+          <button [disabled]="currentChart2Index>=chart2Datas.length-1" md-raised-button color="primary" (click)="onChart2Move(true)" class="pull-right">
+              Next
+          </button>
         </div>
       </div> 
 

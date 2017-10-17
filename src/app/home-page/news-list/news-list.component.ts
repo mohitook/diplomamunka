@@ -52,7 +52,16 @@ p;
      this.game = params['game'] ? params['game'] : 'All' ;
 
     if(this.game != 'All'){
-      this.statService.addStatistics('newsCategory', this.game);
+
+      var dateObj = new Date();
+      var month = dateObj.getUTCMonth() + 1;
+      var year = dateObj.getUTCFullYear();
+  
+      var bonus0 = (month<10)? '0' : '';
+  
+      var currentMonth = year + '-' + bonus0 + month;
+
+      this.statService.addStatistics('newsCategory/' + currentMonth , this.game);
     }
      
      this.specificNews = this.afService.selectSpecificNews(this.game);

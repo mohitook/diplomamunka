@@ -1,5 +1,6 @@
+import { PaginationInstance } from 'ngx-pagination';
 import { AF } from './../../providers/af';
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ChartComponent } from 'angular2-chartjs';
 
 @Component({
@@ -7,7 +8,7 @@ import { ChartComponent } from 'angular2-chartjs';
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit, AfterViewInit {
+export class AdminDashboardComponent implements  AfterViewInit {
 
 
   @ViewChild('chart1') chart1: ChartComponent;
@@ -29,9 +30,16 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     return pool;
   }
 
-
+  public config: PaginationInstance = {
+    id: 'config',
+    itemsPerPage: 10,
+    currentPage: 1
+  };
 
   chart1type = 'pie';
+
+  chart1Datas = [];
+
   chart1data = {
     labels: [],
     datasets: [
@@ -53,81 +61,176 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   };
 
 
-  chart2type = 'line';
-  chart2data = {
-    labels: ['2017-10-16', '2017-10-17'],
-    datasets: []
-  };
-  chart2options: {
-    responsive: true,
-    maintainAspectRatio: false
-  }
+  chart2type = 'bar';
 
-  categoryCount = 0;
+  chart2Datas = [];
+
+  chart2data = {
+    labels: [],
+    datasets: [
+      {
+        label: "",
+        data: [],
+        fill: false,
+        backgroundColor: "rgba(100, 100, 255, 1)",
+        borderColor: [
+          "rgb(255, 255, 255)"
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  chart2dataTmp = {
+    labels: [],
+    datasets: [
+      {
+        label: "",
+        data: [],
+        fill: false,
+        backgroundColor: ["rgba(100, 255, 100,1)"],
+        borderColor: [
+          "rgb(255, 255, 255)"
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  chart2options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },                                                                                             
+    scales: {
+      yAxes: [{id: 'y-axis-1', type: 'linear', position: 'left', ticks: {min: 0}}]
+    },
+    layout: {
+      padding: {
+        left: 10,
+        bottom: 5
+      }
+    }
+  };
+
+  categoryMaxCount = 0;
   newsShareCount = 0;
 
-  constructor(public afService: AF, private elementRef: ElementRef) {
+  currentChart2Index = -1;
+  currentChart1Index = -1;
+
+  chart1Titles = [];
+  chart2Titles = [];
+
+  constructor(public afService: AF, private elementRef: ElementRef, private cdRef:ChangeDetectorRef) {
 
   }
 
   ngAfterViewInit(): void {
+
+    //50 should be anough for a while
+    var chart1Backgrounds = this.poolColors(50);
+
+    this.chart1data.datasets[0].backgroundColor = chart1Backgrounds;    
+
     //set chart1
     this.afService.af.database.list('statistics/newsCategory').subscribe(
-      categoryList => {
-        this.chart1data.labels = [];
-        this.chart1data.datasets[0].data = [];
-        categoryList.forEach(x => {
-          console.log(x.$key + ' | ' + x.$value);
-          this.chart1data.labels.push(x.$key);
-          this.chart1data.datasets[0].data.push(x.$value);
-        });
-        if (this.categoryCount != categoryList.length) {
-          this.categoryCount = categoryList.length;
-          this.chart1data.datasets[0].backgroundColor = this.poolColors(categoryList.length);
+      dates=>{
+        dates.forEach(
+          monthlyData => {
+
+            this.chart2Titles.push(monthlyData.$key);
+
+            var tmpData = {labels: [], data:[], backgroundColor:[]}
+
+            console.log(monthlyData);
+            var arr = Object.keys(monthlyData).map(function(key){
+             return {key: key, value: monthlyData[key]};
+            });
+            arr.forEach(x => {
+              tmpData.labels.push(x.key);
+              tmpData.data.push(x.value);
+            });
+
+            this.chart1Datas.push(tmpData);
+          }
+        )
+
+        if(this.currentChart1Index == -1){
+          this.currentChart1Index = this.chart1Datas.length-1;
         }
 
+        this.chart1data.labels = this.chart1Datas[this.currentChart1Index].labels;
+        this.chart1data.datasets[0].data = this.chart1Datas[this.currentChart1Index].data;
+        console.log(this.chart1Datas);
         this.chart1.chart.update();
       }
     );
 
     //set chart2
     this.afService.af.database.list('statistics/newsShared').subscribe(
-      newsShareList => {
-        this.chart2data.labels = [];
-        this.chart2data.datasets = [];
-        console.log(newsShareList)
-        newsShareList.forEach(date => {
-          var resultArray = Object.keys(date).map(function(key){
-            var retvalue = {value:date[key], key: key};
-            // do something with person
-            return retvalue;
-        });
-        console.log(resultArray);
-          this.chart2data.labels.push(date.$key);
-          resultArray.forEach(x=>{
-            
-            if(this.chart2data.datasets.find(y=> y.label == x.key)){
-              
-            }
+      
+      dates=>{
+        dates.forEach(
+          monthlyData => {
 
-            this.chart2data.datasets.push({
-              label: x.key,
-              data: [x.value],
-              fill: false,
-              borderColor: [this.dynamicColors()],
-              borderWidth: 1
+            this.chart2Titles.push(monthlyData.$key);
+
+            var tmpData = {labels: [], data:[]}
+
+            // this.chart2dataTmp.labels = [];
+            // this.chart2dataTmp.datasets[0].data = [];
+            console.log(monthlyData);
+            var arr = Object.keys(monthlyData).map(function(key){
+             return {key: key, value: monthlyData[key]};
             });
-          })
-        });
-        if (this.newsShareCount != newsShareList.length) {
-          this.newsShareCount = newsShareList.length;
+            arr.forEach(x => {
+              tmpData.labels.push(x.key);
+              tmpData.data.push(x.value);
+            });
+    
+            this.chart2Datas.push(tmpData);
+          }
+        )
+
+        if(this.currentChart2Index == -1){
+          this.currentChart2Index = this.chart2Datas.length-1;
         }
+
+        this.chart2data.labels = this.chart2Datas[this.currentChart2Index].labels;
+        this.chart2data.datasets[0].data = this.chart2Datas[this.currentChart2Index].data;
+        console.log(this.chart2Datas);
         this.chart2.chart.update();
       }
     );
+
+
+    this.cdRef.detectChanges();
   }
 
-  ngOnInit() {
+  onChart2Move(next?){
+    if(this.currentChart2Index!=0 && !next)
+      this.currentChart2Index--;
+    else if(this.currentChart2Index!=this.chart2Datas.length-1 && next)
+      this.currentChart2Index++;
+
+    this.chart2data.labels = this.chart2Datas[this.currentChart2Index].labels;
+    this.chart2data.datasets[0].data = this.chart2Datas[this.currentChart2Index].data;
+
+    this.chart2.chart.update();
+  }
+
+  onChart1Move(next?){
+    if(this.currentChart1Index!=0 && !next)
+      this.currentChart1Index--;
+    else if(this.currentChart1Index!=this.chart1Datas.length-1 && next)
+      this.currentChart1Index++;
+
+    this.chart1data.labels = this.chart1Datas[this.currentChart1Index].labels;
+    this.chart1data.datasets[0].data = this.chart1Datas[this.currentChart1Index].data;
+
+    this.chart1.chart.update();
   }
 
 }

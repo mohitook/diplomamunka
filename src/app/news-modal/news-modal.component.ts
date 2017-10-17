@@ -110,11 +110,18 @@ export class NewsModalComponent implements OnInit {
   openedShareButton(event){
     //add sharecount!
 
-    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'-');
-    console.log(utc);
+    // var utc = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    // console.log(utc);
 
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1;
+    var year = dateObj.getUTCFullYear();
 
-    this.statService.addStatistics('newsShared/' + utc, this.selectedNews.creator.displayname);
+    var bonus0 = (month<10)? '0' : '';
+
+    var currentMonth = year + '-' + bonus0 + month;
+
+    this.statService.addStatistics('newsShared/' + currentMonth , this.selectedNews.creator.displayname);
   }
 
   moderateComment(commentKey: string){
