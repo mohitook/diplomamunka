@@ -16,11 +16,13 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
   pwReset = false;
 
   NOT_EMPTY_REGEX = /^.*[^ ].*$/;
+  NO_SPEC_CHAR_REGEX = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
   HTTP_REGEX = /^^(http|https|ftp):\/\/.*$/;
 
   nameFormControl = new FormControl('', [
     Validators.required, 
-    Validators.pattern(this.NOT_EMPTY_REGEX)]);
+    Validators.pattern(this.NOT_EMPTY_REGEX),
+    Validators.pattern(this.NO_SPEC_CHAR_REGEX)]);
 
   imageUrlFormControl = new FormControl('', [
     Validators.required,

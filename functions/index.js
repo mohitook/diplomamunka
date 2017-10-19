@@ -13,7 +13,7 @@ var apiKeyForCsGo = 'k772vgds4x3x875gep7cq9dh';
 var apiKeyForDota2 = '4xrzt3cygq3rs5ghv4khqft7';
 var apiKeyForLoL = '3atqmme9np7jwe9gbx5texn5';
 
-//+++++++++++++++++++++++++ new bats handler
+//+++++++++++++++++++++++++ new bets handler
 
 exports.handleUserBets = functions.database.ref('bets/{matchId}/{userId}').onCreate(event => {
   console.log("Handle " + event.params.userId + " new bet on match " + event.params.matchId);
@@ -66,11 +66,11 @@ exports.handleUserBetsPutToMatchBets = functions.database.ref('bets/{matchId}/{u
   }
 });
 
-//------------------------- new bats handler
+//------------------------- new bets handler
 
 
 //++++++++++++++++++++++++++ user handlers
-exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
+exports.createUserHandler = functions.auth.user().onCreate(event => {
   const user = event.data;
   const uid = user.uid;
   const email = user.email; // The email of the user.
@@ -78,8 +78,12 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate(event => {
   const photoURL = user.photoURL;
   admin.database().ref('users/' + uid + '/coins').set(1000);
   admin.database().ref('users/' + uid + '/email').set(email);
-  admin.database().ref('users/' + uid + '/displayName').set(displayName);
-  admin.database().ref('users/' + uid + '/photoURL').set(photoURL);
+  if(displayName != null){
+    admin.database().ref('users/' + uid + '/displayName').set(displayName);
+  }
+  if(photoURL != null){
+    admin.database().ref('users/' + uid + '/photoURL').set(photoURL);
+  }
   admin.database().ref('users/' + uid + '/roles').set({
     admin: false,
     author: false
@@ -127,7 +131,7 @@ exports.modifydisplayNameInArticles = functions.database.ref('users/{userId}/dis
   admin.database().ref('news').once('value',function(newsSnap){
     newsSnap.forEach(function(news){
         if(news.val().creator.uid != null && news.val().creator.uid== event.params.userId){
-          admin.database().ref('news/' + news.key + '/displayname').set(event.data.val());
+          admin.database().ref('news/' + news.key + '/creator/displayname').set(event.data.val());
         }
       })
   });

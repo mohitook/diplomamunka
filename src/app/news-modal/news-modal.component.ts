@@ -41,7 +41,7 @@ export class NewsModalComponent implements OnInit {
 
   constructor(private router: Router,public afService: AF ,public statService: StatisticsService, private route: ActivatedRoute,private sanitizer:DomSanitizer, public dialog: MdDialog) {
     //predefine to avoid errors
-    this.selectedNews = {coverImageUrl:"",creator:{displayname:"",uid:""},labels:{},summary:"",timestamp:"",title:""}
+    this.selectedNews = {coverImageUrl:"",creator:{displayname:"",uid:""},labels:{},summary:"",timestamp:"",title:"", text:''}
   }
 
   ngOnInit() {
@@ -69,10 +69,8 @@ export class NewsModalComponent implements OnInit {
          this.htmlText = "test news with no content!"
        }
        else{
-         //http://stackoverflow.com/questions/38446235/div-innerhtml-not-working-with-iframe-html-in-angular2-html-inject
-         //in fact it is not secure right now!! TODO: read about this bypassSecurityTrustHtml
-         var tmp = JSON.parse(JSON.stringify(x));
-         this.htmlText = this.sanitizer.bypassSecurityTrustHtml(tmp.text);
+         //var tmp = JSON.parse(JSON.stringify(x));
+         this.htmlText = x.text; //this.sanitizer.bypassSecurityTrustHtml(tmp.text);
        }
      });
   }
@@ -120,7 +118,7 @@ export class NewsModalComponent implements OnInit {
     var bonus0 = (month<10)? '0' : '';
 
     var currentMonth = year + '-' + bonus0 + month;
-
+    console.log(currentMonth);
     this.statService.addStatistics('newsShared/' + currentMonth , this.selectedNews.creator.displayname);
   }
 
@@ -134,5 +132,4 @@ export class NewsModalComponent implements OnInit {
     }
     return 'blue';
   }
-
 }

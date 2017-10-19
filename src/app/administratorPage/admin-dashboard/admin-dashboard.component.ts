@@ -137,12 +137,13 @@ export class AdminDashboardComponent implements  AfterViewInit {
     //set chart1
     this.afService.af.database.list('statistics/newsCategory').subscribe(
       dates=>{
+        this.chart1Datas = [];
         dates.forEach(
           monthlyData => {
 
             this.chart2Titles.push(monthlyData.$key);
 
-            var tmpData = {labels: [], data:[], backgroundColor:[]}
+            var tmpData = {labels: [], data:[]}
 
             console.log(monthlyData);
             var arr = Object.keys(monthlyData).map(function(key){
@@ -172,6 +173,7 @@ export class AdminDashboardComponent implements  AfterViewInit {
     this.afService.af.database.list('statistics/newsShared').subscribe(
       
       dates=>{
+        this.chart2Datas = [];
         dates.forEach(
           monthlyData => {
 

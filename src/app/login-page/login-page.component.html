@@ -1,6 +1,6 @@
 <h2 md-dialog-title>Login or Register</h2>
 
-<md-dialog-content *ngIf="!registerPage">
+<md-dialog-content *ngIf="!registerPage && !resetPasswordPage">
 
     
     
@@ -32,6 +32,7 @@
       </form>
       <hr style="border-color:grey;">
       <a (click)="changeToRegisterPage()" style="cursor: pointer;">Register Now</a>
+      <a (click)="changeToResetPage()" style="cursor: pointer;" class="pull-right">Reset password</a>
 
     <!-- <button md-raised-button (click)="afService.resetPassword('oldPw','alma123')">Reset password</button> -->
 
@@ -46,17 +47,61 @@
   </div>
       <form class="example-form" (submit)="register($event, name.value, email.value, password.value)">
         <md-form-field class="example-full-width">
-            <input mdInput #name type="text" id="name" placeholder="Name" required="">
+            <input mdInput maxlength="15" #name type="text" id="name" placeholder="Name" required="" [formControl]="nameFormControl">
+            <md-hint align="end">{{name.value.length}} / 15</md-hint>
+            <md-error *ngIf="nameFormControl.hasError('required')">
+                Please type your display name
+            </md-error>
+            <md-error *ngIf="nameFormControl.hasError('pattern')">
+                Display Name is not valid!
+            </md-error>
         </md-form-field>
         <md-form-field class="example-full-width">
-            <input mdInput #email type="email" id="email" placeholder="Email address" required="" autofocus="">
+            <input mdInput #email  type="email" id="email" placeholder="Email address" required="" [formControl]="emailFormControl">
+            <md-error *ngIf="emailFormControl.hasError('required')">
+                Please type your email
+            </md-error>
+            <md-error *ngIf="emailFormControl.hasError('pattern')">
+                Email is not valid
+            </md-error>
         </md-form-field>
         <md-form-field class="example-full-width">
-            <input mdInput #password type="password" id="inputPassword" placeholder="Password" required="">
+            <input mdInput minlength="8" #password type="password" id="inputPassword" placeholder="Password" required="" [formControl]="passwordFormControl">
+            <md-hint align="end">Minimum {{password.value.length}} / 8</md-hint>
+            <md-error *ngIf="passwordFormControl.hasError('required')">
+                Please type your password
+            </md-error>
+            <md-error *ngIf="passwordFormControl.hasError('pattern')">
+                Password is not strong enough!
+            </md-error>
         </md-form-field>
         <br>
         <button md-raised-button color="primary" type="submit">Register</button>
-      </form>
+        
+    </form>
 
 
+</md-dialog-content>
+
+
+<md-dialog-content *ngIf="resetPasswordPage">
+
+        <div style="color:orange">
+                For password reset you will get an email with all the necessary informations!
+        </div>
+
+        <form class="example-form">
+                <md-form-field class="example-full-width">
+                    <input mdInput #resetEmail  type="email" id="email" placeholder="Email address" required="" [formControl]="emailFormControl">
+                    <md-error *ngIf="emailFormControl.hasError('required')">
+                        Please type your email
+                    </md-error>
+                    <md-error *ngIf="emailFormControl.hasError('pattern')">
+                        Email is not valid
+                    </md-error>
+                </md-form-field>
+                <button md-raised-button [disabled]="!emailFormControl.valid" (click)="afService.resetPassword(emailFormControl.value);onNoClick();" style="background-color:#ffd54f; margin-bottom: 5px;">
+                        Reset Password
+                </button>
+            </form>
 </md-dialog-content>

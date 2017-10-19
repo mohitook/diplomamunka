@@ -49,7 +49,7 @@
                                   [colspan]="4"
                                   [rowspan]="1" style="border-bottom: #1A237E solid;"
                                   >
-                                  <div [ngStyle]="getTeamFontStyle(match.$key, 'left')">
+                                  <div [ngStyle]="{'color': getFontColor(match.$key, 'left'), 'font-weight': getFontWeight(match.$key, 'left')}" style="color:black"> 
                                     {{match.opponents.left.name}}                                
                                   </div>
                                   <span class="fill-remaining-space"></span>
@@ -65,7 +65,7 @@
                                 [colspan]="4"
                                 [rowspan]="1"
                                 >
-                                <div [ngStyle]="getTeamFontStyle(match.$key, 'right')">
+                                <div [ngStyle]="{'color': getFontColor(match.$key, 'right'), 'font-weight': getFontWeight(match.$key, 'right')}">
                                   {{match.opponents.right.name}}                                
                                 </div>
                                 <span class="fill-remaining-space"></span>
@@ -133,7 +133,7 @@
                                   [colspan]="4"
                                   [rowspan]="1" style="border-bottom: #1A237E solid;"
                                   >
-                                  <div [ngStyle]="getTeamFontStyle(match.$key, 'left')">
+                                  <div [ngStyle]="{'color': getFontColor(match.$key, 'left'), 'font-weight': getFontWeight(match.$key, 'left')}">
                                       {{match.opponents.left.name}}
                                   </div>
                                   <span class="fill-remaining-space"></span>
@@ -149,7 +149,7 @@
                                 [colspan]="4"
                                 [rowspan]="1"
                                 >
-                                <div [ngStyle]="getTeamFontStyle(match.$key, 'right')">
+                                <div [ngStyle]="{'color': getFontColor(match.$key, 'right'), 'font-weight': getFontWeight(match.$key, 'right')}">
                                   {{match.opponents.right.name}}                                
                                 </div>
                                 <span class="fill-remaining-space"></span>
@@ -217,7 +217,7 @@
                                   [colspan]="4"
                                   [rowspan]="1" style="border-bottom: #1A237E solid;"
                                   >
-                                  <div [ngStyle]="getTeamFontStyle(match.$key, 'left', match.winner)">
+                                  <div  [ngStyle]="{'color': getFontColor(match.$key, 'left', match.winner), 'font-weight': getFontWeight(match.$key, 'left', match.winner)}">
                                       {{match.opponents.left.name}}
                                   </div>
 
@@ -235,7 +235,7 @@
                                 [colspan]="4"
                                 [rowspan]="1"
                                 >
-                                <div [ngStyle]="getTeamFontStyle(match.$key, 'right', match.winner)">
+                                <div [ngStyle]="{'color': getFontColor(match.$key, 'right', match.winner), 'font-weight': getFontWeight(match.$key, 'right', match.winner)}">
                                     {{match.opponents.right.name}}
                                 </div>
 

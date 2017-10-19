@@ -6,11 +6,11 @@
         <md-form-field class="example-full-width">
             <input #newName maxlength="15" mdInput placeholder="Display name" value="{{afService.user.displayName}}" [formControl]="nameFormControl">
             <md-hint align="end">{{newName.value.length}} / 15</md-hint>
-            <md-error *ngIf="nameFormControl.hasError('required')">
+            <md-error *ngIf="nameFormControl.hasError('required') && nameFormControl.dirty">
                 Please type your display name
             </md-error>
-            <md-error *ngIf="nameFormControl.hasError('pattern')">
-                Not just whitespaces!
+            <md-error *ngIf="nameFormControl.hasError('pattern') && nameFormControl.dirty">
+                Display Name is not valid!
             </md-error>
         </md-form-field>
         <!-- <button class="pull-right" md-raised-button color="primary" (click)="afService.updateProfileName(newName.value)">Reset Name</button> -->
@@ -23,15 +23,18 @@
         <br/>
         <md-form-field class="example-full-width">
             <input #newPicture mdInput placeholder="Profile picture Url" value="{{afService.user.photoURL}}" [formControl]="imageUrlFormControl">
-            <md-error *ngIf="imageUrlFormControl.hasError('required')">
+            <md-error *ngIf="imageUrlFormControl.hasError('required') && imageUrlFormControl.dirty">
                     Please add a link to your new avatar
                 </md-error>
-                <md-error *ngIf="imageUrlFormControl.hasError('pattern')">
+                <md-error *ngIf="imageUrlFormControl.hasError('pattern') && imageUrlFormControl.dirty">
                     Not valid url! (URL starts with http or https)
                 </md-error>
         </md-form-field>
         <br/>
-        <button md-raised-button color="primary" (click)="afService.updateProfile(newName.value, newPicture.value); onNoClick()">Save</button>
+        <button 
+        [disabled]="(nameFormControl.dirty && !nameFormControl.valid) ||
+                     (imageUrlFormControl.dirty && !imageUrlFormControl.valid) || (!nameFormControl.dirty && !imageUrlFormControl.dirty)"
+         md-raised-button color="primary" (click)="afService.updateProfile(newName.value, newPicture.value); onNoClick()">Save</button>
     </form>
 
     <br/>

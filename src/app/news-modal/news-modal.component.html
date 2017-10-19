@@ -14,9 +14,9 @@
     <!--in fact I shouldn't do it.. : http://stackoverflow.com/questions/34936027/angular-2-how-do-you-render-html-from-a-json-response-without-displaying-the-ta -->
     <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
         </div> -->
-    <div *ngIf="htmlText">
-      <div [innerHTML]="htmlText" style="padding-left:10px; padding-right:10px;">
-      </div>
+    <!-- <div *ngIf="htmlText"> [innerHTML]="htmlText" -->
+      <div  [froalaView]="htmlText" style="padding-left:10px; padding-right:10px;">
+      <!-- </div> -->
     </div>
     <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
     <div>

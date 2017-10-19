@@ -58,6 +58,7 @@ export class AF {
     }
 
     constructor(public af: AngularFire) {
+        console.log(firebase.auth());
         this.propertySubject = new Subject();
         this.valueSubject = new Subject();
         this.commentsSubject = new Subject();
@@ -381,15 +382,14 @@ export class AF {
     //  * @param model
     //  * @returns {firebase.Promise<void>}
     //  */
-    // saveUserInfoFromForm(uid, name, email) {
-    //     return this.af.database.object('users/' + uid).set({
-    //         displayName: name,
-    //         email: email,
-    //         coins: 1000
-    //     });
-    // } 
+    saveUserInfoFromForm(uid, name, email) {
+        return this.af.database.object('users/' + uid).update({
+            displayName: name
+        });
+    }
 
     saveUserNameInAuth(name) {
+        console.log(name);
         return this.authState.auth.updateProfile({
             displayName: name,
             photoURL: ''
@@ -451,12 +451,17 @@ export class AF {
         }
     }
 
-    resetPassword(oldPw: string, newPw: string) {
-        console.log('reset Password');
-        console.log(this.user.email);
+    resetPassword(email?) {
+        //console.log('reset Password');
+        //console.log(this.user.email);
         //firebase.auth().verifyPasswordResetCode(oldPw).then
         //firebase.auth().currentUser.updatePassword(newPw);
-        return firebase.auth().sendPasswordResetEmail(this.user.email);
+        
+
+        if(email == null)
+            return firebase.auth().sendPasswordResetEmail(this.user.email);
+        else
+            return firebase.auth().sendPasswordResetEmail(email);
     }
 
 }

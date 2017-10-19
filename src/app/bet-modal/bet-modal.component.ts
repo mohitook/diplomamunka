@@ -1,4 +1,5 @@
-import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
+import { LoginPageComponent } from './../login-page/login-page.component';
+import { MdDialogRef, MD_DIALOG_DATA, MdDialog } from '@angular/material';
 import { Component, OnInit, Inject } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import { AF } from '../providers/af';
@@ -30,7 +31,7 @@ export class BetModalComponent implements OnInit {
     Validators.pattern(this.BET_REGEX_Not0), 
     Validators.pattern(this.BET_REGEX)]);
 
-  constructor(public afService: AF,
+  constructor(public afService: AF,  public dialog: MdDialog,
     public dialogRef: MdDialogRef<BetModalComponent>,
     @Inject(MD_DIALOG_DATA) public data: any) { 
       this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
@@ -63,9 +64,26 @@ export class BetModalComponent implements OnInit {
         });
       });
       //this.alreadyTiped = true;
+
+
+      
+
     }
 
- ngOnInit(): void { }
+ ngOnInit(): void {
+
+  this.afService.af.database.object('users/' + this.afService.uid + '/coins').subscribe(coins => {
+    console.log(coins.$value);
+    this.betFormControl.setValidators(
+      [
+        Validators.required,
+        Validators.pattern(this.BET_REGEX_Not0),
+        Validators.pattern(this.BET_REGEX),
+        Validators.max(coins.$value)]
+    );
+    this.betFormControl.updateValueAndValidity();
+  });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -111,6 +129,15 @@ export class BetModalComponent implements OnInit {
           break;
       }
     }
+  }
+
+  openLoginDialog(): void {
+    const dialogRef = this.dialog.open(LoginPageComponent, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
 }

@@ -153,6 +153,7 @@ p3;
     }
   }
 
+  //can't use because if I set the "whole" style than it won't refresh if the user logs off and it will let unwanted colors/weights on screen
   getTeamFontStyle(matchKey, competitor, winner = ''){
     var color;
     var fontWeight;
@@ -193,12 +194,63 @@ p3;
     }
   }
 
+  getFontWeight(matchKey, competitor, winner = ''){
+
+    if(this.afService.userBettings[matchKey] != null){
+
+        //in case of live matches
+      if(this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team){
+        return 900;
+      }
+      //in case of finished matches
+      else if(this.afService.userBettings[matchKey].status == 'finished'){
+        if(this.afService.userBettings[matchKey].team == competitor){
+          if(this.afService.userBettings[matchKey].result == 'win'){
+            return 900;
+          }
+        }
+        if(this.afService.userBettings[matchKey].team != competitor 
+          && this.afService.userBettings[matchKey].result == 'lose'){
+            return 900;
+        }
+      }
+    }
+    else{
+      if(competitor == winner){
+        return 900;
+      }
+    }
+  }
+
+  getFontColor(matchKey, competitor, winner = ''){
+
+
+    if(this.afService.userBettings[matchKey] != null){
+
+        //in case of live matches
+      if(this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team){
+        return '#e65100';
+      }
+      //in case of finished matches
+      else if(this.afService.userBettings[matchKey].status == 'finished'){
+        if(this.afService.userBettings[matchKey].team == competitor){
+          if(this.afService.userBettings[matchKey].result == 'win'){
+            return '#00c853';
+          }
+          else if(this.afService.userBettings[matchKey].result == 'lose'){
+            return '#d50000';
+          }
+        }
+      }
+  }
+}
+
   setBackgroundOnBet(matchKey, result?){
 
     if(this.afService.userBettings[matchKey] != null){
 
       if(this.afService.userBettings[matchKey].status == 'inProgress'){
-        return '#fff176';      
+        return '#fff176';
       }
       if(this.afService.userBettings[matchKey].status == 'finished'){
         if(this.afService.userBettings[matchKey].result == 'win'){

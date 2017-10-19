@@ -207,7 +207,7 @@
 
 <md-dialog-actions style="text-align: center;display: block;" *ngIf="selectedTeam!=''">
 
-    <button md-raised-button *ngIf="!afService.isLoggedIn" routerLink="/login" (click)="dialogRef.close()" color="primary">
+    <button md-raised-button *ngIf="!afService.isLoggedIn" (click)="openLoginDialog()" color="primary">
             Login to Tip
         </button>
 
@@ -215,12 +215,15 @@
             <!-- floatPlaceholder="never" -->
         <md-form-field *ngIf="!alreadyTiped" >
             <!-- placeholder="Bet" -->
-            <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet"  min="0" step="1" [formControl]="betFormControl">
+            <input #betInput mdInput type="number" [(ngModel)]="tip" name="tip" placeholder="Bet"  min="0" step="1" max="{{(afService.userObs | async)?.coins}}" [formControl]="betFormControl">
             <md-error *ngIf="betFormControl.hasError('pattern')">
                 Please use only Integers
             </md-error>
             <md-error *ngIf="betFormControl.hasError('required')">
                 Please take your bets
+            </md-error>
+            <md-error *ngIf="betFormControl.hasError('max')">
+                You can bet only what you have ({{(afService.userObs | async)?.coins}} coins)
             </md-error>
         </md-form-field>
 
@@ -246,7 +249,7 @@
         </md-chip-list>
 
     </form>
-    <button *ngIf="!betFormControl.hasError('pattern') && !betFormControl.hasError('required') && !alreadyTiped" (click)="placeBets()"
+    <button *ngIf="!betFormControl.hasError('pattern') && !betFormControl.hasError('required') && !betFormControl.hasError('max') && !alreadyTiped" (click)="placeBets()"
         style="width:200px" md-raised-button color="primary" md-dialog-close>Tip</button>
 
     <!-- <button md-button md-dialog-close>{{data.name}}</button>

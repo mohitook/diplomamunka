@@ -1,5 +1,5 @@
 import { BetModalComponent } from './../bet-modal/bet-modal.component';
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Pipe, PipeTransform, Sanitizer, Inject, Renderer } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Pipe, PipeTransform, Sanitizer, Inject, Renderer, Renderer2 } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { AF } from "../providers/af";
 import { MobileViewService } from "../providers/mobileView.service";
@@ -30,7 +30,7 @@ export class HomePageComponent implements OnInit {
   upcomingMatches: FirebaseListObservable<any>;
   labelsAreAvailable = false;
 
-  constructor(private renderer: Renderer, public afService: AF, public route: ActivatedRoute, public router: Router,
+  constructor(private renderer: Renderer2, public afService: AF, public route: ActivatedRoute, public router: Router,
     private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog, public mobView: MobileViewService) {
 
     this.labels = this.afService.labels;
@@ -54,15 +54,17 @@ export class HomePageComponent implements OnInit {
     .subscribe(() => {
         const contentContainer = document.querySelector('.mat-drawer-content');
         //it can be buggy in some browser versions!
-        if(contentContainer != null)
-          contentContainer.scrollTo(0, 0);
+        if(contentContainer != null){
+          //contentContainer.scrollTo(0, 0);
+          this.renderer.setProperty(contentContainer, 'scrollTop', 0);
+        } 
     });
   }
 
   onSidenavClick(label: any) {
     this.selectedLabel = label.label;
     this.router.navigate(['./gamenews', label.label]).then(() => {
-      window.scroll(0, 0); // should be here, in promise
+      //window.scroll(0, 0); // should be here, in promise
     });
   }
 
