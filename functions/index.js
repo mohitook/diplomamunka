@@ -78,6 +78,11 @@ exports.createUserHandler = functions.auth.user().onCreate(event => {
   const photoURL = user.photoURL;
   admin.database().ref('users/' + uid + '/coins').set(1000);
   admin.database().ref('users/' + uid + '/email').set(email);
+  
+  if(user.providerData[0].providerId == 'google.com'){
+    admin.database().ref('users/' + uid + '/verified').set(true);
+  }
+
   if(displayName != null){
     admin.database().ref('users/' + uid + '/displayName').set(displayName);
   }

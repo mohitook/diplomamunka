@@ -30,6 +30,8 @@ export class NewsModalComponent implements OnInit {
 
   public commentsLength:number = 0;
 
+  verifyResent = false;
+
   fbButton;
 
   public config: PaginationInstance = {
@@ -131,5 +133,9 @@ export class NewsModalComponent implements OnInit {
       return 'red';
     }
     return 'blue';
+  }
+
+  verifyAgain(){
+    this.afService.sendUserVerifyAgain().then(()=>{this.verifyResent = true;});
   }
 }

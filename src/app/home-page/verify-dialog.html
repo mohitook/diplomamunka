@@ -1,0 +1,13 @@
+<h2 md-dialog-title style="text-align:center" *ngIf="success">Your email {{afService.user.email}} is verified</h2>
+
+<md-dialog-content style="text-align:center" *ngIf="success">
+        From now on you can use Bet functions and write comments under news!
+</md-dialog-content> 
+
+<h2 md-dialog-title style="text-align:center" *ngIf="!success">Your email {{afService.user.email}} is NOT verified</h2>
+<md-dialog-actions style="display: block; text-align:center" *ngIf="!success">
+        Your verification code is probably outdated or invalid, please verify your email address again!
+        <br/>
+        <br/>        
+        <button md-raised-button color="primary" (click)="verifyAgain()">Send Email verification again</button>
+</md-dialog-actions>

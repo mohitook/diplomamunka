@@ -38,7 +38,7 @@
               <small class="text-inside-grid-left text-muted">({{user.email}})</small>
             </label>
   
-            <div class="pull-right action-buttons">
+            <div class="pull-right action-buttons" *ngIf="user.email!=afService.user.email">
               <a style="cursor: pointer;" (click)="openModifyDialog(user)"><span class="glyphicon glyphicon-pencil"></span></a>
               <a style="cursor: pointer;" (click)="openDeleteDialog(user)" class="trash"><span class="glyphicon glyphicon-trash"></span></a>
             </div>

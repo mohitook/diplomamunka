@@ -140,4 +140,8 @@ export class BetModalComponent implements OnInit {
     });
   }
 
+  verifyAgain(){
+    this.afService.sendUserVerifyAgain().then(()=>{this.onNoClick()});
+  }
+
 }

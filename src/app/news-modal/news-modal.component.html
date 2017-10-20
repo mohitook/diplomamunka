@@ -85,7 +85,7 @@
       </div>
     </pagination-template>
     <hr />
-    <div class="boxsizingBorder" *ngIf="afService.isLoggedIn">
+    <div class="boxsizingBorder" *ngIf="afService.isLoggedIn && (afService.userObs | async)?.verified">
         <textarea [(ngModel)]="newCommentText" name="addComment" rows="5"
         style="resize: none;"
         ></textarea>
@@ -95,6 +95,15 @@
     <div class="boxsizingBorder" *ngIf="!afService.isLoggedIn">
         <button (click)="openLoginDialog()" class="btn btn-success">Login to comment</button>    
     </div>
+
+    <div *ngIf="!(afService.userObs | async)?.verified && !verifyResent">
+        Please verify your email before comment!
+        <br>
+        <br>
+        <button md-raised-button color="primary" (click)="verifyAgain()">Send Email verification again</button>
+    </div>
+
+     <div style="color: orange;" *ngIf="verifyResent">Please wait for the verification email and verify your account!</div>
 
   </div>
   <!-- content end -->

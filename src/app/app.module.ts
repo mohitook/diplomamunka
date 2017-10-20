@@ -24,7 +24,7 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
-import { HomePageComponent } from './home-page/home-page.component';
+import { HomePageComponent, VerifyDialog, ResetPasswordDialog } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
 import { AddNewComponent, PreviewDialog } from './add-new/add-new.component';
 import { DeleteNewsComponent, DeleteDialog } from './delete-news/delete-news.component';
@@ -145,6 +145,8 @@ const routes: Routes = [
     AppComponent,
     LoginPageComponent,
     HomePageComponent,
+    VerifyDialog,
+    ResetPasswordDialog,
     ChatPageComponent,
     AddNewComponent,
     PreviewDialog,
@@ -186,7 +188,9 @@ const routes: Routes = [
      EditProfileComponent,
      UserModifyDialog,
      UserDeleteDialog,
-     PreviewDialog
+     PreviewDialog,
+     VerifyDialog,
+     ResetPasswordDialog
     ],
   imports: [
     BrowserModule,

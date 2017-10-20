@@ -18,7 +18,6 @@ export class LoginPageComponent {
 
   resetPasswordPage = false;
 
-
   NOT_EMPTY_REGEX = /^.*[^ ].*$/;
   NO_SPEC_CHAR_REGEX = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
   //https://www.w3resource.com/javascript/form/email-validation.php
@@ -82,6 +81,7 @@ export class LoginPageComponent {
       this.afService.saveUserInfoFromForm(user.uid, name, email).then(() => {
         this.afService.saveUserNameInAuth(name).then(() => {
           //this.afService.displayName = name;
+          this.afService.sendUserVerifyAgain();
           this.onNoClick();
         });
       })

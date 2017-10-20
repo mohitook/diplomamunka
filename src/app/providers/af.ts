@@ -452,16 +452,37 @@ export class AF {
     }
 
     resetPassword(email?) {
+        //https://dipterv-f7bce.firebaseapp.com/__/auth/action
         //console.log('reset Password');
         //console.log(this.user.email);
         //firebase.auth().verifyPasswordResetCode(oldPw).then
         //firebase.auth().currentUser.updatePassword(newPw);
         
-
+        //firebase.auth().currentUser.sendEmailVerification();
+        //console.log(firebase.auth().currentUser.emailVerified);
+        
         if(email == null)
             return firebase.auth().sendPasswordResetEmail(this.user.email);
         else
             return firebase.auth().sendPasswordResetEmail(email);
+    }
+
+    verifyUser(actionCode: string): any {
+        return firebase.auth().applyActionCode(actionCode);
+    }
+
+    sendUserVerifyAgain(){
+
+        console.log(firebase.auth().currentUser.providerData[0].providerId);
+        return firebase.auth().currentUser.sendEmailVerification();
+    }
+
+    verifyPaswordResetCode(actionCode: string){
+        return firebase.auth().verifyPasswordResetCode(actionCode);
+    }
+
+    confirmPasswordReset(actionCode, newPassword){
+        return firebase.auth().confirmPasswordReset(actionCode, newPassword);
     }
 
 }
