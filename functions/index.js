@@ -32,7 +32,6 @@ exports.handleUserBets = functions.database.ref('bets/{matchId}/{userId}').onCre
       }
       else {
         console.warn(event.params.userId + " new bet on match " + event.params.matchId + " was not successfull! (not enough coin)");
-
         //only people who bet more that the amount of coin they have can get this state... and since they are just
         //trying to *cheat* I just simply delete their bets.
         admin.database().ref('bets/' + event.params.matchId + '/' + event.params.userId).remove();
@@ -68,18 +67,20 @@ exports.handleUserBetsPutToMatchBets = functions.database.ref('bets/{matchId}/{u
 
 //------------------------- new bets handler
 
-
 //++++++++++++++++++++++++++ user handlers
 exports.createUserHandler = functions.auth.user().onCreate(event => {
   const user = event.data;
   const uid = user.uid;
   const email = user.email; // The email of the user.
   const displayName = user.displayName; // The display name of the user.
-  const photoURL = user.photoURL;
+  var photoURL = "";
+  if(user.photoURL!=null){
+    photoURL = user.photoURL;  
+  }
   admin.database().ref('users/' + uid + '/coins').set(1000);
   admin.database().ref('users/' + uid + '/email').set(email);
   
-  if(user.providerData[0].providerId == 'google.com'){
+  if(user.providerData != null && user.providerData[0].providerId == 'google.com'){
     admin.database().ref('users/' + uid + '/verified').set(true);
   }
 

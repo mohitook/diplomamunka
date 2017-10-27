@@ -211,7 +211,7 @@
             Login to Tip
     </button>
 
-    <div *ngIf="!(afService.userObs | async)?.verified">
+    <div *ngIf="afService.isLoggedIn && !(afService.userObs | async)?.verified">
         Please verify your email before tip!
         <br>
         <br>

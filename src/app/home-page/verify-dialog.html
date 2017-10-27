@@ -1,13 +1,36 @@
-<h2 md-dialog-title style="text-align:center" *ngIf="success">Your email {{afService.user.email}} is verified</h2>
+<h2 md-dialog-title *ngIf="afService.isLoggedIn  && success" style="text-align:center">Your email {{afService.user.email}} is verified</h2>
+<h2 md-dialog-title *ngIf="!afService.isLoggedIn" style="text-align:center">Please login to verify your email address</h2>
+<h2 md-dialog-title style="text-align:center" *ngIf="afService.isLoggedIn && !success">Your email {{afService.user.email}} is NOT verified</h2>
 
-<md-dialog-content style="text-align:center" *ngIf="success">
-        From now on you can use Bet functions and write comments under news!
-</md-dialog-content> 
 
-<h2 md-dialog-title style="text-align:center" *ngIf="!success">Your email {{afService.user.email}} is NOT verified</h2>
-<md-dialog-actions style="display: block; text-align:center" *ngIf="!success">
-        Your verification code is probably outdated or invalid, please verify your email address again!
-        <br/>
-        <br/>        
-        <button md-raised-button color="primary" (click)="verifyAgain()">Send Email verification again</button>
-</md-dialog-actions>
+<md-dialog-content style="text-align:center">
+        <div *ngIf="!afService.isLoggedIn">
+                Your email verification is ALMOST complete!
+                <br/> Please Login, to verify your email completely!
+                <br/>
+                <br/>
+                <div *ngIf="error" class="alert alert-warning" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span> {{error}}
+                </div>
+                <form (submit)="loginWithEmail($event, email.value, password.value)" class="example-form">
+                        <md-form-field class="example-full-width">
+                                <input mdInput #email type="email" id="email" placeholder="Email address">
+                        </md-form-field>
+                        <md-form-field class="example-full-width">
+                                <input mdInput #password type="password" id="password" placeholder="Password">
+                        </md-form-field>
+                        <br>
+                        <button type="submit" md-raised-button color="primary">Log In</button>
+                </form>
+        </div>
+        <div *ngIf="afService.isLoggedIn && success">
+                Email verification Completed! From now on you can use Bet functions and write comments under news!
+        </div>
+        <div *ngIf="afService.isLoggedIn && !success && !loading">
+                Your verification code is probably outdated or invalid, please verify your email address again!
+                <br/>
+                <br/>
+                <button md-raised-button color="primary" (click)="verifyAgain()">Send Email verification again</button>
+        </div>
+</md-dialog-content>

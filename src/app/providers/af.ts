@@ -18,7 +18,7 @@ export class AF {
     private clock: Observable<Date>;
 
     public userBets: FirebaseListObservable<any>;
-    public pendingBetsForUser: FirebaseObjectObservable<any>;
+    //public pendingBetsForUser: FirebaseObjectObservable<any>;
     public upcomingMatches: FirebaseListObservable<any>;
     public upcomingMatchesForNewsPage: FirebaseListObservable<any>;
     public notFutureMatches: FirebaseListObservable<any>;
@@ -118,16 +118,16 @@ export class AF {
 
         this.uidUpdate.subscribe(uid => {
             this.propertySubject.next(uid);
-            this.pendingBetsForUser = this.af.database.object('pendingBets/' + uid);
-            this.pendingBetsForUser.subscribe(x => {
-                //this is for the client check, to disable all bet functions till there is a pending bet related to the current user!
-                if (x.matchId != null) {
-                    this.userHasAlreadyPendingBet = true;
-                }
-                else {
-                    this.userHasAlreadyPendingBet = false;
-                }
-            });
+            // this.pendingBetsForUser = this.af.database.object('pendingBets/' + uid);
+            // this.pendingBetsForUser.subscribe(x => {
+            //     //this is for the client check, to disable all bet functions till there is a pending bet related to the current user!
+            //     if (x.matchId != null) {
+            //         this.userHasAlreadyPendingBet = true;
+            //     }
+            //     else {
+            //         this.userHasAlreadyPendingBet = false;
+            //     }
+            // });
         });
 
         this.userBets.subscribe(bets => {
@@ -175,6 +175,7 @@ export class AF {
                     this.userObs = this.af.database.object('/users/' + this.uid_prop);
                     this.userObs.subscribe(userData => {
                         console.log('userObs sub called');
+                        console.log(userData);
                         this.user = new User(userData);
                     });
                 }
@@ -234,7 +235,7 @@ export class AF {
             displayName: this.user.displayName,
             email: this.user.email,
             timestamp: Date.now(),
-            photoURL: this.user.photoURL,
+            photoURL: this.user.photoURL ? this.user.photoURL : '',
             userId: this.uid //not the best practice..
         };
         return this.comments.push(message);
@@ -335,11 +336,11 @@ export class AF {
         this.af.database.object('/users/' + this.uid + "/labels").set(selectedLabels);
     }
 
-    getUserLastSelected() {
-        var queryString = 'users/' + this.uid + '/lastSelected';
-        console.log('getUserLastSelected - ' + queryString);
-        return this.af.database.object(queryString);
-    }
+    // getUserLastSelected() {
+    //     var queryString = 'users/' + this.uid + '/lastSelected';
+    //     console.log('getUserLastSelected - ' + queryString);
+    //     return this.af.database.object(queryString);
+    // }
 
     selectSpecificNews(property: any) {
         console.log('selectSpecificNews - ' + property);
@@ -351,7 +352,7 @@ export class AF {
             }
         });
         console.log(property);
-        this.af.database.object('users/' + this.uid + '/lastSelected').set(property);
+        //this.af.database.object('users/' + this.uid + '/lastSelected').set(property);
         return this.specificNews;
     }
 

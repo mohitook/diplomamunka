@@ -47,7 +47,7 @@
       <button md-menu-item routerLink="/">News</button>
       <button md-menu-item routerLink="/matches">Matches</button>
       <a  href="https://espot.prophpbb.com" target="_blank" style="text-decoration: none;"> <button md-menu-item >Forum</button></a>
-      <button md-menu-item *ngIf="afService.user.roles.admin || afService.user.roles.author" routerLink="/administrato" style="color:#ff6f00">Administrator page</button>
+      <button md-menu-item *ngIf="afService.user.roles.admin || afService.user.roles.author" routerLink="/administrator" style="color:#ff6f00">Administrator page</button>
       <div md-menu-item *ngIf="afService.isLoggedIn" >
               <b>{{(afService.userObs | async)?.coins}}</b> &nbsp;
               <img  style="height:20px" src="https://opengameart.org/sites/default/files/Coin_0.png" />

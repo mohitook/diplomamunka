@@ -57,6 +57,7 @@ export class AppComponent implements OnInit {
 
     logout() {
         this.afService.logout();
+        this.router.navigate(['']);
     }
 
     openEditProfileDialog(): void {

@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit {
   constructor(private renderer: Renderer2, public afService: AF, public route: ActivatedRoute, public router: Router,
     private sanitizer: DomSanitizer, private media: ObservableMedia, public dialog: MdDialog, public mobView: MobileViewService) {
 
-      
+
 
     this.labels = this.afService.labels;
 
@@ -47,9 +47,9 @@ export class HomePageComponent implements OnInit {
     });
     console.log('home-page constructor end');
   }
-  
+
   ngOnInit() {
-    
+
     this.route.queryParams.subscribe(params => {
       let mode = params['mode'];
       let actionCode = params['oobCode'];
@@ -62,20 +62,20 @@ export class HomePageComponent implements OnInit {
 
     console.log('ngOnInit');
     this.router
-    .events
-    .filter(event => event instanceof NavigationEnd)
-    .subscribe(() => {
+      .events
+      .filter(event => event instanceof NavigationEnd)
+      .subscribe(() => {
         const contentContainer = document.querySelector('.mat-drawer-content');
         //it can be buggy in some browser versions!
-        if(contentContainer != null){
+        if (contentContainer != null) {
           //contentContainer.scrollTo(0, 0);
           this.renderer.setProperty(contentContainer, 'scrollTop', 0);
-        } 
-    });
+        }
+      });
   }
 
   //https://firebase.google.com/docs/auth/custom-email-handler
-  handleAuth(mode, actionCode){
+  handleAuth(mode, actionCode) {
     // Handle the user management action.
     switch (mode) {
       case 'resetPassword':
@@ -91,42 +91,32 @@ export class HomePageComponent implements OnInit {
         this.handleVerifyEmail(actionCode);
         break;
       default:
-        // Error: invalid mode.
+      // Error: invalid mode.
     }
   }
 
-  handleResetPassword(actionCode){
+  handleResetPassword(actionCode) {
     this.afService.verifyPaswordResetCode(actionCode).then(email => {
       let dialogRef = this.dialog.open(ResetPasswordDialog, {
         width: '400px',
-        data : {email: email, actionCode: actionCode}
+        data: { email: email, actionCode: actionCode }
       });
-    }).catch(error=>{
+    }).catch(error => {
       let dialogRef = this.dialog.open(ResetPasswordDialog, {
         width: '400px',
-        data : false
+        data: false
       });
     });
   }
 
-  handleVerifyEmail(actionCode){
+  handleVerifyEmail(actionCode) {
 
-    this.afService.verifyUser(actionCode).then(resp =>{
-      let dialogRef = this.dialog.open(VerifyDialog, {
-        width: '400px',
-        data : true
-      });
-      console.log(resp);
-      //todo: save users/uid/verified = true
-
-      this.afService.af.database.object('users/' + this.afService.uid + '/verified').set(true);
-
-    }).catch(error => {
-      let dialogRef = this.dialog.open(VerifyDialog, {
-        width: '400px',
-        data : false
-      });
+    let dialogRef = this.dialog.open(VerifyDialog, {
+      width: '400px',
+      data: actionCode
     });
+
+
   }
 
 
@@ -189,56 +179,56 @@ export class HomePageComponent implements OnInit {
     return '#8c9eff';
   }
 
-  getFontWeight(matchKey, competitor, winner = ''){
-    
-        if(this.afService.userBettings[matchKey] != null){
-    
-            //in case of live matches
-          if(this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team){
-            return 900;
-          }
-          //in case of finished matches
-          else if(this.afService.userBettings[matchKey].status == 'finished'){
-            if(this.afService.userBettings[matchKey].team == competitor){
-              if(this.afService.userBettings[matchKey].result == 'win'){
-                return 900;
-              }
-            }
-            if(this.afService.userBettings[matchKey].team != competitor 
-              && this.afService.userBettings[matchKey].result == 'lose'){
-                return 900;
-            }
-          }
-        }
-        else{
-          if(competitor == winner){
-            return 900;
-          }
-        }
+  getFontWeight(matchKey, competitor, winner = '') {
+
+    if (this.afService.userBettings[matchKey] != null) {
+
+      //in case of live matches
+      if (this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team) {
+        return 900;
       }
-    
-      getFontColor(matchKey, competitor, winner = ''){
-    
-    
-        if(this.afService.userBettings[matchKey] != null){
-    
-            //in case of live matches
-          if(this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team){
-            return '#e65100';
+      //in case of finished matches
+      else if (this.afService.userBettings[matchKey].status == 'finished') {
+        if (this.afService.userBettings[matchKey].team == competitor) {
+          if (this.afService.userBettings[matchKey].result == 'win') {
+            return 900;
           }
-          //in case of finished matches
-          else if(this.afService.userBettings[matchKey].status == 'finished'){
-            if(this.afService.userBettings[matchKey].team == competitor){
-              if(this.afService.userBettings[matchKey].result == 'win'){
-                return '#00c853';
-              }
-              else if(this.afService.userBettings[matchKey].result == 'lose'){
-                return '#d50000';
-              }
-            }
-          }
+        }
+        if (this.afService.userBettings[matchKey].team != competitor
+          && this.afService.userBettings[matchKey].result == 'lose') {
+          return 900;
+        }
       }
     }
+    else {
+      if (competitor == winner) {
+        return 900;
+      }
+    }
+  }
+
+  getFontColor(matchKey, competitor, winner = '') {
+
+
+    if (this.afService.userBettings[matchKey] != null) {
+
+      //in case of live matches
+      if (this.afService.userBettings[matchKey].status == 'inProgress' && competitor === this.afService.userBettings[matchKey].team) {
+        return '#e65100';
+      }
+      //in case of finished matches
+      else if (this.afService.userBettings[matchKey].status == 'finished') {
+        if (this.afService.userBettings[matchKey].team == competitor) {
+          if (this.afService.userBettings[matchKey].result == 'win') {
+            return '#00c853';
+          }
+          else if (this.afService.userBettings[matchKey].result == 'lose') {
+            return '#d50000';
+          }
+        }
+      }
+    }
+  }
 
 
 
@@ -251,20 +241,60 @@ export class HomePageComponent implements OnInit {
 })
 export class VerifyDialog {
 
+  actionCode;
+  public error: any;
+
   success = false;
 
+  loading = true;
+
   constructor(public afService: AF,
-    public dialogRef: MdDialogRef<VerifyDialog>,
+    public dialogRef: MdDialogRef<VerifyDialog>, public dialog: MdDialog,
     @Inject(MD_DIALOG_DATA) public data: any) {
-      this.success = data;
-    }
+    this.actionCode = data;
+
+    this.afService.af.auth.subscribe((auth) => {
+      if(auth != null){
+        console.log('loggedIn');
+        this.verify();
+      }
+    });
+  }
+
+  verify() {
+    this.afService.verifyUser(this.actionCode).then(resp => {
+      console.log(resp);
+
+      this.afService.af.database.object('users/' + this.afService.uid + '/verified').set(true);
+      this.success = true;
+
+    }).catch(error => {
+      console.log(error);
+      this.loading = false;
+      this.success = false;
+    });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  verifyAgain(){
-    this.afService.sendUserVerifyAgain().then(()=>{this.onNoClick()});
+  verifyAgain() {
+    this.afService.sendUserVerifyAgain().then(() => { this.onNoClick() });
+  }
+
+  loginWithEmail(event, email, password) {
+    //event.preventDefault();
+    this.afService.loginWithEmail(email, password).then(() => {
+      console.log(this.afService.user.displayName);
+      this.verify();
+    })
+      .catch((error: any) => {
+        if (error) {
+          this.error = error;
+          console.log(this.error);
+        }
+      });
   }
 }
 
@@ -286,7 +316,7 @@ export class ResetPasswordDialog {
 
 
   passwordFormControl = new FormControl('', [
-    Validators.required, 
+    Validators.required,
     Validators.pattern(this.PASSWORD_REGEX)]);
 
 
@@ -294,19 +324,19 @@ export class ResetPasswordDialog {
     public dialogRef: MdDialogRef<ResetPasswordDialog>,
     @Inject(MD_DIALOG_DATA) public data: any) {
 
-      if(data==false){
-        this.success = false;
-      }else{
-        this.email = data.email;
-        this.actionCode = data.actionCode;
-      }
+    if (data == false) {
+      this.success = false;
+    } else {
+      this.email = data.email;
+      this.actionCode = data.actionCode;
     }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  setNewPassword(newPassword){
-    this.afService.confirmPasswordReset(this.actionCode, newPassword).then(()=>{this.successfullUpdate = true;});
+  setNewPassword(newPassword) {
+    this.afService.confirmPasswordReset(this.actionCode, newPassword).then(() => { this.successfullUpdate = true; });
   }
 }

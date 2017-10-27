@@ -1,22 +1,56 @@
 {
   "rules": {
-    ".write" : true,
-    ".read":true,
-      "news":{
-        ".read": true,
-        	"content":{
-            ".write": "root.child('users').child(auth.uid).child('roles').child('administrator').val() === true"
-          },
-          "$new":{
-            	"comments":{
-                 "$comment": {
-                   					// we can write as long as old data or new data does not exist
-														// in other words, if this is a delete or a create, but not an update
-                          ".write": "!data.exists() || !newData.exists()"
-                  }
-         				}
+    //".write" : true,
+    //".read":true,
+      "bets":{
+        ".read":true,
+        "$match":{
+          "$userBet":{
+            
+            //loggedIn user takes the bet && there is no bet already && in time && has enough coins && email verified
+        		".write": "auth.uid === $userBet && !data.exists() && root.child('matches/'+$match+'/begin_at').val()>=now && root.child('users/'+$userBet+'/coins').val()>=newData.child('tip').val() && root.child('users/'+$userBet+'/verified').val() === true"
           }
-         
+        }
+      },
+      "comments":{
+        ".read":true,
+        "$new":{
+          "$comment":{
+            //loggedin user comments in his/her name || admin || author
+            ".write": "auth.uid === newData.child('userId').val() || root.child('users/'+auth.uid+'/roles/admin').val() == true || root.child('users/'+auth.uid+'/roles/author').val() == true"
+          }
+        }
+      },
+      "labels":{
+        ".read":true,
+        	//only authors can modify labels~categories
+        ".write": "root.child('users/'+auth.uid+'/roles/author').val() == true"
+      },
+      "matches":{
+        ".indexOn": ["status", "begin_at"],
+        ".read":true,
+        	//only the Administrator (not roles/admin) can modify the matches - it means only functions are able to modify it!
+        ".write":false
+      },
+      "news":{
+        ".read":true,
+        	//only authors can modify news
+        ".write": "root.child('users/'+auth.uid+'/roles/author').val() == true"
+      },
+      "newscontent":{
+        ".read":true,
+        ".write": "root.child('users/'+auth.uid+'/roles/author').val() == true"
+      },
+      "statistics":{
+        ".read":true,
+        ".write": true
+      },
+      "users":{
+        ".read": "root.child('users/'+auth.uid+'/roles/admin').val() === true",
+        "$userId":{
+          ".read": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
+          ".write" : "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+        }
       }
   }
 }

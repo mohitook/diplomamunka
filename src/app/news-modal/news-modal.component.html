@@ -42,7 +42,7 @@
         <div class="panel-heading" style="display: flex;" [ngStyle]="{'background-color': (comment.moderated)?'#ff5252':'#c5cae9'}">
           <img *ngIf="comment.photoURL==null || comment.photoURL==''" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" 
           style="height: 40px;margin-right: 10px;" />
-          <img *ngIf="comment.photoURL!=null || comment.photoURL!=''" [src]="comment.photoURL" 
+          <img *ngIf="comment.photoURL!=null && comment.photoURL!=''" [src]="comment.photoURL" 
           style="height: 40px;width:40px;margin-right: 10px;" />
           <div>
               <strong>{{ comment.displayName}}</strong> <br/>
@@ -96,7 +96,7 @@
         <button (click)="openLoginDialog()" class="btn btn-success">Login to comment</button>    
     </div>
 
-    <div *ngIf="!(afService.userObs | async)?.verified && !verifyResent">
+    <div *ngIf="afService.isLoggedIn &&  !(afService.userObs | async)?.verified && !verifyResent">
         Please verify your email before comment!
         <br>
         <br>
