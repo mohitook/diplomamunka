@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { StatisticsService } from './../providers/statistics.service';
 import { MdDialog } from '@angular/material';
 import { LoginPageComponent } from './../login-page/login-page.component';
@@ -22,7 +23,7 @@ export class NewsModalComponent implements OnInit {
   public selectedNews;
   public htmlText;
 
-  public comments: FirebaseListObservable<any>;
+  public comments: Observable<any>;
 
   public commentsOpened :boolean = false;
 

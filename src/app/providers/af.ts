@@ -4,6 +4,9 @@ import { Injectable, EventEmitter } from "@angular/core";
 import { AngularFire, AuthProviders, AuthMethods, FirebaseListObservable, FirebaseObjectObservable, FirebaseRef, FirebaseAuthState } from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/do';
 import "rxjs/add/operator/share";
 
 import * as firebase from 'firebase';
@@ -226,7 +229,34 @@ export class AF {
             console.log('comments sub');
             console.log(x);
         });
-        return this.comments;
+        //return this.comments;
+        //https://stackoverflow.com/questions/41755579/how-to-get-do-a-join-in-angularfire2-database
+        //https://stackoverflow.com/questions/41769360/joining-firebase-queries-in-angularfire2
+        var retValues = this.comments.switchMap(comments => {
+            
+                // Map the projects to the array of observables that are to be
+                // combined.
+            
+                let userObservables = comments.map(comment => this.af.database
+                  .object(`users/${comment.userId}`).do(value => {
+                      console.log(value);
+                      if(value.displayName == null){
+                        comment.displayName = 'Invalid or deleted user',
+                        comment.photoURL = ''
+                      }
+                      else{
+                      comment.displayName = value.displayName,
+                      comment.photoURL = value.photoURL
+                      }
+                  })
+                );
+                
+                // Combine the user observables, and match up the users with the
+                // projects, etc.
+            
+                return Observable.combineLatest(...userObservables, () => comments);
+              });
+        return retValues;
     }
 
     sendComment(text) {
