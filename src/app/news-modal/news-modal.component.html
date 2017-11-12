@@ -15,7 +15,7 @@
     <!-- <div [innerHTML]="(afService.getNewsContent(selectedNews.$key) | async)?.text">
         </div> -->
     <!-- <div *ngIf="htmlText"> [innerHTML]="htmlText" -->
-      <div  [froalaView]="htmlText" style="padding-left:10px; padding-right:10px;">
+      <div *ngIf="htmlText"  [froalaView]="htmlText" style="padding-left:10px; padding-right:10px;">
       <!-- </div> -->
     </div>
     <div class="text-muted"><small>{{selectedNews.creator.displayname}} | {{ selectedNews.timestamp | date:"MM/dd/yy hh:mm a" }}</small></div>
@@ -61,7 +61,7 @@
       </div>
       <!-- /panel panel-default -->
 
-    <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
+    <pagination-template *ngIf="commentsLength>0" #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
       <div *ngIf="p.pages[1]">
         <div class="custom-pagination">
           <div class="pagination-previous" [class.disabled]="p.isFirstPage()">

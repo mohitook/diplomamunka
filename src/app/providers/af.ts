@@ -239,7 +239,6 @@ export class AF {
             
                 let userObservables = comments.map(comment => this.af.database
                   .object(`users/${comment.userId}`).do(value => {
-                      console.log(value);
                       if(value.displayName == null){
                         comment.displayName = 'Invalid or deleted user',
                         comment.photoURL = ''
