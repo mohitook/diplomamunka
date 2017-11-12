@@ -46,10 +46,34 @@
         ".write": true
       },
       "users":{
-        ".read": "root.child('users/'+auth.uid+'/roles/admin').val() === true",
+        //".read": "root.child('users/'+auth.uid+'/roles/admin').val() === true",
+        //".read":true,
         "$userId":{
-          ".read": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
-          ".write" : "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          ".read":true,
+          "email":{
+            ".read": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
+          	".write" : "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          },
+          "displayName":{
+            ".read":true,
+            ".write": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          },
+          "coins":{
+            ".read":"auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
+            ".write": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          },
+          "photoURL":{
+            ".read": true,
+            ".write": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          },
+          "roles":{
+            ".read": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
+            ".write": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          },
+          "verified":{
+            ".read": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true",
+            ".write": "auth.uid === $userId || root.child('users/'+auth.uid+'/roles/admin').val() == true"
+          }
         }
       }
   }

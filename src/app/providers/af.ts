@@ -261,10 +261,10 @@ export class AF {
     sendComment(text) {
         var message = {
             message: text,
-            displayName: this.user.displayName,
-            email: this.user.email,
+            //displayName: this.user.displayName,
+            //email: this.user.email,
             timestamp: Date.now(),
-            photoURL: this.user.photoURL ? this.user.photoURL : '',
+            //photoURL: this.user.photoURL ? this.user.photoURL : '',
             userId: this.uid //not the best practice..
         };
         return this.comments.push(message);
