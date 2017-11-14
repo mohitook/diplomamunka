@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FirebaseListObservable } from "angularfire2";
-import { AF } from "../providers/af";
+import { AF } from "../../providers/af";
 import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 
 @Component({

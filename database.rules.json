@@ -46,7 +46,7 @@
         ".write": true
       },
       "users":{
-        //".read": "root.child('users/'+auth.uid+'/roles/admin').val() === true",
+        ".read": "root.child('users/'+auth.uid+'/roles/admin').val() === true",
         //".read":true,
         "$userId":{
           ".read":true,

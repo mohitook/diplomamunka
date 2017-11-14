@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { AF } from "../providers/af";
+import { AF } from "../../providers/af";
 import { FirebaseListObservable } from "angularfire2";
 import {NgxPaginationModule, PaginationInstance} from 'ngx-pagination';
 import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';

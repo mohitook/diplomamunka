@@ -7,10 +7,10 @@ import {
   Input,
   Output, OnInit, Inject
 } from '@angular/core';
-import { EditorDirective } from '../editor.directive';
+import { EditorDirective } from '../../editor.directive';
 import { FirebaseListObservable } from "angularfire2";
-import { AF } from "../providers/af";
-import { NewsModel } from "../model/news.model";
+import { AF } from "../../providers/af";
+import { NewsModel } from "../../model/news.model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';

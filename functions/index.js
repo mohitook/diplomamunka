@@ -150,13 +150,12 @@ exports.modifydisplayNameInArticles = functions.database.ref('users/{userId}/dis
 //check in every 12 hours. If the a match doesn't have result in 8 hours from the begin_at ->
 //-> give back every bet to the users
 exports.matchResultCheck = functions.https.onRequest((request, response) => {
-
   var matches = admin.database().ref('matches');
   matches.once('value', function (matchesSnapShot) {
     matchesSnapShot.forEach(function (match) {
       if (match.val().status == 'notFuture') {
-        //4800000 is 8 hours in milliseconds
-        if ((match.val().begin_at + 4800000) <= new Date().getTime()) {
+        //28800000 is 8 hours in milliseconds
+        if ((match.val().begin_at + 28800000) <= new Date().getTime()) {
           admin.database().ref('bets/' + match.key).once('value', function (betSnapShot) {
             betSnapShot.forEach(function (userBet) {
               //just to secure the bets with log
@@ -183,6 +182,25 @@ exports.matchResultCheck = functions.https.onRequest((request, response) => {
 
 //--------------------------- 
 
+
+//++++++++++++++++++++++++++++ archive old matches
+exports.archiveOldMatches = functions.https.onRequest((request, response) => {
+  var matches = admin.database().ref('matches');
+  matches.once('value', function (matchesSnapShot) {
+    matchesSnapShot.forEach(function (match) {
+      // 1209600000 is 2 weeks (14 days) in milliseconds
+      if ((match.val().begin_at + 1209600000) <=  new Date().getTime())  {
+        admin.database().ref('archivedMatches/' + match.key).set(match.val());
+        admin.database().ref('matches/' + match.key).remove();
+      }
+    });
+  });
+
+  response.send('process started');
+
+})
+
+//---------------------------- archive old matches
 
 //++++++++++++++++++++++++++++ fiveMinuteMatchTimeCheck
 

@@ -1,3 +1,4 @@
+import { SharedModule } from 'app/app-shared.module';
 import { StatisticsService } from './providers/statistics.service';
 import { AdminDashboardComponent } from './administratorPage/admin-dashboard/admin-dashboard.component';
 import { RoleGuardService } from './providers/role-guard.service';
@@ -11,11 +12,11 @@ import { BettingHoursPipe } from './pipes/betting-hours.pipe';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import {RouterModule, Routes} from "@angular/router";
+import { HttpModule } from '@angular/http'; 
+import {RouterModule, Routes} from "@angular/router"; 
 import {ShareButtonsModule} from 'ngx-sharebuttons';
 
-import {LabelsPageComponent, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog} from './labels-page/labels-page.component';
+import {LabelsPageComponent, LabelDeleteDialog, LabelModifyDialog, LabelNewDialog} from './administratorPage/labels-page/labels-page.component';
 
 import {LocationStrategy, HashLocationStrategy} from "@angular/common";
 
@@ -26,8 +27,8 @@ import {AF} from "./providers/af";
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomePageComponent, VerifyDialog, ResetPasswordDialog } from './home-page/home-page.component';
 import { ChatPageComponent } from './chat-page/chat-page.component';
-import { AddNewComponent, PreviewDialog } from './add-new/add-new.component';
-import { DeleteNewsComponent, DeleteDialog } from './delete-news/delete-news.component';
+import { AddNewComponent, PreviewDialog } from './administratorPage/add-new/add-new.component';
+import { DeleteNewsComponent, DeleteDialog } from './administratorPage/delete-news/delete-news.component';
 import { EditorDirective } from './editor.directive';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 import {SelectModule} from 'ng-select';
@@ -114,23 +115,11 @@ const routes: Routes = [
     { path: 'news/:key', component: NewsModalComponent },
     { path: 'gamenews/:game', component: NewsListComponent }
       ] },
-  { path: 'administrator', component: AdministratorPageComponent,
+  { path: 'administrator', loadChildren: 'app/administratorPage/adminModule.module#AdminModuleModule',
   canActivate: [RoleGuardService],
-  data: { roles: ['author', 'admin'] },
-  children: [
-    {
-      path: '',
-      pathMatch: 'full',
-      redirectTo: 'dashBoard'
-    },
-      { path: 'dashBoard', component: AdminDashboardComponent},
-        { path: 'addNews', component: AddNewComponent},
-        { path: 'deleteNews', component: DeleteNewsComponent},
-        { path: 'labelsPage', component: LabelsPageComponent},
-        { path: 'manageUsers', component: ManageUsersComponent, 
-          canActivate: [RoleGuardService], data: { roles: ['admin'] }}
-      ]  },
-  { path: 'matches', component: MatchesPageComponent}
+  data: { roles: ['author', 'admin'] }
+  },
+  { path: 'matches', loadChildren: 'app/matches-page/matches.module#MatchesModule'}
 ];
 
 /*class MyErrorHandler implements ErrorHandler {
@@ -138,7 +127,6 @@ const routes: Routes = [
     console.log("ERROR happened");
   }
 }*/
-
 
 @NgModule({
   declarations: [
@@ -148,35 +136,33 @@ const routes: Routes = [
     VerifyDialog,
     ResetPasswordDialog,
     ChatPageComponent,
-    AddNewComponent,
+    //AddNewComponent,
     PreviewDialog,
     EditorDirective,
     NewsModalComponent,
-    SafePipe,
+    
     SettingsComponent,
     RegistrationPageComponent,
-    LabelFilterPipe,
-    PaginationPipePipe,
-    LabelsPageComponent,
+    
+    //LabelsPageComponent,
     LabelDeleteDialog,
     LabelModifyDialog,
     LabelNewDialog,
-    DeleteNewsComponent,
+    //DeleteNewsComponent,
     BetModalComponent,
-    BettingHoursPipe,
-    BettingPercentagePipe,
+    
     NewsListComponent,
     MyMasonryDirective,
-    MatchesPageComponent,
-    MatchFilterPipe,
-    SafeUrlPipe,
-    AdministratorPageComponent,
+    //MatchesPageComponent,
+    
+    
+    //AdministratorPageComponent,
     DeleteDialog,
     EditProfileComponent,
-    ManageUsersComponent,
+    //ManageUsersComponent,
     UserModifyDialog,
     UserDeleteDialog,
-    AdminDashboardComponent
+    //AdminDashboardComponent
 ],
   entryComponents:[
     LoginPageComponent,
@@ -193,55 +179,12 @@ const routes: Routes = [
      ResetPasswordDialog
     ],
   imports: [
-    BrowserModule,
-    FormsModule,
+    BrowserModule, 
+    BrowserAnimationsModule,
     HttpModule,
-    //CKEditorModule,
-    ModalModule,
-    AngularFireModule.initializeApp(firebaseConfig),
     RouterModule.forRoot(routes),
-    InfiniteScrollModule,
-    SelectModule,
-    FilterPipeModule,
-    NgxPaginationModule,
-    TagInputModule, BrowserAnimationsModule,
     ShareButtonsModule.forRoot(),
-    MdAutocompleteModule,
-    MdButtonModule,
-    MdButtonToggleModule,
-    MdCardModule,
-    MdCheckboxModule,
-    MdChipsModule,
-    MdCoreModule,
-    MdDatepickerModule,
-    MdDialogModule,
-    MdExpansionModule,
-    MdGridListModule,
-    MdIconModule,
-    MdInputModule,
-    MdListModule,
-    MdMenuModule,
-    MdNativeDateModule,
-    MdPaginatorModule,
-    MdProgressBarModule,
-    MdProgressSpinnerModule,
-    MdRadioModule,
-    MdRippleModule,
-    MdSelectModule,
-    MdSidenavModule,
-    MdSliderModule,
-    MdSlideToggleModule,
-    MdSnackBarModule,
-    MdSortModule,
-    MdTableModule,
-    MdTabsModule,
-    MdToolbarModule,
-    MdTooltipModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    NgxChartsModule,
-    ChartModule,
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot()
+    SharedModule
   ],
   providers: [/*{provide: ErrorHandler, useClass: MyErrorHandler},*/AF, StatisticsService, RoleGuardService, MobileViewService, { provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
