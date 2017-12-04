@@ -71,12 +71,19 @@ export class AF {
         this.labels = this.af.database.list('labels');
         this.users = this.af.database.list('users');
 
+        //tslint:disable
+
+
+        //feliratkozás az listára az adott feltételeknek
+        //megfelelő elemek visszaadásával
         this.allNews = this.af.database.list('news', {
             query: {
                 orderByChild: 'labels/All',
                 equalTo: true,
             }
         });
+
+
 
         //refactor this to a method
         //this handles the still tip'able matches. if the timestamp of the match is bigger then the current time: it is not tipable anymore
@@ -214,6 +221,7 @@ export class AF {
      * @param text
      */
     sendMessage(text) {
+        //adatbázisba push-olás
         var message = {
             message: text,
             displayName: this.user.displayName,

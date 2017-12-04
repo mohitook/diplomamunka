@@ -26,7 +26,7 @@ export class MyMasonryDirective {
     //console.log(selected);
     var array = Array.prototype.slice.call(selected);
     //console.log(array);
-
+    // tslint:disable
     array.forEach(element => {
       //console.log(element.style);
 
@@ -40,12 +40,11 @@ export class MyMasonryDirective {
             else  //go to the left column
             {
               this.renderer.setElementStyle(element, 'top', left+'px');
-              this.renderer.setElementStyle(element, 'left', ''); //fix in case of mixed picture loading
-              left += parseInt(getComputedStyle(element).height); 
+              this.renderer.setElementStyle(element, 'left', ''); //avoid style bug
+              left += parseInt(getComputedStyle(element).height);
             }
         });
      var heighest = left > right ? left : right;
-
      this.renderer.setElementStyle(this.el.nativeElement, 'height', heighest+"px");
   }
 

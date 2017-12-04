@@ -1,4 +1,4 @@
-<md-icon style="float: left;" class="md-24" mdTooltip="{{(selectedBetting | async)?.$key}}">bug_report</md-icon>
+<!-- <md-icon style="float: left;" class="md-24" mdTooltip="{{(selectedBetting | async)?.$key}}">bug_report</md-icon> -->
 
 <h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'future'">Place your bets</h2>
 <h2 md-dialog-title *ngIf="(selectedBetting | async)?.status == 'notFuture'">Match is in progress</h2>
@@ -187,7 +187,7 @@
 
                                     <md-grid-list cols="4" rowHeight="20px">
                                             
-                                            <md-grid-tile [rowspan]="2">
+                                            <md-grid-tile [rowspan]="2"> 
                                                 <div class="workingLineBreaker">
                                                     {{(selectedBetting | async)?.opponents.right.bets | betting_percentage: (selectedBetting | async)?.opponents.left.bets}}
                                                     <small>({{(selectedBetting | async)?.opponents.right.bets}})</small>

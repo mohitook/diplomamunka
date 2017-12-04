@@ -195,22 +195,19 @@ exports.archiveOldMatches = functions.https.onRequest((request, response) => {
       }
     });
   });
-
   response.send('process started');
-
 })
 
 //---------------------------- archive old matches
 
 //++++++++++++++++++++++++++++ fiveMinuteMatchTimeCheck
 
-//in every 5 minutes compare the current time to the matches begin_at! (less datecheck call from clients)
+//in every 5 minutes compare the current time to the matches begin_at!
 exports.fiveMinuteMatchTimeCheck = functions.https.onRequest((request, response) => {
   var matches = admin.database().ref('matches');
   matches.once('value', function (matchesSnapShot) {
     matchesSnapShot.forEach(function (match) {
       if (match.val().status == 'future') {
-        //420000 = 7 minute in milliseconds -deprecated.. to complicated to handle
         if (match.val().begin_at <= new Date().getTime()) {
           console.log('rewrite status of:' + match.key);
           console.log(match.val());
@@ -628,14 +625,14 @@ exports.prizeToUsers = functions.database.ref('matches/{matchId}/status')
           });
 
           //get the descending sort
-          userPlusCoinDict.sort(function (a, b) { return (a.value > b.value) ? -1 : ((b.value > a.value) ? 1 : 0); });
+          userPlusCoinDict.sort(function (a, b) { return ((a.value%1) > (b.value%1) ? -1 : ((b.value%1) > (a.value%1)) ? 1 : 0); });
 
           //add +1 coins till the remaining prize is 0 / or there is no remaining bets from users
           //with the +5 per sites when the init is up it will be really generous!
           userPlusCoinDict.forEach(function (userCoin) {
-            if (coinSum > 0) {
+            if (coinSum >= (1 - userCoin.value%1)) {
               userCoin.value = Math.ceil(userCoin.value);
-              coinSum--;
+              coinSum-= 1 - userCoin.value%1;
             }
             else {
               userCoin.value = Math.floor(userCoin.value);
