@@ -87,7 +87,7 @@ import {
   MdTooltipModule,
 } from '@angular/material';
 
-import HLTV from 'hltv';
+//import HLTV from 'hltv';
 import { BetModalComponent } from './bet-modal/bet-modal.component';
 import { MyMasonryDirective } from './myMasonry.directive';
 import { MatchesPageComponent } from './matches-page/matches-page.component';
