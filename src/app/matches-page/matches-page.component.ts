@@ -68,7 +68,7 @@ p3;
     ];
 
     this.afService.userBets.subscribe(x=>{
-      console.log(x);
+      //console.log(x);
       });
 
     this.finishedMatches.subscribe(matches=>{
@@ -99,7 +99,7 @@ p3;
   }
 
   checkboxChanged(event){
-    console.log(event); 
+    //console.log(event); 
   }
 
   filterOnlyMyBets(event){
@@ -123,7 +123,7 @@ p3;
   }
 
   openDialog(key: string): void {
-    console.log('key: '+key);
+    //console.log('key: '+key);
     const dialogRef = this.dialog.open(BetModalComponent, {
       width: '400px',
       data: { key: key }

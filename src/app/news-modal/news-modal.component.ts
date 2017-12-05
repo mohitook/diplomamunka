@@ -89,12 +89,12 @@ export class NewsModalComponent implements OnInit {
 
   onComments(){
     this.commentsOpened=true;
-    console.log(this.key);
+    //console.log(this.key);
     this.comments = this.afService.setCommentsFilter(this.key);
     this.comments.subscribe(x=>{
       //to paginate to the last page when a new comment comes
       this.commentsLength = x.length;
-      console.log("current length: " + x.length);
+      //console.log("current length: " + x.length);
     });
   }
 

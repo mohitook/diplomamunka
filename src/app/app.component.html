@@ -16,7 +16,7 @@
       </div>
       <span class="fill-remaining-space"></span>
       <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-        <a href="https://espot.prophpbb.com" target="_blank"> <button md-button style="color:rgba(255,255,255,.87);">Forum</button></a>
+        <a href="http://espot.prophpbb.com" target="_blank"> <button md-button style="color:rgba(255,255,255,.87);">Forum</button></a>
         <button *ngIf="afService.user.roles.admin || afService.user.roles.author" md-button routerLink="/administrator" style="color:#ffd54f">Administrator page</button>
         <md-chip-list *ngIf="afService.isLoggedIn">
                 <md-chip style="background-color:#1a237e;color:rgba(255,255,255,.87);">
@@ -46,7 +46,7 @@
   <md-menu x-position="before" #menu="mdMenu">
       <button md-menu-item routerLink="/">News</button>
       <button md-menu-item routerLink="/matches">Matches</button>
-      <a  href="https://espot.prophpbb.com" target="_blank" style="text-decoration: none;"> <button md-menu-item >Forum</button></a>
+      <a  href="http://espot.prophpbb.com" target="_blank" style="text-decoration: none;"> <button md-menu-item >Forum</button></a>
       <button md-menu-item *ngIf="afService.user.roles.admin || afService.user.roles.author" routerLink="/administrator" style="color:#ff6f00">Administrator page</button>
       <div md-menu-item *ngIf="afService.isLoggedIn" >
               <b>{{(afService.userObs | async)?.coins}}</b> &nbsp;

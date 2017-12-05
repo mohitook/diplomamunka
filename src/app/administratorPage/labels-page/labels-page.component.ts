@@ -168,7 +168,7 @@ export class LabelNewDialog {
   }
   
   addLabel(){
-    console.log(this.newLabel)
+    //console.log(this.newLabel)
     this.afService.addNewLabel(this.newLabel);
   }
 

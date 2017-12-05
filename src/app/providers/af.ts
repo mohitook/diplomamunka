@@ -61,7 +61,7 @@ export class AF {
     }
 
     constructor(public af: AngularFire) {
-        console.log(firebase.auth());
+        //console.log(firebase.auth());
         this.propertySubject = new Subject();
         this.valueSubject = new Subject();
         this.commentsSubject = new Subject();
@@ -146,7 +146,7 @@ export class AF {
             bets.forEach(bet => {
                 this.userBettings[bet.$key] = bet[this.uid];
             });
-            console.log(this.userBettings);
+            //console.log(this.userBettings);
         });
 
         //this.clock = Observable.interval(1000).map(tick => new Date()).share();
@@ -162,14 +162,14 @@ export class AF {
         this.af.auth.subscribe(
             (auth) => {
                 this.authState = auth;
-                console.log('af auth trigger');
+                //console.log('af auth trigger');
                 if (auth == null) {
-                    console.log("Not Logged in.");
+                    //console.log("Not Logged in.");
                     this.isLoggedIn = false;
                     //this.router.navigate(['login']);
                 }
                 else {
-                    console.log("Successfully Logged in.");
+                    //console.log("Successfully Logged in.");
                     // Set the Display Name and Email so we can attribute messages to them
                     if (auth.google) {
                         //keep it separated in case if there will be any new difference
@@ -184,8 +184,8 @@ export class AF {
                     this.isLoggedIn = true;
                     this.userObs = this.af.database.object('/users/' + this.uid_prop);
                     this.userObs.subscribe(userData => {
-                        console.log('userObs sub called');
-                        console.log(userData);
+                        //console.log('userObs sub called');
+                        //console.log(userData);
                         this.user = new User(userData);
                     });
                 }
@@ -234,8 +234,8 @@ export class AF {
     setCommentsFilter(key: any) {
         this.comments = this.af.database.list('comments/' + key);
         this.comments.subscribe(x => {
-            console.log('comments sub');
-            console.log(x);
+            //console.log('comments sub');
+            //console.log(x);
         });
         //return this.comments;
         //https://stackoverflow.com/questions/41755579/how-to-get-do-a-join-in-angularfire2-database
@@ -317,11 +317,11 @@ export class AF {
         var labelsTmp: any = {};
 
         news.labels.forEach(x => {
-            console.log(x);
+            //console.log(x);
             labelsTmp[x] = true;
         });
 
-        console.log(labelsTmp);
+        //console.log(labelsTmp);
 
         var newsSend = {
             title: news.title,
@@ -339,8 +339,8 @@ export class AF {
         //https://github.com/angular/angularfire2/issues/144
         var newObjectKey = (1 / Date.now()) + this.uid.substring(0, 5);
         newObjectKey = newObjectKey.replace('.', '');
-        console.log("newsObjectKey:");
-        console.log(newObjectKey);
+        //console.log("newsObjectKey:");
+        //console.log(newObjectKey);
         //not necessary, it will just order the news on the firebase dashboard! dont affect to the items queried by child element!
         this.news.$ref.ref.child(newObjectKey).setWithPriority(newsSend, 0 - Date.now());
 
@@ -364,7 +364,7 @@ export class AF {
     getNewsContent(key) {
         var item = this.af.database.object('/newscontent/' + key);
         item.subscribe(x => {
-            console.log("it return many times, CHECK IT" + x);
+            //console.log("it return many times, CHECK IT" + x);
         })
         return item;
     }
@@ -380,7 +380,7 @@ export class AF {
     // }
 
     selectSpecificNews(property: any) {
-        console.log('selectSpecificNews - ' + property);
+        //console.log('selectSpecificNews - ' + property);
         this.specificNews = this.af.database.list('news', {
             query: {
                 orderByChild: 'labels/' + property,
@@ -388,7 +388,7 @@ export class AF {
                 //limitToFirst: this.limitNumber //nem nyerek vele kb semmit..csak vesztek
             }
         });
-        console.log(property);
+        //console.log(property);
         //this.af.database.object('users/' + this.uid + '/lastSelected').set(property);
         return this.specificNews;
     }
@@ -407,7 +407,7 @@ export class AF {
    * @returns {firebase.Promise<void>}
    */
     registerUser(email, password) {
-        console.log(email)
+        //console.log(email)
         return this.af.auth.createUser({
             email: email,
             password: password
@@ -427,7 +427,7 @@ export class AF {
     }
 
     saveUserNameInAuth(name) {
-        console.log(name);
+        //console.log(name);
         return this.authState.auth.updateProfile({
             displayName: name,
             photoURL: ''
@@ -511,7 +511,7 @@ export class AF {
 
     sendUserVerifyAgain(){
 
-        console.log(firebase.auth().currentUser.providerData[0].providerId);
+        //console.log(firebase.auth().currentUser.providerData[0].providerId);
         return firebase.auth().currentUser.sendEmailVerification();
     }
 

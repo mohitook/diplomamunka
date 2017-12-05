@@ -45,7 +45,7 @@ export class LoginPageComponent {
   loginWithGoogle() {
     this.afService.loginWithGoogle().then((data) => {
       // Send them to the homepage if they are logged in
-      console.log(data);
+      //console.log(data);
       this.onNoClick();
     })
   }
@@ -53,13 +53,13 @@ export class LoginPageComponent {
   loginWithEmail(event, email, password){
     //event.preventDefault();
     this.afService.loginWithEmail(email, password).then(() => {
-      console.log(this.afService.user.displayName);
+      //console.log(this.afService.user.displayName);
       this.onNoClick();
     }) 
       .catch((error: any) => {
         if (error) {
           this.error = error;
-          console.log(this.error);
+          //console.log(this.error);
         }
       });
   }
@@ -91,7 +91,7 @@ export class LoginPageComponent {
     })
       .catch((error) => {
         this.error = error;
-        console.log(this.error);
+        //console.log(this.error);
       });
   }
 

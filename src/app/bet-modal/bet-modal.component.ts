@@ -36,7 +36,7 @@ export class BetModalComponent implements OnInit {
     @Inject(MD_DIALOG_DATA) public data: any) { 
       this.selectedBetting = this.afService.af.database.object('matches/'+ data.key);
       this.selectedBetting.subscribe(match=>{
-        console.log(match);
+        //console.log(match);
         this.game = match.game;
         if(match.stream!=null && match.stream!=''){
           //todo: ez nem fog menni mert más élő közvetítétést nem ágyazhatom be :)... tehát youtube esetén csak egy link lesz kint!
@@ -53,7 +53,7 @@ export class BetModalComponent implements OnInit {
           }
         }
         this.afService.checkIfAlreadyTiped(this.data.key).subscribe(matchBet=>{
-          console.log(matchBet);
+          //console.log(matchBet);
           if(matchBet.status!=null){ 
             this.selectedTeam = matchBet.team;
             this.alreadyTiped = true;
@@ -73,7 +73,7 @@ export class BetModalComponent implements OnInit {
  ngOnInit(): void {
 
   this.afService.af.database.object('users/' + this.afService.uid + '/coins').subscribe(coins => {
-    console.log(coins.$value);
+    //console.log(coins.$value);
     this.betFormControl.setValidators(
       [
         Validators.required,

@@ -145,7 +145,7 @@ export class AdminDashboardComponent implements  AfterViewInit {
 
             var tmpData = {labels: [], data:[]}
 
-            console.log(monthlyData);
+            //console.log(monthlyData);
             var arr = Object.keys(monthlyData).map(function(key){
              return {key: key, value: monthlyData[key]};
             });
@@ -164,7 +164,7 @@ export class AdminDashboardComponent implements  AfterViewInit {
 
         this.chart1data.labels = this.chart1Datas[this.currentChart1Index].labels;
         this.chart1data.datasets[0].data = this.chart1Datas[this.currentChart1Index].data;
-        console.log(this.chart1Datas);
+        //console.log(this.chart1Datas);
         this.chart1.chart.update();
       }
     );
@@ -183,7 +183,7 @@ export class AdminDashboardComponent implements  AfterViewInit {
 
             // this.chart2dataTmp.labels = [];
             // this.chart2dataTmp.datasets[0].data = [];
-            console.log(monthlyData);
+            //console.log(monthlyData);
             var arr = Object.keys(monthlyData).map(function(key){
              return {key: key, value: monthlyData[key]};
             });
@@ -202,7 +202,7 @@ export class AdminDashboardComponent implements  AfterViewInit {
 
         this.chart2data.labels = this.chart2Datas[this.currentChart2Index].labels;
         this.chart2data.datasets[0].data = this.chart2Datas[this.currentChart2Index].data;
-        console.log(this.chart2Datas);
+        //console.log(this.chart2Datas);
         this.chart2.chart.update();
       }
     );

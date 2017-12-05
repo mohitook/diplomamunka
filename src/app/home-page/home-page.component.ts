@@ -45,7 +45,7 @@ export class HomePageComponent implements OnInit {
         this.labelsAreAvailable = true;
       }
     });
-    console.log('home-page constructor end');
+    //console.log('home-page constructor end');
   }
 
   ngOnInit() {
@@ -57,10 +57,10 @@ export class HomePageComponent implements OnInit {
 
       this.handleAuth(mode, actionCode);
 
-      console.log(params); // Print the parameter to the console. 
+      //console.log(params); // Print the parameter to the console. 
     });
 
-    console.log('ngOnInit');
+    //console.log('ngOnInit');
     this.router
       .events
       .filter(event => event instanceof NavigationEnd)
@@ -128,13 +128,13 @@ export class HomePageComponent implements OnInit {
   }
 
   openDialog(key: string): void {
-    console.log('key: ' + key);
+    //console.log('key: ' + key);
     const dialogRef = this.dialog.open(BetModalComponent, {
       width: '400px',
       data: { key: key }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      //console.log('The dialog was closed');
     });
   }
 
@@ -248,6 +248,8 @@ export class VerifyDialog {
 
   loading = true;
 
+  calledOnceSuccessfully = false;
+
   constructor(public afService: AF,
     public dialogRef: MdDialogRef<VerifyDialog>, public dialog: MdDialog,
     @Inject(MD_DIALOG_DATA) public data: any) {
@@ -256,20 +258,23 @@ export class VerifyDialog {
     this.afService.af.auth.subscribe((auth) => {
       if(auth != null){
         console.log('loggedIn');
-        this.verify();
+        if(!this.calledOnceSuccessfully){
+          this.calledOnceSuccessfully = true;
+          this.verify();
+        }
       }
     });
   }
 
   verify() {
     this.afService.verifyUser(this.actionCode).then(resp => {
-      console.log(resp);
+      //console.log(resp);
 
       this.afService.af.database.object('users/' + this.afService.uid + '/verified').set(true);
       this.success = true;
 
     }).catch(error => {
-      console.log(error);
+      //console.log(error);
       this.loading = false;
       this.success = false;
     });
@@ -285,14 +290,18 @@ export class VerifyDialog {
 
   loginWithEmail(event, email, password) {
     //event.preventDefault();
+
     this.afService.loginWithEmail(email, password).then(() => {
-      console.log(this.afService.user.displayName);
-      this.verify();
+      //console.log(this.afService.user.displayName);
+      if(!this.calledOnceSuccessfully){
+        this.calledOnceSuccessfully = true;
+        this.verify();
+      }
     })
       .catch((error: any) => {
         if (error) {
           this.error = error;
-          console.log(this.error);
+          //console.log(this.error);
         }
       });
   }

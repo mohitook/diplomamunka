@@ -68,7 +68,7 @@ p;
      this.specificNews.subscribe(x=>{
        this.loadedIn = true;
      });
-     console.log('route navigated to new label category:' + this.game);
+     //console.log('route navigated to new label category:' + this.game);
    });
 
  }

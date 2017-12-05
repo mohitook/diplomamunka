@@ -9,9 +9,9 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 //global variables:
-var apiKeyForCsGo = 'k772vgds4x3x875gep7cq9dh';
-var apiKeyForDota2 = '4xrzt3cygq3rs5ghv4khqft7';
-var apiKeyForLoL = '3atqmme9np7jwe9gbx5texn5';
+var apiKeyForCsGo = 'fa4ek422sr4ktsbeekj4dftw';
+var apiKeyForDota2 = 'nj366mck6g52jtqge854rdpx';
+var apiKeyForLoL = '942za6wxpbfrfmtuvhmnqwh9';
 
 //+++++++++++++++++++++++++ new bets handler
 

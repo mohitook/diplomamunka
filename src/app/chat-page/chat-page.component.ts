@@ -23,7 +23,7 @@ export class ChatPageComponent implements OnInit, AfterViewChecked {
     scrollToBottom(): void {
         try {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-        } catch (err) { console.log('Scroll to bottom failed yo!') }
+        } catch (err) {  }
     }
 
     // I forgot to add this but thanks for letting me know in the comments so I could update it!

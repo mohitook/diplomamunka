@@ -42,7 +42,7 @@ export class ManageUsersComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      //console.log('The dialog was closed');
 
     });
   }
@@ -54,7 +54,7 @@ export class ManageUsersComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      //console.log('The dialog was closed');
 
     });
   }
@@ -116,7 +116,7 @@ export class UserModifyDialog {
   }
   
   saveModifications(){
-    console.log(this.admin + '|' + this.author);
+    //console.log(this.admin + '|' + this.author);
    this.afService.af.database.object('users/' + this.user.$key + '/roles/admin').set(
     this.admin
    );
